@@ -170,7 +170,7 @@ public class TagManager implements Listener {
             if (runner == null) continue;
 
             Function<Long, String> title = i -> "Hunters waking up in " + i + "s";
-            new CountdownTimerTask(plugin, sleepSeconds){
+            new CountdownTimerTask(plugin, sleepSeconds) {
                 @Override
                 protected void onCount() {
                     if (!runner.isOnline()) {
@@ -186,10 +186,11 @@ public class TagManager implements Listener {
                 }
 
                 @Override
-                protected void onFinish() {}
+                protected void onFinish() {
+                }
             }.start();
         }
-        new CountdownTimerTask(plugin, sleepSeconds){
+        new CountdownTimerTask(plugin, sleepSeconds) {
             @Override
             protected void onCount() {
                 if (getSeconds() <= 3) {
@@ -262,7 +263,7 @@ public class TagManager implements Listener {
         }
         sleepingPlayers.clear();
 
-        if (pointsTicker != null){
+        if (pointsTicker != null) {
             pointsTicker.cancel();
             pointsTicker = null;
         }
@@ -310,7 +311,7 @@ public class TagManager implements Listener {
             if (p == runner) continue;
             if (p == hunter) continue;
 
-            server.broadcastMessage( ChatColor.RED + runner.getDisplayName() + ChatColor.RED + " was tagged!");
+            server.broadcastMessage(ChatColor.RED + runner.getDisplayName() + ChatColor.RED + " was tagged!");
             SoundEffect.TAG_BROADCAST.play(p);
         }
     }
@@ -462,8 +463,8 @@ public class TagManager implements Listener {
     }
 
     /**
-     * @return if the specified player is a hunter and is sleeping (by recently being tagged)
      * @param player the player to check
+     * @return if the specified player is a hunter and is sleeping (by recently being tagged)
      */
     private boolean isSleeping(@NotNull Player player) {
         return sleepingPlayers.containsKey(player.getUniqueId());
@@ -561,7 +562,7 @@ public class TagManager implements Listener {
         // Restore role if joining in the same round
         Role logoutRole = logoutRoleByPlayer.get(player.getUniqueId());
         if (logoutRole != null) setRole(player, logoutRole);
-        // Set new players to runners
+            // Set new players to runners
         else setRole(player, Role.RUNNER);
 
         // Restore inventory if joining in the same round
@@ -589,9 +590,9 @@ public class TagManager implements Listener {
     }
 
     /**
-     * @return the closest non-sleeping hunter to the specified player (not self), or null if no hunters
-     * @param player the player to check nearby hunters of
+     * @param player          the player to check nearby hunters of
      * @param includeSleeping if sleeping hunters should be included
+     * @return the closest non-sleeping hunter to the specified player (not self), or null if no hunters
      */
     @Nullable
     public Player getClosestHunter(@NotNull Player player, boolean includeSleeping) {
@@ -599,8 +600,8 @@ public class TagManager implements Listener {
     }
 
     /**
-     * @return the closest runner to the specified player (not self), or null if no runners
      * @param player the player to check nearby runners of
+     * @return the closest runner to the specified player (not self), or null if no runners
      */
     @Nullable
     public Player getClosestRunner(@NotNull Player player) {
@@ -608,8 +609,8 @@ public class TagManager implements Listener {
     }
 
     /**
-     * @return the closest player to the specified player (not self), or null if list has no other players
      * @param player the player to check nearby players of
+     * @return the closest player to the specified player (not self), or null if list has no other players
      */
     @Nullable
     private Player getClosestPlayer(@NotNull Player player, @NotNull List<Player> players) {

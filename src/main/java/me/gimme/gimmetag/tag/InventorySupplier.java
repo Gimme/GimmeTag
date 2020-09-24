@@ -9,12 +9,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.Objects;
 
 public abstract class InventorySupplier {
     /**
      * Sets the inventory of the specified player to the starting state of the specified role.
+     *
      * @param player the player to set the inventory for
      * @param role   the role to get the starting inventory state of
      */

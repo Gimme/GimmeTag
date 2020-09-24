@@ -48,8 +48,8 @@ class GameplayState {
     }
 
     /**
-     * @return the current state of the specified player
      * @param player the player to get the current state of
+     * @return the current state of the specified player
      */
     static GameplayState of(@NotNull Player player) {
         return new GameplayState(player.getDisplayName(), player.getGameMode(), player.getInventory().getContents(),
