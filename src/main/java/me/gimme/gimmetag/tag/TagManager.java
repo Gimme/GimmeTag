@@ -69,6 +69,12 @@ public class TagManager implements Listener {
         stop(false);
     }
 
+    /**
+     * Marks the specified player with priority to become hunter or runner for the next round.
+     *
+     * @param player the player to mark priority for
+     * @param hunter if the player should be marked as hunter, else runner
+     */
     public void setDesiredHunter(@NotNull Player player, boolean hunter) {
         Role role;
         if (hunter) {
@@ -93,6 +99,13 @@ public class TagManager implements Listener {
         return activeRound;
     }
 
+    /**
+     * Starts a new round of tag with randomly selected hunters.
+     *
+     * @param sleepSeconds    the delay in seconds before the hunters can start chasing
+     * @param numberOfHunters the amount of hunters to randomly select
+     * @return if a new round of tag was successfully started
+     */
     public boolean start(int sleepSeconds, int numberOfHunters) {
         if (server.getOnlinePlayers().size() < numberOfHunters) {
             Bukkit.getLogger().warning("Not enough players online");
@@ -123,6 +136,13 @@ public class TagManager implements Listener {
         return start(hunters, sleepSeconds);
     }
 
+    /**
+     * Starts a new round of tag with selected hunters.
+     *
+     * @param chosenHunters the players that should start has hunters
+     * @param sleepSeconds  the delay in seconds before the hunters can start chasing
+     * @return if a new round of tag was successfully started
+     */
     private boolean start(@NotNull Set<UUID> chosenHunters, int sleepSeconds) {
         TagStartEvent event = new TagStartEvent();
         Bukkit.getPluginManager().callEvent(event);
@@ -218,6 +238,12 @@ public class TagManager implements Listener {
         return true;
     }
 
+    /**
+     * Stops the current round of tag.
+     *
+     * @param printScores if the scores of the round should be broadcast in chat
+     * @return if an active round was successfully stopped
+     */
     public boolean stop(boolean printScores) {
         if (!activeRound) return false;
 
@@ -252,6 +278,14 @@ public class TagManager implements Listener {
         return true;
     }
 
+    /**
+     * Makes the specified hunter tag the specified runner.
+     * <p>
+     * The players will swap roles and have their inventories reset to the starting state of their new roles.
+     *
+     * @param runner the player that was tagged
+     * @param hunter the player that tagged the runner
+     */
     private void tag(@NotNull Player runner, @NotNull Player hunter) {
         PlayerTaggedEvent event = new PlayerTaggedEvent(runner, hunter);
         Bukkit.getPluginManager().callEvent(event);
@@ -344,6 +378,12 @@ public class TagManager implements Listener {
         Bukkit.getPluginManager().callEvent(new PlayerRoleSetEvent(player, role));
     }
 
+    /**
+     * Apply the starting state of the specified player based on the role.
+     *
+     * @param player the player to apply the state on
+     * @param role   the role to get the starting state from
+     */
     private void applyStartingPlayerState(@NotNull Player player, @NotNull Role role) {
         // Add role color to name
         player.setDisplayName(role.playerDisplayName(player));
@@ -361,10 +401,20 @@ public class TagManager implements Listener {
         }
     }
 
+    /**
+     * Stores the gameplay state of the specified player, including gamemode, inventory and xp.
+     *
+     * @param player the player to store the gameplay state of
+     */
     private void storeGameplayState(@NotNull Player player) {
         previousStateByPlayer.put(player.getUniqueId(), GameplayState.of(player));
     }
 
+    /**
+     * Restores the stored gameplay state of the specified player, including gamemode, inventory and xp.
+     *
+     * @param player the player to restore the gameplay state of
+     */
     private void restoreGameplayState(@NotNull Player player) {
         GameplayState state = previousStateByPlayer.get(player.getUniqueId());
 
@@ -519,6 +569,9 @@ public class TagManager implements Listener {
         if (logoutItems != null) player.getInventory().setContents(logoutItems);
     }
 
+    /**
+     * Clears inventory if in the middle of a round and remembers it for if they return.
+     */
     @EventHandler(priority = EventPriority.MONITOR)
     private void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -526,12 +579,12 @@ public class TagManager implements Listener {
         desiredHunters.remove(uuid);
 
         Role role = getRole(player);
-        // Clear inventory if in the middle of a round
+        // If in the middle of a round
         if (role != null) {
             PlayerInventory inventory = player.getInventory();
             logoutItemsByPlayer.put(uuid, inventory.getContents());
             logoutRoleByPlayer.put(uuid, role);
-            setRole(player, null); // Also clears inventory
+            setRole(player, null); // Clears inventory
         }
     }
 

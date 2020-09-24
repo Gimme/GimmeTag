@@ -20,6 +20,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Keeps and displays the scores of players in an active round of tag.
+ */
 class TagScoreboard implements Listener {
 
     private static final String OBJECTIVE_NAME = "tag-game";
@@ -62,16 +65,29 @@ class TagScoreboard implements Listener {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
 
+    /**
+     * Adds the specified player to the hunter team.
+     *
+     * @param player the player to add to the hunter team
+     */
     void setHunter(@NotNull Player player) {
         initPlayer(player);
         huntersTeam.addEntry(entry(player)); // Automatically removes from any current team
     }
 
+    /**
+     * Adds the specified player to the runner team.
+     *
+     * @param player the player to add to the runner team
+     */
     void setRunner(@NotNull Player player) {
         initPlayer(player);
         runnersTeam.addEntry(entry(player)); // Automatically removes from any current team
     }
 
+    /**
+     * Resets all scores and teams.
+     */
     void reset() {
         scores.clear();
         scoreboard.getEntries().forEach(e -> scoreboard.resetScores(e)); // TODO: might be unnecessary because scores are set to 0 in initPlayer
@@ -79,6 +95,12 @@ class TagScoreboard implements Listener {
         runnersTeam.getEntries().forEach(e -> runnersTeam.removeEntry(e));
     }
 
+    /**
+     * Adds the specified amount of points to the specified player's score.
+     *
+     * @param player the player to give the points to
+     * @param points the points to give to the player
+     */
     void addPoints(@NotNull Player player, int points) {
         int score = scores.merge(player.getUniqueId(), points, Integer::sum);
 
@@ -91,6 +113,9 @@ class TagScoreboard implements Listener {
         objective.getScore(entry(player)).setScore(floorLevel);
     }
 
+    /**
+     * Broadcasts the current scores to the chat.
+     */
     void printScores() {
         TableBuilder tableBuilder = new ChatTableBuilder()
                 .setEllipsize(true)

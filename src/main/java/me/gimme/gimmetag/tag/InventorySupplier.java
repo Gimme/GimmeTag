@@ -2,9 +2,6 @@ package me.gimme.gimmetag.tag;
 
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.item.CustomItems;
-import me.gimme.gimmetag.item.items.HunterCompass;
-import me.gimme.gimmetag.item.items.InvisPotion;
-import me.gimme.gimmetag.item.items.SwapperBall;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,6 +13,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class InventorySupplier {
+    /**
+     * Sets the inventory of the specified player to the starting state of the specified role.
+     * @param player the player to set the inventory for
+     * @param role   the role to get the starting inventory state of
+     */
     static void setInventory(@NotNull Player player, @NotNull Role role) {
         player.getInventory().clear();
         if (Role.HUNTER.equals(role)) setHunterInventory(player.getInventory());
