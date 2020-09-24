@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -45,6 +46,7 @@ public class SwapperBall extends CustomItem {
         meta.setDisplayName(DISPLAY_NAME);
         meta.setLore(LORE);
         meta.addEnchant(Enchantment.LOYALTY, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         setItemMeta(meta);
 
         Plugin plugin = GimmeTag.getPlugin();

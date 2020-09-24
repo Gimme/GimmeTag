@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -45,9 +46,11 @@ public class SpeedBoost extends CustomItem {
         long seconds = Math.round(Config.SPEED_BOOST_DURATION.getValue().doubleValue());
 
         ItemMeta meta = Objects.requireNonNull(getItemMeta());
-        meta.setDisplayName(DISPLAY_NAME + " " + ChatColor.GRAY + ChatColor.ITALIC + "(" + seconds + "s)");
+        meta.setDisplayName(DISPLAY_NAME + " " + Config.SPEED_BOOST_LEVEL.getValue() + " "
+                + ChatColor.GRAY + ChatColor.ITALIC + "(" + seconds + "s)");
         meta.getPersistentDataContainer().set(TAG_KEY, PersistentDataType.STRING, "");
-        meta.addEnchant(Enchantment.SOUL_SPEED, Config.SPEED_BOOST_LEVEL.getValue(), true);
+        meta.addEnchant(Enchantment.SOUL_SPEED, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         setItemMeta(meta);
 
         if (!registeredEvents) {
@@ -91,7 +94,8 @@ public class SpeedBoost extends CustomItem {
             ItemStack item = event.getItem();
             if (item == null) return;
             if (!item.getType().equals(MATERIAL)) return;
-            if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) return;
+            if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)))
+                return;
 
             Block clickedBlock = event.getClickedBlock();
             if (clickedBlock != null && clickedBlock.getType().isInteractable()) return;

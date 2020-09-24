@@ -15,6 +15,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,7 +50,8 @@ public class HunterCompass extends CustomItem {
 
         ItemMeta meta = Objects.requireNonNull(getItemMeta());
         meta.getPersistentDataContainer().set(TAG_KEY, PersistentDataType.STRING, UUID.randomUUID().toString());
-        meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+        meta.addEnchant(Enchantment.LUCK, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         setItemMeta(meta);
 
         clearTargetingTask(this);
