@@ -1,0 +1,68 @@
+# If the food level should not go down during a round.
+disable-hunger: true
+
+# If players should be able to push each other (damage is still disabled)
+enable-pvp: false
+
+
+# Sleep duration after being tagged (in seconds).
+tag-sleep-time: 30
+
+# Distance a hunter needs to be within of a player death for it to count as a tag event.
+tag-death-distance: 20
+
+
+
+# ---------- SCORING ----------
+
+scoring:
+  period: 1
+  points-per-tick: 1
+  points-per-level: 100
+  points-on-tag: 500
+  points-on-tagged: -0
+  distance-from-hunter-to-get-points: 40
+
+
+
+# ---------- ITEMS ----------
+
+hunter:
+  leather-color: 0xFF0000
+  items:
+    hunter_compass: 1
+    speed_boost: 3
+    hunter_bow: 1
+    arrow: 1
+
+runner:
+  leather-color: 0x0000FF
+  items:
+    swapper_ball: 1
+    egg: 8
+    chorus_fruit: 2
+    invis_potion: 1
+    speed_boost: 1
+
+
+
+# ---------- CUSTOM ITEMS ----------
+
+custom-item:
+  swapper-ball:
+    # Seconds until the item returns to inventory or -1 to disable
+    cooldown: 30.0
+    allow-hunter-swap: false
+
+  invis-potion:
+    duration: 10
+
+  speed-boost:
+    duration: 5
+    level: 1
+
+
+enable-knockback:
+  - snowball
+  - egg
+  - fishing_hook

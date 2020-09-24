@@ -1,0 +1,24 @@
+name: ${project.name}
+version: ${project.version}
+main: ${project.groupId}.${project.artifactId}
+api-version: 1.13
+authors: [Gimme]
+description: ${project.description}
+
+commands:
+  tag:
+    aliases: t
+    description: All tag commands
+    usage: "Unknown command. Type \"/tag help\" for help."
+    permission: gimmetag.tag.*
+
+permissions:
+  gimmetag.*:
+    description: Wildcard permission
+    default: op
+    children:
+      gimmetag.tag.*: true
+
+  gimmetag.tag.*:
+    description: Can use tag commands
+    default: true
