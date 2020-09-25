@@ -107,11 +107,12 @@ public class TagManager implements Listener {
     /**
      * Starts a new round of tag with randomly selected hunters.
      *
+     * @param pointsCapacity  the amount of points required to win
      * @param sleepSeconds    the delay in seconds before the hunters can start chasing
      * @param numberOfHunters the amount of hunters to randomly select
      * @return if a new round of tag was successfully started
      */
-    public boolean start(int sleepSeconds, int numberOfHunters) {
+    public boolean start(int pointsCapacity, int sleepSeconds, int numberOfHunters) {
         if (server.getOnlinePlayers().size() < numberOfHunters) {
             Bukkit.getLogger().warning("Not enough players online");
             return false;
@@ -138,17 +139,18 @@ public class TagManager implements Listener {
             hunters.addAll(remainingPlayers.subList(0, missingHunters));
         }
 
-        return start(hunters, sleepSeconds);
+        return start(pointsCapacity, sleepSeconds, hunters);
     }
 
     /**
      * Starts a new round of tag with selected hunters.
      *
-     * @param chosenHunters the players that should start has hunters
-     * @param sleepSeconds  the delay in seconds before the hunters can start chasing
+     * @param pointsCapacity the amount of points required to win
+     * @param sleepSeconds   the delay in seconds before the hunters can start chasing
+     * @param chosenHunters  the players that should start has hunters
      * @return if a new round of tag was successfully started
      */
-    private boolean start(@NotNull Set<UUID> chosenHunters, int sleepSeconds) {
+    private boolean start(int pointsCapacity, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
         TagStartEvent event = new TagStartEvent();
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
@@ -221,6 +223,8 @@ public class TagManager implements Listener {
             }
         }.start();
 
+        tagScoreboard.setPointsCapacity(pointsCapacity);
+
         pointsTicker = new BukkitRunnable() {
             @Override
             public void run() {
@@ -237,6 +241,8 @@ public class TagManager implements Listener {
 
                     tagScoreboard.addPoints(runner, pointsPerTick);
                 }
+
+                if (tagScoreboard.getWinner() != null) stop(true);
             }
         };
         pointsTicker.runTaskTimer(plugin, Config.SCORING_PERIOD.getValue(), Config.SCORING_PERIOD.getValue());
@@ -252,9 +258,11 @@ public class TagManager implements Listener {
      */
     public boolean stop(boolean printScores) {
         if (!activeRound) return false;
-
         activeRound = false;
-        server.broadcastMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "Tag round finished");
+
+        broadcastGameOverTitle(tagScoreboard.getWinner());
+        // Display the final scoreboard
+        if (printScores) tagScoreboard.printScores();
 
         // Clear active countdown tasks
         for (BukkitRunnable task : countdownTasks.values()) {
@@ -273,15 +281,40 @@ public class TagManager implements Listener {
             pointsTicker = null;
         }
 
-        // Display the final scoreboard
-        if (printScores) tagScoreboard.printScores();
-
         clearRoles();
         logoutItemsByPlayer.clear();
         logoutRoleByPlayer.clear();
         tagScoreboard.reset();
 
         return true;
+    }
+
+    /**
+     * Sends a game over title message to all players showing who won the round.
+     *
+     * @param winner the player who won the round
+     */
+    private void broadcastGameOverTitle(@Nullable Player winner) {
+        roleByPlayer.keySet().stream()
+                .map(uuid -> server.getPlayer(uuid))
+                .filter(Objects::nonNull)
+                .forEach(p -> {
+                    if (winner != null) {
+                        p.sendTitle(
+                                (p.equals(winner) ? ChatColor.GREEN : ChatColor.RED) + "GAME OVER",
+                                winner.getDisplayName() + ChatColor.YELLOW + " won",
+                                0,
+                                60,
+                                30);
+                    } else {
+                        p.sendTitle(
+                                ChatColor.YELLOW + "GAME OVER",
+                                "",
+                                0,
+                                60,
+                                30);
+                    }
+                });
     }
 
     /**

@@ -14,11 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Keeps and displays the scores of players in an active round of tag.
@@ -43,6 +41,7 @@ class TagScoreboard implements Listener {
     private Team runnersTeam;
 
     private Map<UUID, Integer> scores = new HashMap<>();
+    private int pointsCapacity = 100;
 
     TagScoreboard(@NotNull Server server) {
         this.server = server;
@@ -63,6 +62,20 @@ class TagScoreboard implements Listener {
 
         objective = scoreboard.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA, OBJECTIVE_DISPLAyNAME, RenderType.INTEGER);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+    }
+
+    /**
+     * @return the player with the most points if above the capacity, else null (no winner yet)
+     */
+    @Nullable
+    Player getWinner() {
+        if (scores.size() == 0) return null;
+
+        Map.Entry<UUID, Integer> max = Collections.max(scores.entrySet(), Map.Entry.comparingByValue());
+
+        if (max.getValue() < pointsCapacity) return null;
+
+        return server.getPlayer(max.getKey());
     }
 
     /**
@@ -131,6 +144,10 @@ class TagScoreboard implements Listener {
         }
 
         server.broadcastMessage(tableBuilder.build());
+    }
+
+    void setPointsCapacity(int pointsCapacity) {
+        this.pointsCapacity = pointsCapacity;
     }
 
     private void initPlayer(@NotNull Player player) {
