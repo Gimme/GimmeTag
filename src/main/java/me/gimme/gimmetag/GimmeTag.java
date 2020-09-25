@@ -2,10 +2,14 @@ package me.gimme.gimmetag;
 
 import me.gimme.gimmecore.command.CommandManager;
 import me.gimme.gimmetag.command.commands.*;
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
+import me.gimme.gimmetag.item.ItemManager;
+import me.gimme.gimmetag.item.items.*;
 import me.gimme.gimmetag.tag.TagManager;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +19,7 @@ public final class GimmeTag extends JavaPlugin {
     public static final String TAG_COMMAND = "tag";
 
     private CommandManager commandManager;
+    private ItemManager itemManager;
     private TagManager tagManager;
 
     public TagManager getTagManager() {
@@ -28,10 +33,12 @@ public final class GimmeTag extends JavaPlugin {
         saveDefaultConfig();
 
         commandManager = new CommandManager(this);
-        tagManager = new TagManager(this);
+        itemManager = new ItemManager(this);
+        tagManager = new TagManager(this, itemManager);
 
         registerCommands();
         registerEvents();
+        registerCustomItems();
     }
 
     @Override
@@ -55,6 +62,30 @@ public final class GimmeTag extends JavaPlugin {
         registerEvents(new EnableProjectileKnockback(() -> tagManager.isActiveRound()));
     }
 
+    private void registerCustomItems() {
+        ConfigurationSection speedBoostSection = Config.SPEED_BOOSTS.getValue();
+        for (String speedBoostId : speedBoostSection.getKeys(false)) {
+            AbilityItemConfig itemConfig = new AbilityItemConfig(speedBoostSection, speedBoostId);
+            itemManager.registerItem(new SpeedBoost(
+                    speedBoostId,
+                    itemConfig.getCooldown().doubleValue(),
+                    itemConfig.isConsumable(),
+                    itemConfig.getDuration().doubleValue(),
+                    itemConfig.getLevel()
+            ));
+        }
+        itemManager.registerItem(new HunterCompass("hunter_compass", this));
+        itemManager.registerItem(new SwapperBall(
+                Config.SWAPPER_BALL.getCooldown().doubleValue(),
+                Config.SWAPPER_BALL.isConsumable(),
+                Config.SWAPPER_ALLOW_HUNTER_SWAP.getValue(),
+                this,
+                tagManager
+        ));
+        itemManager.registerItem(new HunterBow());
+        itemManager.registerItem(new InvisPotion(Config.INVIS_POTION_DURATION.getValue().doubleValue()));
+    }
+
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {
         commandManager.register(command);
     }
@@ -65,6 +96,7 @@ public final class GimmeTag extends JavaPlugin {
 
 
     private static GimmeTag instance;
+
     public static GimmeTag getPlugin() {
         return instance;
     }

@@ -34,16 +34,13 @@ public abstract class Config {
 
     private static final AbstractConfig<ConfigurationSection> CUSTOM_ITEM = new ValueConfig<>("custom-item", ConfigurationSection.class);
 
-    private static final AbstractConfig<ConfigurationSection> SWAPPER_BALL = new ValueConfig<>(CUSTOM_ITEM, "swapper-ball", ConfigurationSection.class);
-    public static final AbstractConfig<Number> SWAPPER_BALL_COOLDOWN = new ValueConfig<>(SWAPPER_BALL, "cooldown", Number.class);
+    public static final AbilityItemConfig SWAPPER_BALL = new AbilityItemConfig(CUSTOM_ITEM, "swapper-ball");
     public static final AbstractConfig<Boolean> SWAPPER_ALLOW_HUNTER_SWAP = new ValueConfig<>(SWAPPER_BALL, "allow-hunter-swap", Boolean.class);
 
     private static final AbstractConfig<ConfigurationSection> INVIS_POTION = new ValueConfig<>(CUSTOM_ITEM, "invis-potion", ConfigurationSection.class);
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration", Number.class);
 
-    private static final AbstractConfig<ConfigurationSection> SPEED_BOOST = new ValueConfig<>(CUSTOM_ITEM, "speed-boost", ConfigurationSection.class);
-    public static final AbstractConfig<Number> SPEED_BOOST_DURATION = new ValueConfig<>(SPEED_BOOST, "duration", Number.class);
-    public static final AbstractConfig<Integer> SPEED_BOOST_LEVEL = new ValueConfig<>(SPEED_BOOST, "level", Integer.class);
+    public static final AbstractConfig<ConfigurationSection> SPEED_BOOSTS = new ValueConfig<>(CUSTOM_ITEM, "speed-boost", ConfigurationSection.class);
 
     public static final AbstractConfig<Set<String>> ENABLE_KNOCKBACK = new SetConfig<>("enable-knockback");
 }

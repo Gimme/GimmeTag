@@ -5,34 +5,36 @@ import me.gimme.gimmetag.item.CustomItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 public class InvisPotion extends CustomItem {
 
-    private static final String NAME = "invis_potion";
-    private static final Material MATERIAL = Material.POTION;
-    private static final PotionEffectType POTION_EFFECT_TYPE = PotionEffectType.INVISIBILITY;
-    private static final String DISPLAY_NAME = "Potion of Invisibility";
-    private static final Color COLOR = Color.fromRGB(0x7f8392); // Invis potion color
+    private static final Color COLOR = Color.fromRGB(0x7f8392); // Invisibility potion color
 
-    public InvisPotion() {
-        this(1);
+    private int durationTicks;
+
+    public InvisPotion(double duration) {
+        super(
+                "invis_potion",
+                "Potion of Invisibility",
+                Material.POTION,
+                false
+        );
+
+        this.durationTicks = (int) Math.round(duration * 20);
     }
 
-    public InvisPotion(int amount) {
-        super(NAME, MATERIAL, amount);
+    @Override
+    protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
+        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY+ " (" + formatSeconds(durationTicks) + ")");
 
-        long seconds = Math.round(Config.INVIS_POTION_DURATION.getValue().doubleValue());
-        int ticks = Math.round(Config.INVIS_POTION_DURATION.getValue().floatValue() * 20);
-
-        PotionMeta potionMeta = (PotionMeta) Objects.requireNonNull(getItemMeta());
-        potionMeta.setDisplayName(DISPLAY_NAME + " " + ChatColor.GRAY + ChatColor.ITALIC + "(" + seconds + "s)");
+        PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.setColor(COLOR);
-        potionMeta.addCustomEffect(new PotionEffect(POTION_EFFECT_TYPE, ticks, 0), true);
-        setItemMeta(potionMeta);
+        potionMeta.addCustomEffect(new PotionEffect(PotionEffectType.INVISIBILITY, durationTicks, 0), true);
     }
 }

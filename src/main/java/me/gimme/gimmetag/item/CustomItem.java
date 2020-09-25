@@ -1,23 +1,96 @@
 package me.gimme.gimmetag.item;
 
+import me.gimme.gimmetag.GimmeTag;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class CustomItem extends ItemStack {
-    private String name;
+import java.text.DecimalFormat;
+import java.util.Objects;
 
-    public CustomItem(@NotNull String name, @NotNull Material type) {
-        this(name, type, 1);
+public abstract class CustomItem {
+
+    private static final NamespacedKey ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "CustomItem");
+    private static final PersistentDataType<String, String> ID_DATA_TYPE = PersistentDataType.STRING;
+
+    private String id;
+    private String displayName;
+    private Material type;
+    private boolean glowing;
+
+    public CustomItem(@NotNull String name, @NotNull Material type, boolean glowing) {
+        this(
+                ChatColor.stripColor(name).toLowerCase().replaceAll(" ", "_"),
+                name,
+                type,
+                glowing);
     }
 
-    public CustomItem(@NotNull String name, @NotNull Material type, int amount) {
-        super(type, amount);
-        this.name = name;
+    public CustomItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, boolean glowing) {
+        this.id = id;
+        this.displayName = displayName;
+        this.type = type;
+        this.glowing = glowing;
     }
 
     @NotNull
-    public String getName() {
-        return name;
+    public ItemStack createItemStack() {
+        return createItemStack(1);
+    }
+
+    @NotNull
+    public ItemStack createItemStack(int amount) {
+        ItemStack itemStack = new ItemStack(type, amount);
+
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        Objects.requireNonNull(itemMeta);
+
+        itemMeta.getPersistentDataContainer().set(ID_KEY, ID_DATA_TYPE, id);
+        itemMeta.setDisplayName(displayName);
+
+        if (glowing) {
+            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
+        onCreate(itemStack, itemMeta);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
+    }
+
+    protected abstract void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta);
+
+    @NotNull
+    public String getId() {
+        return id;
+    }
+
+
+    /**
+     * @param itemStack the ItemStack to get the custom item ID of
+     * @return the custom item ID of the specified ItemStack if it is a custom item, else null
+     */
+    @Nullable
+    public static String getCustomItemId(@NotNull ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) return null;
+
+        String itemId = itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
+        if (itemId == null) return null;
+
+        return itemId;
+    }
+
+    private static DecimalFormat df = new DecimalFormat("#.##");
+    protected static String formatSeconds(int ticks) {
+        return df.format(ticks / 20d) + "s";
     }
 }

@@ -1,7 +1,7 @@
 package me.gimme.gimmetag.tag;
 
 import me.gimme.gimmetag.config.Config;
-import me.gimme.gimmetag.item.CustomItems;
+import me.gimme.gimmetag.item.ItemManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,20 +13,27 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class InventorySupplier {
+public class InventorySupplier {
+
+    private ItemManager itemManager;
+
+    public InventorySupplier(@NotNull ItemManager itemManager) {
+        this.itemManager = itemManager;
+    }
+
     /**
      * Sets the inventory of the specified player to the starting state of the specified role.
      *
-     * @param player the player to set the inventory for
-     * @param role   the role to get the starting inventory state of
+     * @param player      the player to set the inventory for
+     * @param role        the role to get the starting inventory state of
      */
-    static void setInventory(@NotNull Player player, @NotNull Role role) {
+    void setInventory(@NotNull Player player, @NotNull Role role) {
         player.getInventory().clear();
         if (Role.HUNTER.equals(role)) setHunterInventory(player.getInventory());
         if (Role.RUNNER.equals(role)) setRunnerInventory(player.getInventory());
     }
 
-    private static void setHunterInventory(@NotNull PlayerInventory inventory) {
+    private void setHunterInventory(@NotNull PlayerInventory inventory) {
         addItems(inventory, Config.HUNTER_ITEMS.getValue());
 
         Color c = Color.fromRGB(Config.HUNTER_LEATHER_COLOR.getValue());
@@ -36,7 +43,7 @@ public abstract class InventorySupplier {
         inventory.setBoots(getColoredLeatherArmor(ArmorSlot.FEET, c));
     }
 
-    private static void setRunnerInventory(@NotNull PlayerInventory inventory) {
+    private void setRunnerInventory(@NotNull PlayerInventory inventory) {
         addItems(inventory, Config.RUNNER_ITEMS.getValue());
     }
 
@@ -67,14 +74,13 @@ public abstract class InventorySupplier {
         return armor;
     }
 
-    private static void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items) {
-        items.forEach((k, v) -> {
-            int amount = v;
+    private void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items) {
+        items.forEach((itemId, amount) -> {
             // First, check if valid custom item
-            ItemStack item = CustomItems.getCustomItem(k, amount); //TODO
+            ItemStack item = itemManager.createItemStack(itemId, amount);
             if (item == null) {
                 // Then, check if valid normal item
-                Material material = Material.matchMaterial(k);
+                Material material = Material.matchMaterial(itemId);
                 if (material != null) item = new ItemStack(material, amount);
             }
             // Add to inventory if valid item

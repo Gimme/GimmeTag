@@ -50,7 +50,6 @@ runner:
 
 custom-item:
   swapper-ball:
-    # Seconds until the item returns to inventory or -1 to disable
     cooldown: 30.0
     allow-hunter-swap: false
 
@@ -58,8 +57,16 @@ custom-item:
     duration: 10
 
   speed-boost:
-    duration: 5
-    level: 1
+    speed-boost1:
+      cooldown: 10.0
+      consumable: false
+      duration: 5
+      level: 1
+    speed-boost2:
+      cooldown: 0
+      consumable: true
+      duration: 3
+      level: 3
 
 
 enable-knockback:

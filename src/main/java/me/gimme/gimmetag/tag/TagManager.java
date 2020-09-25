@@ -4,6 +4,7 @@ import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.events.PlayerRoleSetEvent;
 import me.gimme.gimmetag.events.PlayerTaggedEvent;
 import me.gimme.gimmetag.events.TagStartEvent;
+import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -38,6 +39,8 @@ public class TagManager implements Listener {
     private Plugin plugin;
     private Server server;
     private TagScoreboard tagScoreboard;
+    private ItemManager itemManager;
+    private InventorySupplier inventorySupplier;
 
     private Set<UUID> desiredHunters = new HashSet<>(); // Players that want to be hunters next round
     private Map<UUID, GameplayState> previousStateByPlayer = new HashMap<>(); // Stores previous states during round
@@ -57,9 +60,11 @@ public class TagManager implements Listener {
     // If there is an active round of tag
     private boolean activeRound = false;
 
-    public TagManager(@NotNull Plugin plugin) {
+    public TagManager(@NotNull Plugin plugin, @NotNull ItemManager itemManager) {
         this.plugin = plugin;
         this.server = plugin.getServer();
+        this.itemManager = itemManager;
+        this.inventorySupplier = new InventorySupplier(itemManager);
 
         tagScoreboard = new TagScoreboard(server);
         server.getPluginManager().registerEvents(tagScoreboard, plugin);
@@ -391,7 +396,7 @@ public class TagManager implements Listener {
         // Set adventure game mode
         player.setGameMode(GameMode.ADVENTURE);
         // Clear inventory and then add items depending on role
-        InventorySupplier.setInventory(player, role);
+        inventorySupplier.setInventory(player, role);
         // Fill food level
         player.setFoodLevel(20);
         // Clear XP
