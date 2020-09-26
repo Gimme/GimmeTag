@@ -41,7 +41,7 @@ class TagScoreboard implements Listener {
     private Team runnersTeam;
 
     private Map<UUID, Integer> scores = new HashMap<>();
-    private int pointsToWin = 100;
+    private int levelsToWin = Config.SCORING_LEVELS_TO_WIN.getValue();
 
     TagScoreboard(@NotNull Server server) {
         this.server = server;
@@ -73,8 +73,7 @@ class TagScoreboard implements Listener {
 
         Map.Entry<UUID, Integer> max = Collections.max(scores.entrySet(), Map.Entry.comparingByValue());
 
-        if (max.getValue() < pointsToWin) return null;
-
+        if (getLevel(max.getValue()) < levelsToWin) return null;
         return server.getPlayer(max.getKey());
     }
 
@@ -146,8 +145,8 @@ class TagScoreboard implements Listener {
         server.broadcastMessage(tableBuilder.build());
     }
 
-    void setPointsToWin(int pointsToWin) {
-        this.pointsToWin = pointsToWin;
+    void setLevelsToWin(int levelsToWin) {
+        this.levelsToWin = levelsToWin;
     }
 
     private void initPlayer(@NotNull Player player) {

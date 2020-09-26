@@ -16,9 +16,10 @@ public abstract class Config {
 
 
     private static final AbstractConfig<ConfigurationSection> SCORING = new ValueConfig<>("scoring", ConfigurationSection.class);
+    public static final AbstractConfig<Integer> SCORING_LEVELS_TO_WIN = new ValueConfig<>(SCORING, "levels-to-win", Integer.class);
+    public static final AbstractConfig<Integer> SCORING_POINTS_PER_LEVEL = new ValueConfig<>(SCORING, "points-per-level", Integer.class);
     public static final AbstractConfig<Integer> SCORING_PERIOD = new ValueConfig<>(SCORING, "period", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_PER_TICK = new ValueConfig<>(SCORING, "points-per-tick", Integer.class);
-    public static final AbstractConfig<Integer> SCORING_POINTS_PER_LEVEL = new ValueConfig<>(SCORING, "points-per-level", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_ON_TAG = new ValueConfig<>(SCORING, "points-on-tag", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_ON_TAGGED = new ValueConfig<>(SCORING, "points-on-tagged", Integer.class);
     public static final AbstractConfig<Integer> SCORING_DISTANCE_FROM_HUNTER_TO_GET_POINTS = new ValueConfig<>(SCORING, "distance-from-hunter-to-get-points", Integer.class);

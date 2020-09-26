@@ -107,12 +107,12 @@ public class TagManager implements Listener {
     /**
      * Starts a new round of tag with randomly selected hunters.
      *
-     * @param pointsToWin     the amount of points required to win
+     * @param levelsToWin     the amount of levels required to win
      * @param sleepSeconds    the delay in seconds before the hunters can start chasing
      * @param numberOfHunters the amount of hunters to randomly select
      * @return if a new round of tag was successfully started
      */
-    public boolean start(int pointsToWin, int sleepSeconds, int numberOfHunters) {
+    public boolean start(int levelsToWin, int sleepSeconds, int numberOfHunters) {
         if (server.getOnlinePlayers().size() < numberOfHunters) {
             Bukkit.getLogger().warning("Not enough players online");
             return false;
@@ -139,18 +139,18 @@ public class TagManager implements Listener {
             hunters.addAll(remainingPlayers.subList(0, missingHunters));
         }
 
-        return start(pointsToWin, sleepSeconds, hunters);
+        return start(levelsToWin, sleepSeconds, hunters);
     }
 
     /**
      * Starts a new round of tag with selected hunters.
      *
-     * @param pointsToWin   the amount of points required to win
+     * @param levelsToWin   the amount of levels required to win
      * @param sleepSeconds  the delay in seconds before the hunters can start chasing
      * @param chosenHunters the players that should start has hunters
      * @return if a new round of tag was successfully started
      */
-    private boolean start(int pointsToWin, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
+    private boolean start(int levelsToWin, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
         TagStartEvent event = new TagStartEvent();
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
@@ -223,7 +223,7 @@ public class TagManager implements Listener {
             }
         }.start();
 
-        tagScoreboard.setPointsToWin(pointsToWin);
+        tagScoreboard.setLevelsToWin(levelsToWin);
 
         pointsTicker = new BukkitRunnable() {
             @Override

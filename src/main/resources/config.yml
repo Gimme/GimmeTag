@@ -30,12 +30,14 @@ tag-death-distance: -1
 # ---------- SCORING ----------
 
 scoring:
+  # Levels required to win the round (1 level equals the number of points defined below).
+  levels-to-win: 100
+  # Points per XP-level
+  points-per-level: 100
   # Server ticks between each score update tick
   period: 1
   # Points gained per score update tick
   points-per-tick: 1
-  # Points per XP-level
-  points-per-level: 100
   # Points gained for tagging another player
   points-on-tag: 0
   # Points gained for getting tagged by a hunter (can be negative for losing points)
