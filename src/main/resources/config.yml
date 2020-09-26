@@ -31,7 +31,7 @@ hunter:
   leather-color: 0xFF0000
   items:
     hunter_compass: 1
-    speed_boost: 3
+    hunter-speed-boost: 3
     hunter_bow: 1
     arrow: 1
 
@@ -42,7 +42,7 @@ runner:
     egg: 8
     chorus_fruit: 2
     invis_potion: 1
-    speed_boost: 1
+    runner-speed-boost: 1
 
 
 
@@ -57,16 +57,16 @@ custom-item:
     duration: 10
 
   speed-boost:
-    speed-boost1:
-      cooldown: 10.0
+    hunter-speed-boost:
+      cooldown: 0
+      consumable: true
+      duration: 1
+      level: 5
+    runner-speed-boost:
+      cooldown: 20.0
       consumable: false
       duration: 5
       level: 1
-    speed-boost2:
-      cooldown: 0
-      consumable: true
-      duration: 3
-      level: 3
 
 
 enable-knockback:
