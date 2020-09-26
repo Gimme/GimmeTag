@@ -62,6 +62,7 @@ public class HunterCompass extends AbilityItem {
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
         mute();
         itemMeta.getPersistentDataContainer().set(getIdKey(), PersistentDataType.STRING, UUID.randomUUID().toString());
+        itemStack.setItemMeta(itemMeta);
         clearTargetingTask(itemStack);
     }
 
