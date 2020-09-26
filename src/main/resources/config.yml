@@ -1,31 +1,51 @@
+# ---------- GENERAL ----------
+
 # If the food level should not go down during a round.
 disable-hunger: true
 
 # If players should be able to push each other (damage is still disabled)
 enable-pvp: false
 
+# Projectiles to enable knockback for.
+#
+# Snowballs and similar projectiles used to have a knockback effect when hitting players. This effect can be re-added
+# by including the projectile in the list below.
+enable-knockback:
+  - snowball
+  - egg
+  - fishing_hook
+
+
+
+# ---------- TAG ----------
 
 # Sleep duration after being tagged (in seconds).
-tag-sleep-time: 30
+tag-sleep-time: 20
 
 # Distance a hunter needs to be within of a player death for it to count as a tag event.
-tag-death-distance: 20
+tag-death-distance: -1
 
 
 
 # ---------- SCORING ----------
 
 scoring:
+  # Server ticks between each score update tick
   period: 1
+  # Points gained per score update tick
   points-per-tick: 1
+  # Points per XP-level
   points-per-level: 100
-  points-on-tag: 500
+  # Points gained for tagging another player
+  points-on-tag: 0
+  # Points gained for getting tagged by a hunter (can be negative for losing points)
   points-on-tagged: -0
+  # Range (in blocks) to be within of a (non-sleeping) hunter to gain points
   distance-from-hunter-to-get-points: 40
 
 
 
-# ---------- ITEMS ----------
+# ---------- INVENTORY ----------
 
 hunter:
   leather-color: 0xFF0000
@@ -67,9 +87,3 @@ custom-item:
       consumable: false
       duration: 5
       level: 1
-
-
-enable-knockback:
-  - snowball
-  - egg
-  - fishing_hook
