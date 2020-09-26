@@ -11,7 +11,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -23,30 +22,29 @@ public class SwapperBall extends AbilityItem {
 
     private static final Material MATERIAL = Material.SNOWBALL;
     private static final EntityType PROJECTILE_TYPE = EntityType.SNOWBALL; // Has to match the material above
+    private static final Class<? extends Projectile> PROJECTILE_CLASS = Snowball.class;
     private static final String DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Swapper Ball";
     private static final List<String> LORE = Collections.singletonList("Swap positions with a player");
 
     private boolean allowHunterSwap;
-    private boolean consumable;
     private TagManager tagManager;
+    private OnHitListener onHitListener = new OnHitListener();
 
     public SwapperBall(double cooldown, boolean consumable, boolean allowHunterSwap, @NotNull Plugin plugin,
                        @NotNull TagManager tagManager) {
         super(
-                ChatColor.LIGHT_PURPLE + "Swapper Ball",
+                DISPLAY_NAME,
                 MATERIAL,
                 true,
                 cooldown,
-                false,
+                consumable,
                 null
         );
 
-        this.consumable = consumable;
         this.allowHunterSwap = allowHunterSwap;
         this.tagManager = tagManager;
 
-        plugin.getServer().getPluginManager().registerEvents(
-                new OnHitListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(onHitListener, plugin);
     }
 
     @Override
@@ -57,9 +55,10 @@ public class SwapperBall extends AbilityItem {
 
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        // Re-add the thrown projectile to your inventory if not consumable
-        if (!consumable && !user.getGameMode().equals(GameMode.CREATIVE))
-            itemStack.setAmount(itemStack.getAmount() + 1);
+        user.setCooldown(itemStack.getType(), 1); // One tick of cooldown to disable the real launch
+
+        Projectile projectile = user.launchProjectile(PROJECTILE_CLASS);
+        onHitListener.onLaunch(projectile);
         return true;
     }
 
@@ -88,13 +87,6 @@ public class SwapperBall extends AbilityItem {
         SoundEffect.TELEPORT.play(player);
     }
 
-    private static boolean isSwapperBall(@NotNull ItemStack item) {
-        if (!item.getType().equals(MATERIAL)) return false;
-
-        String itemName = Objects.requireNonNull(item.getItemMeta()).getDisplayName();
-        return itemName.equals(DISPLAY_NAME);
-    }
-
 
     private class OnHitListener implements Listener {
 
@@ -103,29 +95,12 @@ public class SwapperBall extends AbilityItem {
         private LinkedMap<@NotNull UUID, @NotNull Long> launchedProjectiles = new LinkedMap<>();
 
         /**
-         * Registers launched projectiles (necessary to differentiate normal projectiles to special ones
-         * spawning from this item type), and returns the item to inventory after a delay.
+         * Registers launched projectiles.
+         * <p>
+         * This is necessary to differentiate normal projectiles to special ones, spawning from this item type,
+         * so that we don't do the swapping for normal items.
          */
-        @EventHandler(priority = EventPriority.MONITOR)
-        private void onLaunch(ProjectileLaunchEvent event) {
-            Projectile projectile = event.getEntity();
-
-            if (!projectile.getType().equals(PROJECTILE_TYPE)) return; // Not the right type of projectile
-            if (!(projectile.getShooter() instanceof Player)) return; // Not a player that launched the projectile
-
-            Player shooter = (Player) projectile.getShooter();
-
-            ItemStack item;
-            ItemStack mainHand = shooter.getInventory().getItemInMainHand();
-            ItemStack offHand = shooter.getInventory().getItemInOffHand();
-            if (mainHand.getType().equals(MATERIAL) && offHand.getType().equals(MATERIAL)) {
-                item = mainHand;
-            } else {
-                item = mainHand.getType().equals(MATERIAL) ? mainHand : offHand;
-            }
-
-            if (!isSwapperBall(item)) return;
-
+        private void onLaunch(Projectile projectile) {
             launchedProjectiles.put(projectile.getUniqueId(), System.currentTimeMillis());
             cleanUp();
         }
@@ -146,7 +121,7 @@ public class SwapperBall extends AbilityItem {
         }
 
         /**
-         * Detects hit.
+         * Detects hits.
          */
         @EventHandler(priority = EventPriority.MONITOR)
         private void onHit(ProjectileHitEvent event) {
