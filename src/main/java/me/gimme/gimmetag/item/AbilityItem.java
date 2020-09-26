@@ -9,6 +9,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class AbilityItem extends CustomItem {
@@ -45,9 +48,10 @@ public abstract class AbilityItem extends CustomItem {
         ItemStack itemStack = super.createItemStack(amount);
         if (cooldownTicks <= 0) return itemStack;
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        Objects.requireNonNull(itemMeta).setDisplayName(itemMeta.getDisplayName()
-                + ChatColor.RESET + ChatColor.GRAY + ChatColor.ITALIC + " [" + getCooldown() + " Cooldown]");
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
+        List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
+        lore.add(0, "" + ChatColor.GRAY + ChatColor.ITALIC + " [" + getCooldown() + " Cooldown]");
+        itemMeta.setLore(lore);
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
