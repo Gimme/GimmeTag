@@ -54,6 +54,7 @@ public abstract class AbilityItem extends CustomItem {
     }
 
     public void use(@NotNull ItemStack itemStack, @NotNull Player user) {
+        if (user.hasCooldown(itemStack.getType())) return;
         if (!onUse(itemStack, user)) return;
 
         if (consumable) itemStack.setAmount(itemStack.getAmount() - 1);
