@@ -230,10 +230,9 @@ public class TagManager implements Listener {
             public void run() {
                 int pointsPerTick = Config.SCORING_POINTS_PER_TICK.getValue();
                 double maxDistanceSquared = Math.pow(Config.SCORING_DISTANCE_FROM_HUNTER_TO_GET_POINTS.getValue(), 2);
-                List<Player> hunters = getOnlineHunters(false);
 
                 for (Player runner : getOnlineRunners()) {
-                    Player closestHunter = getClosestPlayer(runner, hunters);
+                    Player closestHunter = getClosestHunter(runner, false);
                     if (closestHunter == null) return; // No hunters
 
                     double distanceSquared = runner.getLocation().distanceSquared(closestHunter.getLocation());
