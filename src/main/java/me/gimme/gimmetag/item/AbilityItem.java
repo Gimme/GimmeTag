@@ -50,7 +50,7 @@ public abstract class AbilityItem extends CustomItem {
 
         ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
         List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
-        lore.add(0, "" + ChatColor.GRAY + ChatColor.ITALIC + " [" + getCooldown() + " Cooldown]");
+        lore.add(0, "" + ChatColor.GRAY + " " + getCooldown() + " Cooldown");
         itemMeta.setLore(lore);
 
         itemStack.setItemMeta(itemMeta);

@@ -24,7 +24,7 @@ public class SpeedBoost extends AbilityItem {
                 true,
                 cooldown,
                 consumable,
-                "Activated speed boost"
+                null
         );
 
         this.durationTicks = (int) Math.round(duration * 20);
