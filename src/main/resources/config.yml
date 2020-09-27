@@ -19,11 +19,11 @@ enable-knockback:
 
 # ---------- TAG ----------
 
-# Sleep duration after being tagged (in seconds).
-tag-sleep-time: 20
-
-# Distance a hunter needs to be within of a player death for it to count as a tag event.
-tag-death-distance: -1
+tag:
+  # Sleep duration after being tagged (in seconds).
+  sleep-time: 20
+  # Distance a hunter needs to be within of a player death for it to count as a tag event.
+  death-distance: -1
 
 
 
@@ -35,7 +35,7 @@ scoring:
   # Points per XP-level
   points-per-level: 100
   # Server ticks between each score update tick
-  period: 1
+  update-period: 1
   # Points gained per score update tick
   points-per-tick: 1
   # Points gained for tagging another player
@@ -68,7 +68,7 @@ runner:
 
 
 
-# ---------- CUSTOM ITEMS ----------
+# ---------- CUSTOM ITEM SETTINGS ----------
 
 custom-item:
   swapper_ball:
