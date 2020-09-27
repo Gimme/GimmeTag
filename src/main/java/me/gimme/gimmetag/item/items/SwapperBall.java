@@ -25,7 +25,7 @@ public class SwapperBall extends AbilityItem {
     private static final Class<? extends Projectile> PROJECTILE_CLASS = Snowball.class;
     private static final Sound LAUNCH_SOUND = Sound.ENTITY_WITCH_THROW;
     private static final String DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Swapper Ball";
-    private static final List<String> LORE = Collections.singletonList("Swap positions with a player");
+    private static final List<String> LORE = Collections.singletonList("Swap positions with the hit player");
 
     private boolean allowHunterSwap;
     private TagManager tagManager;

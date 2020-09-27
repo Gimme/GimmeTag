@@ -61,7 +61,7 @@ runner:
   leather-color: 0x0000FF
   items:
     swapper_ball: 1
-    egg: 8
+    egg: 5
     chorus_fruit: 3
     invis_potion: 1
     runner_speed_boost: 3
@@ -85,8 +85,8 @@ custom-item:
     runner_speed_boost:
       consumable: true
       cooldown: 5.0
-      duration: 1.0
-      level: 5
+      duration: 0.2
+      level: 50
 
   invis_potion:
     duration: 10.0
