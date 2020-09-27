@@ -167,36 +167,33 @@ public class TagManager implements Listener {
         for (UUID h : hunters) {
             Player hunter = server.getPlayer(h);
             if (hunter == null) continue;
-            applySleep(hunter, sleepSeconds);
-            new PlayerCountdownTimerTask(plugin, sleepSeconds, hunter,
-                    Role.HUNTER.getDisplayName(), "Waking up in",
-                    "Hunt!", "").start();
+            applySleep(hunter, sleepSeconds, Role.HUNTER.getDisplayName());
         }
-        for (UUID r : runners) {
-            Player runner = server.getPlayer(r);
-            if (runner == null) continue;
+        new CountdownTimerTask(plugin, sleepSeconds) {
+            @Override
+            protected void onCount() {
+                Function<Long, String> title = i -> "Hunters waking up in " + i + "s";
+                Function<Long, Boolean> shouldDisplay = i -> i > sleepSeconds - 3;
 
-            Function<Long, String> title = i -> "Hunters waking up in " + i + "s";
-            new CountdownTimerTask(plugin, sleepSeconds) {
-                @Override
-                protected void onCount() {
-                    if (!runner.isOnline()) {
-                        finish();
-                    } else if (getSeconds() <= sleepSeconds - 3) {
-                        runner.sendTitle(Role.RUNNER.getDisplayName(),
-                                title.apply(getSeconds()), 0, 0, 12);
-                        finish();
-                    } else {
-                        runner.sendTitle(Role.RUNNER.getDisplayName(),
-                                title.apply(getSeconds()), 0, 25, 10);
-                    }
-                }
+                runners.stream()
+                        .map(r -> server.getPlayer(r))
+                        .filter(Objects::nonNull)
+                        .filter(OfflinePlayer::isOnline)
+                        .forEach(p -> {
+                            if (shouldDisplay.apply(getSeconds())) {
+                                p.sendTitle(Role.RUNNER.getDisplayName(),
+                                        title.apply(getSeconds()), 0, 25, 10);
+                            } else {
+                                p.sendTitle(Role.RUNNER.getDisplayName(),
+                                        title.apply(getSeconds()), 0, 0, 12);
+                            }
+                        });
 
-                @Override
-                protected void onFinish() {
+                if (!shouldDisplay.apply(getSeconds())) {
+                    finish();
                 }
-            }.start();
-        }
+            }
+        }.start();
         new CountdownTimerTask(plugin, sleepSeconds) {
             @Override
             protected void onCount() {
@@ -332,11 +329,8 @@ public class TagManager implements Listener {
         setRole(runner, Role.HUNTER);
         setRole(hunter, Role.RUNNER);
 
-        int sleepTime = Config.TAG_SLEEP_TIME.getValue();
-        applySleep(runner, sleepTime);
-        new PlayerCountdownTimerTask(plugin, sleepTime, runner,
-                Role.HUNTER.getColor() + "Tagged!", "Waking up in",
-                "Hunt!", "").start();
+        int sleepSeconds = Config.TAG_SLEEP_TIME.getValue();
+        applySleep(runner, sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
 
         SoundEffect.TAG.play(hunter);
         SoundEffect.TAGGED.play(runner);
@@ -358,21 +352,9 @@ public class TagManager implements Listener {
      *
      * @param player  the player to apply the effects to
      * @param seconds the duration of the sleep in seconds
+     * @param title   the title of the "waking up in" message
      */
-    private void applySleep(@NotNull Player player, int seconds) {
-        int duration = seconds * 20;
-
-        player.addPotionEffects(Arrays.asList(
-                new PotionEffect(PotionEffectType.BLINDNESS, duration + 20, 1),
-                new PotionEffect(PotionEffectType.SLOW, duration, 1000), // Prevents moving
-                new PotionEffect(PotionEffectType.JUMP, duration, 129), // Prevents jumping
-                new PotionEffect(PotionEffectType.WATER_BREATHING, duration + 5 * 20, 0),
-                new PotionEffect(PotionEffectType.FIRE_RESISTANCE, duration + 5 * 20, 0),
-                new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 1000),
-                new PotionEffect(PotionEffectType.SLOW_FALLING, duration, 1),
-                new PotionEffect(PotionEffectType.GLOWING, duration, 1)
-        ));
-
+    private void applySleep(@NotNull Player player, int seconds, @NotNull String title) {
         BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -380,7 +362,43 @@ public class TagManager implements Listener {
             }
         };
         sleepingPlayers.put(player.getUniqueId(), task);
-        task.runTaskLater(plugin, duration);
+        task.runTaskLater(plugin, seconds * 20);
+
+        new PlayerCountdownTimerTask(plugin, seconds, player,
+                title, "Waking up in",
+                "Hunt!", "").start();
+
+        UUID id = UUID.randomUUID();
+        BukkitRunnable runnable = new BukkitRunnable() {
+            UUID playerId = player.getUniqueId();
+            int ticksLeft = seconds * 20;
+            int potionTicks = 2;
+
+            @Override
+            public void run() {
+                if (ticksLeft <= 0) {
+                    cancel();
+                    countdownTasks.remove(id);
+                }
+                ticksLeft--;
+
+                Player player = server.getPlayer(playerId);
+                if (player == null || !player.isOnline()) return;
+
+                player.addPotionEffects(Arrays.asList(
+                        new PotionEffect(PotionEffectType.BLINDNESS, potionTicks + 20, 1),
+                        new PotionEffect(PotionEffectType.SLOW, potionTicks, 1000), // Prevents moving
+                        new PotionEffect(PotionEffectType.JUMP, potionTicks, 200), // Prevents jumping
+                        new PotionEffect(PotionEffectType.WATER_BREATHING, potionTicks + 5 * 20, 0),
+                        new PotionEffect(PotionEffectType.FIRE_RESISTANCE, potionTicks + 5 * 20, 0),
+                        new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, potionTicks, 1000),
+                        new PotionEffect(PotionEffectType.SLOW_FALLING, potionTicks, 1),
+                        new PotionEffect(PotionEffectType.GLOWING, potionTicks, 1)
+                ));
+            }
+        };
+        countdownTasks.put(id, runnable);
+        runnable.runTaskTimer(plugin, 0, 1);
     }
 
     /**
