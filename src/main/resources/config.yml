@@ -73,6 +73,7 @@ runner:
 custom-item:
   swapper-ball:
     cooldown: 30.0
+    consumable: false
     allow-hunter-swap: false
 
   invis-potion:

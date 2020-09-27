@@ -66,6 +66,7 @@ public class ItemManager {
             if (abilityItem == null) return;
 
             abilityItem.use(item, event.getPlayer());
+            event.setCancelled(true);
         }
     }
 }
