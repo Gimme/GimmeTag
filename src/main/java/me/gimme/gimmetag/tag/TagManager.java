@@ -448,8 +448,8 @@ public class TagManager implements Listener {
     private void applyStartingPlayerState(@NotNull Player player, @NotNull Role role) {
         // Add role color to name
         player.setDisplayName(role.playerDisplayName(player));
-        // Set adventure game mode
-        player.setGameMode(GameMode.ADVENTURE);
+        // Set game mode
+        player.setGameMode(GameMode.valueOf(Config.GAME_MODE.getValue()));
         // Clear inventory and then add items depending on role
         inventorySupplier.setInventory(player, role);
         // Fill food level

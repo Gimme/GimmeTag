@@ -9,6 +9,8 @@ public abstract class Config {
 
     public static final AbstractConfig<Boolean> DISABLE_HUNGER = new ValueConfig<>("disable-hunger", Boolean.class);
     public static final AbstractConfig<Boolean> ENABLE_PVP = new ValueConfig<>("enable-pvp", Boolean.class);
+    public static final AbstractConfig<String> GAME_MODE = new ValueConfig<>("game-mode", String.class);
+    public static final AbstractConfig<Set<String>> ENABLE_KNOCKBACK = new SetConfig<>("enable-knockback");
 
 
     private static final AbstractConfig<ConfigurationSection> TAG = new ValueConfig<>("tag", ConfigurationSection.class);
@@ -43,6 +45,4 @@ public abstract class Config {
 
     private static final AbstractConfig<ConfigurationSection> INVIS_POTION = new ValueConfig<>(CUSTOM_ITEM, "invis_potion", ConfigurationSection.class);
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration", Number.class);
-
-    public static final AbstractConfig<Set<String>> ENABLE_KNOCKBACK = new SetConfig<>("enable-knockback");
 }

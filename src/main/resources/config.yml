@@ -6,6 +6,9 @@ disable-hunger: true
 # If players should be able to push each other (damage is still disabled).
 enable-pvp: false
 
+# The game mode that players have during the round (e.g., ADVENTURE, SURVIVAL).
+game-mode: ADVENTURE
+
 # Projectiles to enable knockback for.
 #
 # Snowballs and similar projectiles used to have a knockback effect when hitting players. This effect can be re-added
