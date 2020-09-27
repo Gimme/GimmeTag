@@ -144,10 +144,12 @@ public class HunterCompass extends AbilityItem {
 
     private static void setTarget(@NotNull ItemStack item, @Nullable Location location) {
         ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
-        if (!(meta instanceof CompassMeta)) return; // Can happen if the item has been dropped on the ground. CraftMetaItem instead of CraftMetaCompass
+        if (!(meta instanceof CompassMeta))
+            return; // Can happen if the item has been dropped on the ground. CraftMetaItem instead of CraftMetaCompass
 
         CompassMeta compassMeta = (CompassMeta) meta;
-        if (location == null) compassMeta.setLodestone(new Location(Bukkit.getWorlds().get(0), 0, 0, 0)); // Location should be null but for some reason it does not work.
+        if (location == null)
+            compassMeta.setLodestone(new Location(Bukkit.getWorlds().get(0), 0, 0, 0)); // Location should be null but for some reason it does not work.
         else compassMeta.setLodestone(location);
         item.setItemMeta(compassMeta);
     }
@@ -208,6 +210,7 @@ public class HunterCompass extends AbilityItem {
         private void onEntityPickup(EntityPickupItemEvent event) {
             onPickup(event.getItem().getItemStack());
         }
+
         @EventHandler(priority = EventPriority.MONITOR)
         private void onInventoryPickup(InventoryPickupItemEvent event) {
             onPickup(event.getItem().getItemStack());

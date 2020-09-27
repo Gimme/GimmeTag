@@ -83,10 +83,7 @@ public abstract class CustomItem {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null) return null;
 
-        String itemId = itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
-        if (itemId == null) return null;
-
-        return itemId;
+        return itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
     }
 
     private static DecimalFormat df = new DecimalFormat("#.##");
