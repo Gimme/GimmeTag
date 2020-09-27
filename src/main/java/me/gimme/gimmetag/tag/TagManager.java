@@ -226,14 +226,19 @@ public class TagManager implements Listener {
             @Override
             public void run() {
                 int pointsPerTick = Config.SCORING_POINTS_PER_TICK.getValue();
-                double maxDistanceSquared = Math.pow(Config.SCORING_DISTANCE_FROM_HUNTER_TO_GET_POINTS.getValue(), 2);
+                int maxDistance = Config.SCORING_HUNTER_DISTANCE.getValue();
+                double maxDistanceSquared = Math.pow(maxDistance, 2);
+
+                boolean checkDistance = maxDistance >= 0;
 
                 for (Player runner : getOnlineRunners()) {
-                    Player closestHunter = getClosestHunter(runner, false);
-                    if (closestHunter == null) return; // No hunters
+                    if (checkDistance) {
+                        Player closestHunter = getClosestHunter(runner, false);
+                        if (closestHunter == null) return; // No hunters
 
-                    double distanceSquared = runner.getLocation().distanceSquared(closestHunter.getLocation());
-                    if (distanceSquared > maxDistanceSquared) continue; // Too far away
+                        double distanceSquared = runner.getLocation().distanceSquared(closestHunter.getLocation());
+                        if (distanceSquared > maxDistanceSquared) continue; // Too far away
+                    }
 
                     tagScoreboard.addPoints(runner, pointsPerTick);
                 }

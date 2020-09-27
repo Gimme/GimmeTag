@@ -23,7 +23,7 @@ public abstract class Config {
     public static final AbstractConfig<Integer> SCORING_POINTS_PER_TICK = new ValueConfig<>(SCORING, "points-per-tick", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_ON_TAG = new ValueConfig<>(SCORING, "points-on-tag", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_ON_TAGGED = new ValueConfig<>(SCORING, "points-on-tagged", Integer.class);
-    public static final AbstractConfig<Integer> SCORING_DISTANCE_FROM_HUNTER_TO_GET_POINTS = new ValueConfig<>(SCORING, "distance-from-hunter-to-get-points", Integer.class);
+    public static final AbstractConfig<Integer> SCORING_HUNTER_DISTANCE = new ValueConfig<>(SCORING, "hunter-distance", Integer.class);
 
 
     private static final AbstractConfig<ConfigurationSection> HUNTER = new ValueConfig<>("hunter", ConfigurationSection.class);
