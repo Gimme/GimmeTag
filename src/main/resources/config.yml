@@ -40,22 +40,22 @@ scoring:
   # If the round should end after achieving a score over or under the "levels to end" value.
   end-condition-over: true
   # If the highest or lowest score wins.
-  highest-score-wins: true
+  highest-score-wins: false
   # Points per XP-level.
   points-per-level: 100
   # Server ticks between each score update tick.
   update-period: 1
   # Runners points gained per score update tick.
-  runner-points-per-tick: 1
+  runner-points-per-tick: 0
   # Hunters points gained per score update tick
-  hunter-points-per-tick: -1
+  hunter-points-per-tick: 1
   # Points gained for tagging another player.
   points-on-tag: 0
   # Points gained for getting tagged by a hunter.
-  points-on-tagged: -0
+  points-on-tagged: 0
   # Range (in blocks) to be within of a (non-sleeping) player of the opposite team (hunter/runner) to gain points.
   # -1 to disable this range check.
-  hunter-distance: 40
+  hunter-distance: -1
 
 
 
