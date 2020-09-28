@@ -13,6 +13,8 @@ public abstract class Config {
     public static final AbstractConfig<Set<String>> ENABLE_KNOCKBACK = new SetConfig<>("enable-knockback");
 
 
+    public static final AbstractConfig<Integer> NUMBER_OF_HUNTERS = new ValueConfig<>("number-of-hunters", Integer.class);
+
     private static final AbstractConfig<ConfigurationSection> TAG = new ValueConfig<>("tag", ConfigurationSection.class);
     public static final AbstractConfig<Integer> TAG_SLEEP_TIME = new ValueConfig<>(TAG, "sleep-time", Integer.class);
     public static final AbstractConfig<Integer> TAG_DEATH_DISTANCE = new ValueConfig<>(TAG, "death-distance", Integer.class);

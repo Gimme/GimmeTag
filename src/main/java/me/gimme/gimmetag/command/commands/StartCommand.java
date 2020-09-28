@@ -28,7 +28,7 @@ public class StartCommand extends BaseCommand {
     protected @Nullable String execute(@NotNull CommandSender sender, @NotNull String[] args) {
         int levelsToEnd = args.length >= 1 ? requireInt(args[0]) : Config.SCORING_LEVELS_TO_END.getValue();
         int sleepSeconds = args.length >= 2 ? requireInt(args[1]) : Config.TAG_SLEEP_TIME.getValue();
-        int numberOfHunters = args.length >= 3 ? requireInt(args[2]) : 1;
+        int numberOfHunters = args.length >= 3 ? requireInt(args[2]) : Config.NUMBER_OF_HUNTERS.getValue();
 
         if (!tagManager.start(levelsToEnd, sleepSeconds, numberOfHunters)) return errorMessage(
                 "Could not start round. Already an ongoing round or too few players.");

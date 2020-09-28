@@ -22,6 +22,9 @@ enable-knockback:
 
 # ---------- TAG ----------
 
+# Default number of hunters when starting a new round
+number-of-hunters: 1
+
 tag:
   # Sleep duration after being tagged (in seconds).
   sleep-time: 20
