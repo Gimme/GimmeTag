@@ -22,6 +22,7 @@ public abstract class AbilityItem extends CustomItem {
     @Nullable
     private String useResponseMessage;
     private boolean muted = false;
+    private boolean hideCooldown = false;
 
     public AbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, double cooldown, boolean consumable,
                        @Nullable String useResponseMessage) {
@@ -45,14 +46,15 @@ public abstract class AbilityItem extends CustomItem {
     @NotNull
     public ItemStack createItemStack(int amount) {
         ItemStack itemStack = super.createItemStack(amount);
-        if (cooldownTicks <= 0) return itemStack;
 
-        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
-        List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
-        lore.add(0, ChatColor.GRAY + getCooldown() + " Cooldown");
-        itemMeta.setLore(lore);
+        if (cooldownTicks > 0 && !hideCooldown) {
+            ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
+            List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
+            lore.add(0, ChatColor.GRAY + getCooldown() + " Cooldown");
+            itemMeta.setLore(lore);
+            itemStack.setItemMeta(itemMeta);
+        }
 
-        itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
 
@@ -71,6 +73,10 @@ public abstract class AbilityItem extends CustomItem {
 
     protected void mute() {
         muted = true;
+    }
+
+    protected void hideCooldown() {
+        hideCooldown = true;
     }
 
     protected String getCooldown() {

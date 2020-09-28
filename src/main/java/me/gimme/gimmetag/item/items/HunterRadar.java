@@ -44,6 +44,7 @@ public class HunterRadar extends AbilityItem {
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
         mute();
+        hideCooldown();
         itemMeta.getPersistentDataContainer().set(getIdKey(), PersistentDataType.STRING, UUID.randomUUID().toString());
         itemMeta.setLore(LORE);
     }
