@@ -4,7 +4,6 @@ import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.inventory.ItemStack;

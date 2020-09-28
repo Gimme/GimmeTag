@@ -96,6 +96,7 @@ custom-item:
     duration: 10.0
 
   balloon_grenade:
-    consumable: false
-    cooldown: 10.0
+    consumable: true
+    cooldown: 0.0
     duration: 5.0
+    level: 2
