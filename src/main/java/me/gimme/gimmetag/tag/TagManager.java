@@ -419,15 +419,11 @@ public class TagManager implements Listener {
         if (Role.HUNTER.equals(previousRole)) hunters.remove(uuid);
         else if (Role.RUNNER.equals(previousRole)) runners.remove(uuid);
 
-        if (Role.HUNTER.equals(role)) {
-            hunters.add(uuid);
-            tagScoreboard.setHunter(player);
-        } else if (Role.RUNNER.equals(role)) {
-            runners.add(uuid);
-            tagScoreboard.setRunner(player);
-        }
+        if (Role.HUNTER.equals(role)) hunters.add(uuid);
+        else if (Role.RUNNER.equals(role)) runners.add(uuid);
 
         if (role != null) {
+            tagScoreboard.setTeam(player, role);
             roleByPlayer.put(uuid, role);
             storeGameplayState(player);
             applyStartingPlayerState(player, role);
@@ -622,8 +618,7 @@ public class TagManager implements Listener {
         // Restore role if joining in the same round
         Role logoutRole = logoutRoleByPlayer.get(player.getUniqueId());
         if (logoutRole != null) setRole(player, logoutRole);
-            // Set new players to runners
-        else setRole(player, Role.RUNNER);
+        else setRole(player, Role.RUNNER); // Set new players to runners
 
         // Restore inventory if joining in the same round
         ItemStack[] logoutItems = logoutItemsByPlayer.get(player.getUniqueId());

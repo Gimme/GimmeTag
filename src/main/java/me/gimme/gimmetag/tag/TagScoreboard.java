@@ -78,23 +78,16 @@ class TagScoreboard implements Listener {
     }
 
     /**
-     * Adds the specified player to the hunter team.
+     * Adds the specified player to their role's team.
      *
-     * @param player the player to add to the hunter team
+     * @param player the player to add to the team
+     * @param role   the role to decide the team
      */
-    void setHunter(@NotNull Player player) {
+    void setTeam(@NotNull Player player, @NotNull Role role) {
         initPlayer(player);
-        huntersTeam.addEntry(entry(player)); // Automatically removes from any current team
-    }
-
-    /**
-     * Adds the specified player to the runner team.
-     *
-     * @param player the player to add to the runner team
-     */
-    void setRunner(@NotNull Player player) {
-        initPlayer(player);
-        runnersTeam.addEntry(entry(player)); // Automatically removes from any current team
+        String entry = entry(player);
+        if (role.equals(Role.HUNTER)) huntersTeam.addEntry(entry);
+        else runnersTeam.addEntry(entry);
     }
 
     /**
@@ -150,8 +143,7 @@ class TagScoreboard implements Listener {
     }
 
     private void initPlayer(@NotNull Player player) {
-        if (scores.containsKey(player.getUniqueId())) return;
-        scores.put(player.getUniqueId(), 0);
+        scores.putIfAbsent(player.getUniqueId(), 0);
         player.setScoreboard(scoreboard);
         initScore(player);
     }
