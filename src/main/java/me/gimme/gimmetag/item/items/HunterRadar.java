@@ -20,7 +20,7 @@ import java.util.*;
 
 public class HunterRadar extends AbilityItem {
 
-    private static DecimalFormat df = new DecimalFormat("#.00");
+    private static DecimalFormat df = new DecimalFormat("0.00");
     private static final Material TYPE = Material.CLOCK;
     private static final List<String> LORE = Collections.singletonList("" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)");
 
@@ -74,7 +74,7 @@ public class HunterRadar extends AbilityItem {
                 }
 
                 double distance = closestTarget.getLocation().distance(user.getLocation());
-                sendActionBar(user, formatMeters(distance));
+                sendActionBar(user, ChatColor.YELLOW + formatMeters(distance));
             }
 
             @Override
@@ -96,7 +96,7 @@ public class HunterRadar extends AbilityItem {
     }
 
     private static void sendActionBar(@NotNull Player player, @NotNull String text) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text, net.md_5.bungee.api.ChatColor.YELLOW));
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(text));
     }
 
     private static void hideActionBar(@NotNull Player player) {
