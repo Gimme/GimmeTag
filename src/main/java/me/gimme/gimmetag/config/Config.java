@@ -24,9 +24,10 @@ public abstract class Config {
     public static final AbstractConfig<Boolean> SCORING_CONDITION_ABOVE = new ValueConfig<>(SCORING, "end-condition-over", Boolean.class);
     public static final AbstractConfig<Boolean> SCORING_HIGHEST_SCORE_WINS = new ValueConfig<>(SCORING, " highest-score-wins", Boolean.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_PER_LEVEL = new ValueConfig<>(SCORING, "points-per-level", Integer.class);
-    public static final AbstractConfig<Integer> SCORING_PERIOD = new ValueConfig<>(SCORING, "update-period", Integer.class);
-    public static final AbstractConfig<Integer> SCORING_RUNNER_POINTS_PER_TICK = new ValueConfig<>(SCORING, "runner-points-per-tick", Integer.class);
-    public static final AbstractConfig<Integer> SCORING_HUNTER_POINTS_PER_TICK = new ValueConfig<>(SCORING, "hunter-points-per-tick", Integer.class);
+    private static final AbstractConfig<ConfigurationSection> SCORING_UPDATE_TICK = new ValueConfig<>(SCORING, "update-tick", ConfigurationSection.class);
+    public static final AbstractConfig<Integer> SCORING_PERIOD = new ValueConfig<>(SCORING_UPDATE_TICK, "period", Integer.class);
+    public static final AbstractConfig<Integer> SCORING_RUNNER_POINTS_PER_TICK = new ValueConfig<>(SCORING_UPDATE_TICK, "runner-points-per-tick", Integer.class);
+    public static final AbstractConfig<Integer> SCORING_HUNTER_POINTS_PER_TICK = new ValueConfig<>(SCORING_UPDATE_TICK, "hunter-points-per-tick", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_ON_TAG = new ValueConfig<>(SCORING, "points-on-tag", Integer.class);
     public static final AbstractConfig<Integer> SCORING_POINTS_ON_TAGGED = new ValueConfig<>(SCORING, "points-on-tagged", Integer.class);
     public static final AbstractConfig<Integer> SCORING_HUNTER_DISTANCE = new ValueConfig<>(SCORING, "hunter-distance", Integer.class);

@@ -43,12 +43,14 @@ scoring:
   highest-score-wins: false
   # Points per XP-level.
   points-per-level: 100
-  # Server ticks between each score update tick.
-  update-period: 1
-  # Runners points gained per score update tick.
-  runner-points-per-tick: 0
-  # Hunters points gained per score update tick
-  hunter-points-per-tick: 1
+  # Settings for the score update tick.
+  update-tick:
+    # Server ticks between each score update tick.
+    period: 1
+    # Runners points gained per score update tick.
+    runner-points-per-tick: 0
+    # Hunters points gained per score update tick
+    hunter-points-per-tick: 1
   # Points gained for tagging another player.
   points-on-tag: 0
   # Points gained for getting tagged by a hunter.
