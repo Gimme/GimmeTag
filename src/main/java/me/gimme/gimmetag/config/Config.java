@@ -45,4 +45,6 @@ public abstract class Config {
 
     private static final AbstractConfig<ConfigurationSection> INVIS_POTION = new ValueConfig<>(CUSTOM_ITEM, "invis_potion", ConfigurationSection.class);
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration", Number.class);
+
+    public static final AbilityItemConfig BALLOON_SPLASH = new AbilityItemConfig(CUSTOM_ITEM, "balloon_splash");
 }

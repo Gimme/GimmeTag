@@ -84,6 +84,12 @@ public final class GimmeTag extends JavaPlugin {
         ));
         itemManager.registerItem(new HunterBow());
         itemManager.registerItem(new InvisPotion(Config.INVIS_POTION_DURATION.getValue().doubleValue()));
+        itemManager.registerItem(new BalloonSplash(
+                Config.BALLOON_SPLASH.getCooldown().doubleValue(),
+                Config.BALLOON_SPLASH.isConsumable(),
+                Config.BALLOON_SPLASH.getDuration().doubleValue(),
+                Config.BALLOON_SPLASH.getLevel()
+        ));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {

@@ -68,6 +68,7 @@ runner:
     chorus_fruit: 3
     invis_potion: 1
     runner_speed_boost: 3
+    balloon_splash: 1
 
 
 
@@ -93,3 +94,8 @@ custom-item:
 
   invis_potion:
     duration: 10.0
+
+  balloon_splash:
+    consumable: false
+    cooldown: 10.0
+    duration: 5.0
