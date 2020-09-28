@@ -44,7 +44,7 @@ public class HunterCompass extends AbilityItem {
                 INACTIVE_DISPLAY_NAME,
                 TYPE,
                 true,
-                0,
+                0.5,
                 false,
                 "Activated hunter compass: points to closest runner"
         );
@@ -114,7 +114,8 @@ public class HunterCompass extends AbilityItem {
         clearTargetingTask(item);
         setActive(item, true);
 
-        new ItemOngoingUseTaskTimer(GimmeTag.getPlugin(), user, item, 5) {
+        new ItemOngoingUseTaskTimer(GimmeTag.getPlugin(), user, item, 5,
+                () -> !user.getInventory().contains(item)) {
             Entity closestTarget = null;
 
             @Override
@@ -127,6 +128,11 @@ public class HunterCompass extends AbilityItem {
                 boolean foundTarget = closestTarget != null;
                 setLore(item, true, foundTarget);
                 setTarget(item, foundTarget ? closestTarget.getLocation() : null);
+            }
+
+            @Override
+            public void onFinish() {
+                clearTargetingTask(item);
             }
         }.start();
     }
@@ -155,20 +161,22 @@ public class HunterCompass extends AbilityItem {
     }
 
 
-    private abstract class ItemOngoingUseTaskTimer extends BukkitRunnable {
+    abstract static class ItemOngoingUseTaskTimer extends BukkitRunnable {
         protected GimmeTag plugin;
         protected Player user;
         protected ItemStack item;
         private int ticksPerRecalculation;
+        private StopCondition stopCondition;
 
         private int ticksUntilRecalculation = 0;
 
-        private ItemOngoingUseTaskTimer(@NotNull GimmeTag plugin, @NotNull Player user, @NotNull ItemStack item,
-                                        int ticksPerRecalculation) {
+        ItemOngoingUseTaskTimer(@NotNull GimmeTag plugin, @NotNull Player user, @NotNull ItemStack item,
+                                        int ticksPerRecalculation, @NotNull StopCondition stopCondition) {
             this.plugin = plugin;
             this.user = user;
             this.item = item;
             this.ticksPerRecalculation = ticksPerRecalculation;
+            this.stopCondition = stopCondition;
         }
 
         @Override
@@ -176,8 +184,7 @@ public class HunterCompass extends AbilityItem {
             if (--ticksUntilRecalculation <= 0) {
                 ticksUntilRecalculation = ticksPerRecalculation;
 
-                if (!user.isOnline() || !user.getInventory().contains(item)) {
-                    clearTargetingTask(item);
+                if (!user.isOnline() || stopCondition.shouldStop()) {
                     cancel();
                     return;
                 }
@@ -192,6 +199,14 @@ public class HunterCompass extends AbilityItem {
 
         public abstract void onTick();
 
+        public abstract void onFinish();
+
+        @Override
+        public synchronized void cancel() throws IllegalStateException {
+            super.cancel();
+            onFinish();
+        }
+
         @NotNull
         public ItemOngoingUseTaskTimer start() {
             return start(1);
@@ -201,6 +216,10 @@ public class HunterCompass extends AbilityItem {
         public ItemOngoingUseTaskTimer start(long period) {
             runTaskTimer(plugin, 0, period);
             return this;
+        }
+
+        interface StopCondition {
+            boolean shouldStop();
         }
     }
 

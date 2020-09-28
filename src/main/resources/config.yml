@@ -70,6 +70,7 @@ hunter:
   leather-color: 0xFF0000
   items:
     hunter_compass: 1
+    hunter_radar: 1
     hunter_speed_boost: 1
     hunter_bow: 1
     arrow: 1
