@@ -59,6 +59,7 @@ public class TagManager implements Listener {
 
     // If there is an active round of tag
     private boolean activeRound = false;
+    private int sleepSeconds = Config.TAG_SLEEP_TIME.getValue();
 
     public TagManager(@NotNull Plugin plugin, @NotNull ItemManager itemManager) {
         this.plugin = plugin;
@@ -155,7 +156,8 @@ public class TagManager implements Listener {
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
-        activeRound = true;
+        this.activeRound = true;
+        this.sleepSeconds = sleepSeconds;
         clearDesiredRoles();
 
         // Assign roles
@@ -352,8 +354,7 @@ public class TagManager implements Listener {
         setRole(runner, Role.HUNTER);
         setRole(hunter, Role.RUNNER);
 
-        int sleepSeconds = Config.TAG_SLEEP_TIME.getValue();
-        applySleep(runner, sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
+        applySleep(runner, this.sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
 
         SoundEffect.TAG.play(hunter);
         SoundEffect.TAGGED.play(runner);

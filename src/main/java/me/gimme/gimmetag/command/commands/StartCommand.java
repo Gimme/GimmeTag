@@ -15,8 +15,8 @@ public class StartCommand extends BaseCommand {
         super("start");
 
         addAlias("s");
-        setArgsUsage("[levels to end] [sleep duration] [hunters=1]");
-        addArgsAlternative("100 30 1");
+        setArgsUsage("[levels to end] [sleep duration] [hunters]");
+        addArgsAlternative("100 20 1");
         setMinArgs(0);
         setMaxArgs(3);
         setDescription("Starts a round of tag with randomly selected hunters");
