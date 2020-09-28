@@ -114,8 +114,7 @@ public class HunterCompass extends AbilityItem {
         clearTargetingTask(item);
         setActive(item, true);
 
-        new ItemOngoingUseTaskTimer(GimmeTag.getPlugin(), user, item, 5,
-                () -> !user.getInventory().contains(item)) {
+        new ItemOngoingUseTaskTimer(GimmeTag.getPlugin(), user, item, 5, null) {
             Entity closestTarget = null;
 
             @Override
@@ -166,12 +165,13 @@ public class HunterCompass extends AbilityItem {
         protected Player user;
         protected ItemStack item;
         private int ticksPerRecalculation;
+        @Nullable
         private StopCondition stopCondition;
 
         private int ticksUntilRecalculation = 0;
 
         ItemOngoingUseTaskTimer(@NotNull GimmeTag plugin, @NotNull Player user, @NotNull ItemStack item,
-                                        int ticksPerRecalculation, @NotNull StopCondition stopCondition) {
+                                int ticksPerRecalculation, @Nullable StopCondition stopCondition) {
             this.plugin = plugin;
             this.user = user;
             this.item = item;
@@ -184,7 +184,7 @@ public class HunterCompass extends AbilityItem {
             if (--ticksUntilRecalculation <= 0) {
                 ticksUntilRecalculation = ticksPerRecalculation;
 
-                if (!user.isOnline() || stopCondition.shouldStop()) {
+                if (!user.isOnline() || item.getType().equals(Material.AIR) || (stopCondition != null && stopCondition.shouldStop())) {
                     cancel();
                     return;
                 }

@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
@@ -26,7 +25,7 @@ public class HunterRadar extends AbilityItem {
     private static final Material TYPE = Material.CLOCK;
     private static final List<String> LORE = Collections.singletonList("" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)");
 
-    private Plugin plugin;
+    private GimmeTag plugin;
     private Set<UUID> activeItems = new HashSet<>();
 
     public HunterRadar(@NotNull GimmeTag plugin) {
@@ -59,8 +58,7 @@ public class HunterRadar extends AbilityItem {
         activeItems.add(uuid);
         SoundEffect.ACTIVATE.play(user);
 
-        new HunterCompass.ItemOngoingUseTaskTimer(GimmeTag.getPlugin(), user, itemStack, 10,
-                () -> !user.getInventory().contains(itemStack)) {
+        new HunterCompass.ItemOngoingUseTaskTimer(plugin, user, itemStack, 10, null) {
             Entity closestTarget = null;
 
             @Override
