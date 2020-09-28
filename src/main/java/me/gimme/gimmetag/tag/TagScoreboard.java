@@ -41,7 +41,7 @@ class TagScoreboard implements Listener {
     private Team runnersTeam;
 
     private Map<UUID, Integer> scores = new HashMap<>();
-    private int levelsToWin = Config.SCORING_LEVELS_TO_WIN.getValue();
+    private int levelsToEnd = Config.SCORING_LEVELS_TO_END.getValue();
 
     TagScoreboard(@NotNull Server server) {
         this.server = server;
@@ -65,16 +65,26 @@ class TagScoreboard implements Listener {
     }
 
     /**
-     * @return the player with the most points if above the capacity, else null (no winner yet)
+     * @return the winner of the round if decided, else null (no winner yet)
      */
     @Nullable
     Player getWinner() {
         if (scores.size() == 0) return null;
 
         Map.Entry<UUID, Integer> max = Collections.max(scores.entrySet(), Map.Entry.comparingByValue());
+        Map.Entry<UUID, Integer> min = Collections.min(scores.entrySet(), Map.Entry.comparingByValue());
 
-        if (getLevel(max.getValue()) < levelsToWin) return null;
-        return server.getPlayer(max.getKey());
+        if (Config.SCORING_CONDITION_ABOVE.getValue()) {
+            if (getLevel(max.getValue()) < levelsToEnd) return null;
+        } else {
+            if (getLevel(min.getValue()) > levelsToEnd) return null;
+        }
+
+        Map.Entry<UUID, Integer> winnerEntry;
+        if (Config.SCORING_HIGHEST_SCORE_WINS.getValue()) winnerEntry = max;
+        else winnerEntry = min;
+
+        return server.getPlayer(winnerEntry.getKey());
     }
 
     /**
@@ -138,12 +148,12 @@ class TagScoreboard implements Listener {
         server.broadcastMessage(tableBuilder.build());
     }
 
-    void setLevelsToWin(int levelsToWin) {
-        this.levelsToWin = levelsToWin;
+    void setLevelsToEnd(int levelsToEnd) {
+        this.levelsToEnd = levelsToEnd;
     }
 
     private void initPlayer(@NotNull Player player) {
-        scores.putIfAbsent(player.getUniqueId(), 0);
+        scores.putIfAbsent(player.getUniqueId(), getPoints(Config.SCORING_STARTING_LEVEL.getValue()));
         player.setScoreboard(scoreboard);
         initScore(player);
     }
@@ -172,5 +182,9 @@ class TagScoreboard implements Listener {
 
     private static float getLevel(int points) {
         return points / (float) Config.SCORING_POINTS_PER_LEVEL.getValue();
+    }
+
+    private static int getPoints(float levels) {
+        return Math.round(levels * Config.SCORING_POINTS_PER_LEVEL.getValue());
     }
 }

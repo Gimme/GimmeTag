@@ -33,17 +33,25 @@ tag:
 # ---------- SCORING ----------
 
 scoring:
+  # Everyone's level at the start of the round.
+  starting-level: 0
   # Levels required to win the round (1 level equals the number of points defined below).
-  levels-to-win: 100
+  levels-to-end: 100
+  # Above or below levels to end.
+  condition-above: true
+  # Highest or lowest score wins.
+  highest-score-wins: true
   # Points per XP-level.
   points-per-level: 100
   # Server ticks between each score update tick.
   update-period: 1
-  # Points gained per score update tick.
-  points-per-tick: 1
+  # Runners points gained per score update tick.
+  runner-points-per-tick: 1
+  # Hunters points gained per score update tick
+  hunter-points-per-tick: -1
   # Points gained for tagging another player.
   points-on-tag: 0
-  # Points gained for getting tagged by a hunter (can be negative for losing points).
+  # Points gained for getting tagged by a hunter.
   points-on-tagged: -0
   # Range (in blocks) to be within of a (non-sleeping) hunter to gain points. -1 to disable the range check.
   hunter-distance: 40

@@ -107,12 +107,12 @@ public class TagManager implements Listener {
     /**
      * Starts a new round of tag with randomly selected hunters.
      *
-     * @param levelsToWin     the amount of levels required to win
+     * @param levelsToEnd     the amount of levels required to end the round
      * @param sleepSeconds    the delay in seconds before the hunters can start chasing
      * @param numberOfHunters the amount of hunters to randomly select
      * @return if a new round of tag was successfully started
      */
-    public boolean start(int levelsToWin, int sleepSeconds, int numberOfHunters) {
+    public boolean start(int levelsToEnd, int sleepSeconds, int numberOfHunters) {
         if (server.getOnlinePlayers().size() < numberOfHunters) {
             Bukkit.getLogger().warning("Not enough players online");
             return false;
@@ -139,18 +139,18 @@ public class TagManager implements Listener {
             hunters.addAll(remainingPlayers.subList(0, missingHunters));
         }
 
-        return start(levelsToWin, sleepSeconds, hunters);
+        return start(levelsToEnd, sleepSeconds, hunters);
     }
 
     /**
      * Starts a new round of tag with selected hunters.
      *
-     * @param levelsToWin   the amount of levels required to win
+     * @param levelsToEnd   the amount of levels required to end the round
      * @param sleepSeconds  the delay in seconds before the hunters can start chasing
      * @param chosenHunters the players that should start has hunters
      * @return if a new round of tag was successfully started
      */
-    private boolean start(int levelsToWin, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
+    private boolean start(int levelsToEnd, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
         TagStartEvent event = new TagStartEvent();
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
@@ -164,11 +164,14 @@ public class TagManager implements Listener {
             else setRole(player, Role.RUNNER);
         }
 
+        // Make hunters sleep
         for (UUID h : hunters) {
             Player hunter = server.getPlayer(h);
             if (hunter == null) continue;
             applySleep(hunter, sleepSeconds, Role.HUNTER.getDisplayName());
         }
+
+        // Display countdown
         new CountdownTimerTask(plugin, sleepSeconds) {
             @Override
             protected void onCount() {
@@ -220,27 +223,27 @@ public class TagManager implements Listener {
             }
         }.start();
 
-        tagScoreboard.setLevelsToWin(levelsToWin);
+        // Set up scoring
+        tagScoreboard.setLevelsToEnd(levelsToEnd);
 
         pointsTicker = new BukkitRunnable() {
             @Override
             public void run() {
-                int pointsPerTick = Config.SCORING_POINTS_PER_TICK.getValue();
+                int runnerPointsPerTick = Config.SCORING_RUNNER_POINTS_PER_TICK.getValue();
+                int hunterPointsPerTick = Config.SCORING_HUNTER_POINTS_PER_TICK.getValue();
                 int maxDistance = Config.SCORING_HUNTER_DISTANCE.getValue();
                 double maxDistanceSquared = Math.pow(maxDistance, 2);
-
-                boolean checkDistance = maxDistance >= 0;
+                boolean checkDistance = maxDistance > 0;
 
                 for (Player runner : getOnlineRunners()) {
-                    if (checkDistance) {
-                        Player closestHunter = getClosestHunter(runner, false);
-                        if (closestHunter == null) return; // No hunters
+                    if (checkDistance && !isWithinRange(runner, getClosestHunter(runner, false), maxDistanceSquared))
+                        continue;
+                    tagScoreboard.addPoints(runner, runnerPointsPerTick);
+                }
 
-                        double distanceSquared = runner.getLocation().distanceSquared(closestHunter.getLocation());
-                        if (distanceSquared > maxDistanceSquared) continue; // Too far away
-                    }
-
-                    tagScoreboard.addPoints(runner, pointsPerTick);
+                for (Player hunter : getOnlineHunters(false)) {
+                    if (checkDistance && !isWithinRange(hunter, getClosestRunner(hunter), maxDistanceSquared)) continue;
+                    tagScoreboard.addPoints(hunter, hunterPointsPerTick);
                 }
 
                 if (tagScoreboard.getWinner() != null) stop(true);
@@ -249,6 +252,21 @@ public class TagManager implements Listener {
         pointsTicker.runTaskTimer(plugin, Config.SCORING_PERIOD.getValue(), Config.SCORING_PERIOD.getValue());
 
         return true;
+    }
+
+    /**
+     * Returns if the specified players are within the specified range of each other.
+     *
+     * @param player       the first player to check
+     * @param otherPlayer  the second player to check
+     * @param rangeSquared the range in blocks
+     * @return if the specified players are within the specified range of each other
+     */
+    private boolean isWithinRange(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared) {
+        if (otherPlayer == null) return false;
+
+        double distanceSquared = player.getLocation().distanceSquared(otherPlayer.getLocation());
+        return distanceSquared <= rangeSquared;
     }
 
     /**
