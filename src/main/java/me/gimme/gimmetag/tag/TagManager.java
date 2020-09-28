@@ -391,8 +391,7 @@ public class TagManager implements Listener {
                 if (player == null || !player.isOnline()) return;
 
                 player.addPotionEffects(Arrays.asList(
-                        new PotionEffect(PotionEffectType.BLINDNESS, potionTicks + 20, 0),
-                        new PotionEffect(PotionEffectType.NIGHT_VISION, potionTicks + 20, 0),
+                        new PotionEffect(PotionEffectType.BLINDNESS, potionTicks + 20, 1),
                         new PotionEffect(PotionEffectType.SLOW, potionTicks, 1000), // Prevents moving
                         new PotionEffect(PotionEffectType.JUMP, potionTicks, 200), // Prevents jumping
                         new PotionEffect(PotionEffectType.WATER_BREATHING, potionTicks + 5 * 20, 0),
