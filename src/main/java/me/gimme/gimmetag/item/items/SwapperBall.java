@@ -23,7 +23,6 @@ public class SwapperBall extends AbilityItem {
     private static final Material MATERIAL = Material.SNOWBALL;
     private static final EntityType PROJECTILE_TYPE = EntityType.SNOWBALL; // Has to match the material above
     private static final Class<? extends Projectile> PROJECTILE_CLASS = Snowball.class;
-    private static final Sound LAUNCH_SOUND = Sound.ENTITY_WITCH_THROW;
     private static final String DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Swapper Ball";
     private static final List<String> LORE = Collections.singletonList("Swap positions with the hit player");
 
@@ -58,7 +57,7 @@ public class SwapperBall extends AbilityItem {
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         Projectile projectile = user.launchProjectile(PROJECTILE_CLASS);
         onHitListener.onLaunch(projectile);
-        user.playSound(user.getLocation(), LAUNCH_SOUND, 1f, 1f);
+        SoundEffect.THROW.play(user);
         return true;
     }
 

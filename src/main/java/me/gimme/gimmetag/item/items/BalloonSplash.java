@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.item.AbilityItem;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 public class BalloonSplash extends AbilityItem {
 
     private static final Color COLOR = Color.fromRGB(137, 208, 229);
-    private static final Sound LAUNCH_SOUND = Sound.ENTITY_WITCH_THROW;
 
     private int durationTicks;
     private int level;
@@ -50,7 +50,7 @@ public class BalloonSplash extends AbilityItem {
         ThrownPotion thrownPotion = user.launchProjectile(ThrownPotion.class);
         thrownPotion.setItem(itemStack);
 
-        user.playSound(user.getLocation(), LAUNCH_SOUND, 1f, 1f);
+        SoundEffect.THROW.play(user);
         return true;
     }
 }
