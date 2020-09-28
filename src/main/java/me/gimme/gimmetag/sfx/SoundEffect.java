@@ -31,18 +31,17 @@ public enum SoundEffect {
     }
 
     SoundEffect(@NotNull org.bukkit.Sound sound) {
-        this.sound = sound;
-        this.local = false;
+        this(sound, 1f, 1f);
     }
 
     SoundEffect(@NotNull org.bukkit.Sound sound, float volume, float pitch) {
-        this(sound);
-        this.volume = volume;
-        this.pitch = pitch;
+        this(sound, volume, pitch, false);
     }
 
     SoundEffect(@NotNull org.bukkit.Sound sound, float volume, float pitch, boolean local) {
-        this(sound, volume, pitch);
+        this.sound = sound;
+        this.volume = volume;
+        this.pitch = pitch;
         this.local = local;
     }
 
