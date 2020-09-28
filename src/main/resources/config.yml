@@ -37,9 +37,9 @@ scoring:
   starting-level: 0
   # Levels required to win the round (1 level equals the number of points defined below).
   levels-to-end: 100
-  # Above or below levels to end.
-  condition-above: true
-  # Highest or lowest score wins.
+  # If the round should end after achieving a score over or under the "levels to end" value.
+  end-condition-over: true
+  # If the highest or lowest score wins.
   highest-score-wins: true
   # Points per XP-level.
   points-per-level: 100
@@ -53,7 +53,8 @@ scoring:
   points-on-tag: 0
   # Points gained for getting tagged by a hunter.
   points-on-tagged: -0
-  # Range (in blocks) to be within of a (non-sleeping) hunter to gain points. -1 to disable the range check.
+  # Range (in blocks) to be within of a (non-sleeping) player of the opposite team (hunter/runner) to gain points.
+  # -1 to disable this range check.
   hunter-distance: 40
 
 
