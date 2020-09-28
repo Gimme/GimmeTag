@@ -5,7 +5,6 @@ import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -93,7 +92,7 @@ public class HunterRadar extends AbilityItem {
     }
 
     private static boolean isItemInHand(@NotNull Player player, ItemStack itemStack) {
-        return itemStack == player.getInventory().getItemInMainHand() || itemStack == player.getInventory().getItemInOffHand();
+        return itemStack.equals(player.getInventory().getItemInMainHand())  || itemStack.equals(player.getInventory().getItemInOffHand());
     }
 
     private static void sendActionBar(@NotNull Player player, @NotNull String text) {
