@@ -616,9 +616,9 @@ public class TagManager implements Listener {
         if (!activeRound) return;
 
         // Restore role if joining in the same round
-        Role logoutRole = logoutRoleByPlayer.get(player.getUniqueId());
-        if (logoutRole != null) setRole(player, logoutRole);
-        else setRole(player, Role.RUNNER); // Set new players to runners
+        Role role = logoutRoleByPlayer.get(player.getUniqueId());
+        if (role == null) role = Role.RUNNER; // Set new players to runners
+        setRole(player, role);
 
         // Restore inventory if joining in the same round
         ItemStack[] logoutItems = logoutItemsByPlayer.get(player.getUniqueId());
