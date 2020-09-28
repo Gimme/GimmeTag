@@ -84,11 +84,11 @@ public final class GimmeTag extends JavaPlugin {
         ));
         itemManager.registerItem(new HunterBow());
         itemManager.registerItem(new InvisPotion(Config.INVIS_POTION_DURATION.getValue().doubleValue()));
-        itemManager.registerItem(new BalloonSplash(
-                Config.BALLOON_SPLASH.getCooldown().doubleValue(),
-                Config.BALLOON_SPLASH.isConsumable(),
-                Config.BALLOON_SPLASH.getDuration().doubleValue(),
-                Config.BALLOON_SPLASH.getLevel()
+        itemManager.registerItem(new BalloonGrenade(
+                Config.BALLOON_GRENADE.getCooldown().doubleValue(),
+                Config.BALLOON_GRENADE.isConsumable(),
+                Config.BALLOON_GRENADE.getDuration().doubleValue(),
+                Config.BALLOON_GRENADE.getLevel()
         ));
     }
 

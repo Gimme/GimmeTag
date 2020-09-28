@@ -14,16 +14,16 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-public class BalloonSplash extends AbilityItem {
+public class BalloonGrenade extends AbilityItem {
 
     private static final Color COLOR = Color.fromRGB(137, 208, 229);
 
     private int durationTicks;
     private int level;
 
-    public BalloonSplash(double cooldown, boolean consumable, double duration, int level) {
+    public BalloonGrenade(double cooldown, boolean consumable, double duration, int level) {
         super(
-                "Balloon Splash",
+                "Balloon Grenade",
                 Material.SPLASH_POTION,
                 true,
                 cooldown,
