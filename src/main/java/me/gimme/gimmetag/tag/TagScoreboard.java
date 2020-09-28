@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Keeps and displays the scores of players in an active round of tag.
@@ -139,7 +140,10 @@ class TagScoreboard implements Listener {
                 .addRow("" + ChatColor.UNDERLINE + ChatColor.GOLD + "Player", "" + ChatColor.UNDERLINE + ChatColor.GOLD + "Score")
                 .addRow();
 
-        for (UUID uuid : scores.keySet()) {
+        for (UUID uuid : scores.entrySet().stream()
+                .sorted(Comparator.comparingInt(e -> (Config.SCORING_HIGHEST_SCORE_WINS.getValue() ? -1 : 1) * e.getValue()))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList())) {
             OfflinePlayer player = server.getOfflinePlayer(uuid);
 
             tableBuilder.addRow(player.getName(), "" + ChatColor.YELLOW + getLevel(getScore(player)));
