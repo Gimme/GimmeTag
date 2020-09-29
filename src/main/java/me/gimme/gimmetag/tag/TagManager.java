@@ -363,11 +363,11 @@ public class TagManager implements Listener {
         tagScoreboard.addPoints(hunter, Config.SCORING_POINTS_ON_TAG.getValue());
         tagScoreboard.addPoints(runner, Config.SCORING_POINTS_ON_TAGGED.getValue());
 
+        server.broadcastMessage(Role.HUNTER.playerDisplayName(runner) + Role.HUNTER.getColor() + " was tagged!");
         for (Player p : server.getOnlinePlayers()) {
-            if (p == runner) continue;
-            if (p == hunter) continue;
+            if (p.getUniqueId().equals(runner.getUniqueId())) continue;
+            if (p.getUniqueId().equals(hunter.getUniqueId())) continue;
 
-            server.broadcastMessage(ChatColor.RED + runner.getDisplayName() + ChatColor.RED + " was tagged!");
             SoundEffect.TAG_BROADCAST.play(p);
         }
     }
