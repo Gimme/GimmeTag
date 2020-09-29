@@ -561,12 +561,22 @@ public class TagManager implements Listener {
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        // No drops
+        if (getRole(player) != null) event.getDrops().clear();
+
         if (!Role.RUNNER.equals(getRole(player))) return;
+        deathTag(player);
+    }
+
+    private void deathTag(@NotNull Player player) {
+        int tagDeathDistance = Config.TAG_DEATH_DISTANCE.getValue();
+        if (tagDeathDistance <= 0) return;
 
         Player closestHunter = getClosestHunter(player, false);
         if (closestHunter == null) return;
+
         double distance = player.getLocation().distance(closestHunter.getLocation());
-        if (distance > Config.TAG_DEATH_DISTANCE.getValue()) return;
+        if (distance > tagDeathDistance) return;
 
         tag(player, closestHunter);
     }
