@@ -39,7 +39,6 @@ public class TagManager implements Listener {
     private Plugin plugin;
     private Server server;
     private TagScoreboard tagScoreboard;
-    private ItemManager itemManager;
     private InventorySupplier inventorySupplier;
 
     private Set<UUID> desiredHunters = new HashSet<>(); // Players that want to be hunters next round
@@ -64,7 +63,6 @@ public class TagManager implements Listener {
     public TagManager(@NotNull Plugin plugin, @NotNull ItemManager itemManager) {
         this.plugin = plugin;
         this.server = plugin.getServer();
-        this.itemManager = itemManager;
         this.inventorySupplier = new InventorySupplier(itemManager);
 
         tagScoreboard = new TagScoreboard(server);
