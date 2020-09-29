@@ -25,6 +25,6 @@ public enum Role {
     }
 
     String playerDisplayName(@NotNull Player player) {
-        return color + player.getDisplayName();
+        return color + ChatColor.stripColor(player.getDisplayName());
     }
 }
