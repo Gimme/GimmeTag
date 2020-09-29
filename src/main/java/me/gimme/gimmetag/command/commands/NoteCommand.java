@@ -2,7 +2,7 @@ package me.gimme.gimmetag.command.commands;
 
 import me.gimme.gimmecore.command.CommandUsageException;
 import me.gimme.gimmetag.command.BaseCommand;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SFX;
 import org.bukkit.Bukkit;
 import org.bukkit.Instrument;
 import org.bukkit.Note;
@@ -34,7 +34,7 @@ public class NoteCommand extends BaseCommand {
 
         double r = Math.random();
         if (r < 0.9) player.playNote(player.getLocation().add(player.getLocation().getDirection()), instrument, Note.natural(requireInt(args[0]), Note.Tone.valueOf(args[1])));
-        else SoundEffect.TELEPORT.play(player);
+        else SFX.TELEPORT.play(player);
         Bukkit.getLogger().info(r + " Sound: " + instrument.name());
         return null;
     }

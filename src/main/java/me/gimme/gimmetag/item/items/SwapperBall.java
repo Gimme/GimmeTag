@@ -1,7 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SFX;
 import me.gimme.gimmetag.tag.TagManager;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.bukkit.*;
@@ -57,7 +57,7 @@ public class SwapperBall extends AbilityItem {
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         Projectile projectile = user.launchProjectile(PROJECTILE_CLASS);
         onHitListener.onLaunch(projectile);
-        SoundEffect.THROW.play(user);
+        SFX.THROW.play(user);
         return true;
     }
 
@@ -83,7 +83,7 @@ public class SwapperBall extends AbilityItem {
 
 
     private static void playSound(@NotNull Player player) {
-        SoundEffect.TELEPORT.play(player);
+        SFX.TELEPORT.play(player);
     }
 
 
