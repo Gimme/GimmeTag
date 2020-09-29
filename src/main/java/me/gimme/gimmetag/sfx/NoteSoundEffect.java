@@ -14,6 +14,7 @@ class NoteSoundEffect extends SoundEffect {
         this.note = note;
     }
 
+    @Override
     public void play(@NotNull Player player) {
         player.playNote(getFrontOfPlayer(player), instrument, note);
     }

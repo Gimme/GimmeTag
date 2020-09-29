@@ -29,6 +29,7 @@ class StandardSoundEffect extends SoundEffect {
         this.local = local;
     }
 
+    @Override
     public void play(@NotNull Player player) {
         if (local) player.playSound(getFrontOfPlayer(player), sound, volume, pitch);
         else player.getWorld().playSound(player.getLocation(), sound, volume, pitch);
