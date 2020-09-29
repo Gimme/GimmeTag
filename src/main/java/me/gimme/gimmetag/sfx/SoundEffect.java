@@ -5,12 +5,12 @@ import org.bukkit.Note;
 import org.bukkit.Sound;
 
 public abstract class SoundEffect {
-    public static final SFX COUNTDOWN = new NoteSFX(Instrument.BASS_GUITAR, Note.natural(0, Note.Tone.C));
-    public static final SFX COUNTDOWN_FINISH = new NoteSFX(Instrument.GUITAR, Note.natural(1, Note.Tone.C));
+    public static final SFX COUNTDOWN = new NoteSFX(Instrument.BASS_GUITAR, Note.natural(0, Note.Tone.C), true);
+    public static final SFX COUNTDOWN_FINISH = new NoteSFX(Instrument.GUITAR, Note.natural(1, Note.Tone.C), true);
 
-    public static final SFX TAG = new NoteSFX(Instrument.CHIME, Note.natural(1, Note.Tone.C));
-    public static final SFX TAGGED = new NoteSFX(Instrument.CHIME, Note.natural(0, Note.Tone.C));
-    public static final SFX TAG_BROADCAST = new NoteSFX(Instrument.CHIME, Note.natural(0,  Note.Tone.C));
+    public static final SFX TAG = new NoteSFX(Instrument.CHIME, Note.natural(1, Note.Tone.C), true);
+    public static final SFX TAGGED = new NoteSFX(Instrument.CHIME, Note.natural(0, Note.Tone.C), true);
+    public static final SFX TAG_BROADCAST = new NoteSFX(Instrument.CHIME, Note.natural(0,  Note.Tone.C), true);
 
     public static final SFX TELEPORT = new SoundSFX(Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1.4f);
     public static final SFX ACTIVATE = new NoteSFX(Instrument.BIT, Note.natural(1, Note.Tone.C));
