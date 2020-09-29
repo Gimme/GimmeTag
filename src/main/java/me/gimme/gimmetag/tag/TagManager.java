@@ -176,8 +176,6 @@ public class TagManager implements Listener {
         }
 
         // Display countdown
-        Chat.sendProgressBar(plugin, () -> !isActiveRound(), getOnlineRunners(), sleepSeconds * 20,
-                Role.HUNTER.getColor() + "Hunter Waking Up", BarColor.RED, BarFlag.DARKEN_SKY, BarFlag.CREATE_FOG);
         new CountdownTimerTask(plugin, sleepSeconds) {
             @Override
             protected void onCount() {

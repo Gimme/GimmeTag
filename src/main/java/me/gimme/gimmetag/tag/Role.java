@@ -8,23 +8,23 @@ public enum Role {
     HUNTER("Hunter", ChatColor.RED),
     RUNNER("Runner", ChatColor.AQUA);
 
-    String name;
-    ChatColor color;
+    private String name;
+    private ChatColor color;
 
     Role(@NotNull String name, ChatColor color) {
         this.name = name;
         this.color = color;
     }
 
-    ChatColor getColor() {
+    public ChatColor getColor() {
         return color;
     }
 
-    String getDisplayName() {
+    public String getDisplayName() {
         return color + name + ChatColor.RESET;
     }
 
-    String playerDisplayName(@NotNull Player player) {
+    public String playerDisplayName(@NotNull Player player) {
         return color + ChatColor.stripColor(player.getDisplayName());
     }
 }

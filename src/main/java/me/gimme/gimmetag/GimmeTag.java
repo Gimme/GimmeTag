@@ -4,6 +4,7 @@ import me.gimme.gimmecore.command.CommandManager;
 import me.gimme.gimmetag.command.commands.*;
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.extension.SleepProgressbar;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
 import me.gimme.gimmetag.item.ItemManager;
@@ -60,6 +61,7 @@ public final class GimmeTag extends JavaPlugin {
         registerEvents(tagManager);
         if (Config.DISABLE_HUNGER.getValue()) registerEvents(new DisableHunger(() -> tagManager.isActiveRound()));
         registerEvents(new EnableProjectileKnockback(() -> tagManager.isActiveRound()));
+        registerEvents(new SleepProgressbar(this, tagManager));
     }
 
     private void registerCustomItems() {
