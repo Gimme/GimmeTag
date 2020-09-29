@@ -368,19 +368,8 @@ public class TagManager implements Listener {
 
         applySleep(runner, this.sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
 
-        SoundEffect.TAG.play(hunter);
-        SoundEffect.TAGGED.play(runner);
-
         tagScoreboard.addPoints(hunter, Config.SCORING_POINTS_ON_TAG.getValue());
         tagScoreboard.addPoints(runner, Config.SCORING_POINTS_ON_TAGGED.getValue());
-
-        server.broadcastMessage(Role.HUNTER.playerDisplayName(runner) + Role.HUNTER.getColor() + " was tagged!");
-        for (Player p : server.getOnlinePlayers()) {
-            if (p.getUniqueId().equals(runner.getUniqueId())) continue;
-            if (p.getUniqueId().equals(hunter.getUniqueId())) continue;
-
-            SoundEffect.TAG_BROADCAST.play(p);
-        }
     }
 
     /**
