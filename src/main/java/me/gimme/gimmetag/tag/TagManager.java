@@ -2,10 +2,7 @@ package me.gimme.gimmetag.tag;
 
 import me.gimme.gimmecore.chat.Chat;
 import me.gimme.gimmetag.config.Config;
-import me.gimme.gimmetag.events.HunterSleepEvent;
-import me.gimme.gimmetag.events.PlayerRoleSetEvent;
-import me.gimme.gimmetag.events.PlayerTaggedEvent;
-import me.gimme.gimmetag.events.TagStartEvent;
+import me.gimme.gimmetag.events.*;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
@@ -291,6 +288,8 @@ public class TagManager implements Listener {
     public boolean stop(boolean printScores) {
         if (!activeRound) return false;
         activeRound = false;
+
+        Bukkit.getPluginManager().callEvent(new TagEndEvent());
 
         broadcastGameOverTitle(tagScoreboard.getWinner());
         // Display the final scoreboard
