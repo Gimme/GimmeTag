@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
+import me.gimme.gimmecore.chat.Chat;
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.sfx.SoundEffect;
@@ -67,7 +68,7 @@ public class HunterRadar extends AbilityItem {
             if (closestRunner == null) return false;
 
             double distance = user.getLocation().distance(closestRunner.getLocation());
-            sendActionBar(user, formatMeters(distance));
+            Chat.sendActionBar(user, formatMeters(distance));
         } else { // Level 2
             activeItems.add(uuid);
             long currentTime = System.currentTimeMillis();
@@ -83,18 +84,18 @@ public class HunterRadar extends AbilityItem {
                 @Override
                 public void onTick() {
                     if (durationMillis < 0 && !isItemInHand(user, item)) {
-                        hideActionBar(user);
+                        Chat.hideActionBar(user);
                     } else if (closestTarget == null) {
-                        sendActionBar(user, ChatColor.YELLOW + "---");
+                        Chat.sendActionBar(user, ChatColor.YELLOW + "---");
                     } else {
                         double distance = closestTarget.getLocation().distance(user.getLocation());
-                        sendActionBar(user, formatMeters(distance));
+                        Chat.sendActionBar(user, formatMeters(distance));
                     }
                 }
 
                 @Override
                 public void onFinish() {
-                    hideActionBar(user);
+                    Chat.hideActionBar(user);
                     activeItems.remove(uuid);
                 }
             }.start();
@@ -110,14 +111,6 @@ public class HunterRadar extends AbilityItem {
 
     private static boolean isItemInHand(@NotNull Player player, ItemStack itemStack) {
         return itemStack.equals(player.getInventory().getItemInMainHand()) || itemStack.equals(player.getInventory().getItemInOffHand());
-    }
-
-    private static void sendActionBar(@NotNull Player player, @NotNull String text) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(text));
-    }
-
-    private static void hideActionBar(@NotNull Player player) {
-        sendActionBar(player, "");
     }
 
     private static String formatMeters(double blocks) {
