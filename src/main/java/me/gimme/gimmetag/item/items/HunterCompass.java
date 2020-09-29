@@ -46,7 +46,7 @@ public class HunterCompass extends AbilityItem {
                 true,
                 0.5,
                 false,
-                "Activated hunter compass: points to closest runner"
+                "Compass: points to closest runner"
         );
 
         this.plugin = plugin;
