@@ -321,11 +321,13 @@ public class TagManager implements Listener {
                 .filter(Objects::nonNull)
                 .forEach(p -> {
                     if (winner != null) {
+                        p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR, 1f, 1f);
+                        p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR, 1f, 1f);
                         p.sendTitle(
                                 (p.equals(winner) ? ChatColor.GREEN : ChatColor.RED) + "GAME OVER",
                                 winner.getDisplayName() + ChatColor.YELLOW + " won",
                                 0,
-                                60,
+                                80,
                                 30);
                     } else {
                         p.sendTitle(
