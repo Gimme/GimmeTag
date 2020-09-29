@@ -28,7 +28,7 @@ number-of-hunters: 1
 tag:
   # Sleep duration after being tagged (in seconds).
   sleep-time: 20
-  # Distance a hunter needs to be within of a player death for it to count as a tag event.
+  # Distance a hunter needs to be within of a player death for it to count as a tag event (ignores y-level).
   death-distance: -1
 
 

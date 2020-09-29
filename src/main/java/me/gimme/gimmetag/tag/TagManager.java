@@ -568,6 +568,11 @@ public class TagManager implements Listener {
         deathTag(player);
     }
 
+    /**
+     * Tags the specified player if they are close enough to a hunter.
+     *
+     * @param player the player to check the distance from a hunter
+     */
     private void deathTag(@NotNull Player player) {
         int tagDeathDistance = Config.TAG_DEATH_DISTANCE.getValue();
         if (tagDeathDistance <= 0) return;
@@ -575,8 +580,13 @@ public class TagManager implements Listener {
         Player closestHunter = getClosestHunter(player, false);
         if (closestHunter == null) return;
 
-        double distance = player.getLocation().distance(closestHunter.getLocation());
-        if (distance > tagDeathDistance) return;
+        Location playerLocation2D = player.getLocation();
+        Location hunterLocation2D = closestHunter.getLocation();
+        playerLocation2D.setY(0);
+        hunterLocation2D.setY(0);
+
+        double distance2D = playerLocation2D.distance(hunterLocation2D);
+        if (distance2D > tagDeathDistance) return;
 
         tag(player, closestHunter);
     }
