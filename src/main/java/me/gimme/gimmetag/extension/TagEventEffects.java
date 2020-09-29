@@ -1,6 +1,8 @@
 package me.gimme.gimmetag.extension;
 
 import me.gimme.gimmetag.events.PlayerTaggedEvent;
+import me.gimme.gimmetag.events.TagEndEvent;
+import me.gimme.gimmetag.events.TagStartEvent;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.tag.Role;
 import org.bukkit.Server;
@@ -10,13 +12,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-public class SoundEffects implements Listener {
+public class TagEventEffects implements Listener {
     private Server server;
 
-    public SoundEffects(@NotNull Server server) {
+    public TagEventEffects(@NotNull Server server) {
         this.server = server;
     }
 
+    /**
+     * Signals tag events with sound effects and chat message.
+     */
     @EventHandler(priority = EventPriority.MONITOR)
     private void onTag(PlayerTaggedEvent event) {
         if (event.isCancelled()) return;
@@ -36,5 +41,26 @@ public class SoundEffects implements Listener {
         }
     }
 
-    //TODO play sfx on round start and end
+    /**
+     * Signals the start of a round with sound effects.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onTagStart(TagStartEvent event) {
+        for (Player player : server.getOnlinePlayers()) {
+            if (event.getHunters().contains(player.getUniqueId())) SoundEffect.HUNTER_GAME_START.play(player);
+            SoundEffect.RUNNER_GAME_START.play(player);
+        }
+    }
+
+    /**
+     * Signals the end of a round with sound effects.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onTagEnd(TagEndEvent event) {
+        if (event.getWinner() != null) {
+            for (Player player : server.getOnlinePlayers()) {
+                SoundEffect.GAME_OVER.play(player);
+            }
+        }
+    }
 }

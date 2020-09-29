@@ -20,7 +20,7 @@ public class StopCommand extends BaseCommand {
 
     @Override
     protected @Nullable String execute(@NotNull CommandSender sender, @NotNull String[] args) {
-        if (!tagManager.stop(true)) return errorMessage("There is no ongoing round");
+        if (!tagManager.stop()) return errorMessage("There is no ongoing round");
         return null;
     }
 }

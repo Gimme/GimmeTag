@@ -3,14 +3,28 @@ package me.gimme.gimmetag.events;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Set;
+import java.util.UUID;
 
 public class TagStartEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean cancelled;
 
-    public TagStartEvent() {
+    private Set<UUID> hunters;
+
+    public TagStartEvent(@NotNull Set<UUID> hunters) {
         this.cancelled = false;
+        this.hunters = hunters;
+    }
+
+    /**
+     * @return the chosen hunters
+     */
+    public Set<UUID> getHunters() {
+        return hunters;
     }
 
     public boolean isCancelled() {
@@ -21,6 +35,8 @@ public class TagStartEvent extends Event implements Cancellable {
         this.cancelled = isCancelled;
     }
 
+    @NotNull
+    @Override
     public HandlerList getHandlers() {
         return HANDLERS;
     }

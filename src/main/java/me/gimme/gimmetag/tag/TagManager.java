@@ -1,13 +1,10 @@
 package me.gimme.gimmetag.tag;
 
-import me.gimme.gimmecore.chat.Chat;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.events.*;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -71,7 +68,7 @@ public class TagManager implements Listener {
     }
 
     public void onDisable() {
-        stop(false);
+        stop();
     }
 
     /**
@@ -151,7 +148,7 @@ public class TagManager implements Listener {
      * @return if a new round of tag was successfully started
      */
     private boolean start(int levelsToEnd, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
-        TagStartEvent event = new TagStartEvent();
+        TagStartEvent event = new TagStartEvent(chosenHunters);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
@@ -248,7 +245,7 @@ public class TagManager implements Listener {
                     tagScoreboard.addPoints(hunter, hunterPointsPerTick);
                 }
 
-                if (tagScoreboard.getWinner() != null) stop(true);
+                if (tagScoreboard.getWinner() != null) stop();
             }
         };
         pointsTicker.runTaskTimer(plugin, Config.SCORING_PERIOD.getValue(), Config.SCORING_PERIOD.getValue());
@@ -282,18 +279,13 @@ public class TagManager implements Listener {
     /**
      * Stops the current round of tag.
      *
-     * @param printScores if the scores of the round should be broadcast in chat
      * @return if an active round was successfully stopped
      */
-    public boolean stop(boolean printScores) {
+    public boolean stop() {
         if (!activeRound) return false;
         activeRound = false;
 
-        Bukkit.getPluginManager().callEvent(new TagEndEvent());
-
-        broadcastGameOverTitle(tagScoreboard.getWinner());
-        // Display the final scoreboard
-        if (printScores) tagScoreboard.printScores();
+        Bukkit.getPluginManager().callEvent(new TagEndEvent(tagScoreboard.getWinner(), tagScoreboard.getScores()));
 
         // Clear active countdown tasks
         for (BukkitRunnable task : countdownTasks.values()) {
@@ -318,35 +310,6 @@ public class TagManager implements Listener {
         tagScoreboard.reset();
 
         return true;
-    }
-
-    /**
-     * Sends a game over title message to all players showing who won the round.
-     *
-     * @param winner the player who won the round
-     */
-    private void broadcastGameOverTitle(@Nullable Player winner) {
-        roleByPlayer.keySet().stream()
-                .map(uuid -> server.getPlayer(uuid))
-                .filter(Objects::nonNull)
-                .forEach(p -> {
-                    if (winner != null) {
-                        SoundEffect.GAME_OVER.play(p);
-                        p.sendTitle(
-                                (p.equals(winner) ? ChatColor.GREEN : ChatColor.RED) + "GAME OVER",
-                                winner.getDisplayName() + ChatColor.YELLOW + " won",
-                                0,
-                                80,
-                                30);
-                    } else {
-                        p.sendTitle(
-                                ChatColor.YELLOW + "GAME OVER",
-                                "",
-                                0,
-                                60,
-                                30);
-                    }
-                });
     }
 
     /**

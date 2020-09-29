@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Keeps and displays the scores of players in an active round of tag.
  */
-class TagScoreboard implements Listener {
+public class TagScoreboard implements Listener {
 
     private static final String OBJECTIVE_NAME = "tag-game";
     private static final String OBJECTIVE_DISPLAyNAME = "Score";
@@ -129,31 +129,12 @@ class TagScoreboard implements Listener {
         objective.getScore(entry(player)).setScore(floorLevel);
     }
 
-    /**
-     * Broadcasts the current scores to the chat.
-     */
-    void printScores() {
-        TableBuilder tableBuilder = new ChatTableBuilder()
-                .setEllipsize(true)
-                .addCol(ChatTableBuilder.Alignment.LEFT, 0.3)
-                .addCol(ChatTableBuilder.Alignment.LEFT, 0.7)
-                .addRow("" + ChatColor.UNDERLINE + ChatColor.GOLD + "Player", "" + ChatColor.UNDERLINE + ChatColor.GOLD + "Score")
-                .addRow();
-
-        for (UUID uuid : scores.entrySet().stream()
-                .sorted(Comparator.comparingInt(e -> (Config.SCORING_HIGHEST_SCORE_WINS.getValue() ? -1 : 1) * e.getValue()))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList())) {
-            OfflinePlayer player = server.getOfflinePlayer(uuid);
-
-            tableBuilder.addRow(player.getName(), "" + ChatColor.YELLOW + getLevel(getScore(player)));
-        }
-
-        server.broadcastMessage(tableBuilder.build());
-    }
-
     void setLevelsToEnd(int levelsToEnd) {
         this.levelsToEnd = levelsToEnd;
+    }
+
+    Map<UUID, Integer> getScores() {
+        return scores;
     }
 
     private void initPlayer(@NotNull Player player) {
@@ -180,15 +161,15 @@ class TagScoreboard implements Listener {
     }
 
 
-    private static String entry(@NotNull Player player) {
-        return player.getName();
-    }
-
-    private static float getLevel(int points) {
+    public static float getLevel(int points) {
         return points / (float) Config.SCORING_POINTS_PER_LEVEL.getValue();
     }
 
-    private static int getPoints(float levels) {
+    public static int getPoints(float levels) {
         return Math.round(levels * Config.SCORING_POINTS_PER_LEVEL.getValue());
+    }
+
+    private static String entry(@NotNull Player player) {
+        return player.getName();
     }
 }
