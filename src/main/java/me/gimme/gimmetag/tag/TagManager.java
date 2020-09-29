@@ -471,10 +471,7 @@ public class TagManager implements Listener {
      * Clears all assigned player roles.
      */
     private void clearRoles() {
-        Iterator<UUID> iter = roleByPlayer.keySet().iterator();
-        while (iter.hasNext()) {
-            UUID uuid = iter.next();
-
+        for (UUID uuid : new HashSet<>(roleByPlayer.keySet())) {
             Player player = server.getPlayer(uuid);
             if (player == null) continue;
             setRole(player, null);
