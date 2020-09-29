@@ -75,7 +75,7 @@ class TagScoreboard implements Listener {
         Map.Entry<UUID, Integer> max = Collections.max(scores.entrySet(), Map.Entry.comparingByValue());
         Map.Entry<UUID, Integer> min = Collections.min(scores.entrySet(), Map.Entry.comparingByValue());
 
-        if (Config.SCORING_CONDITION_ABOVE.getValue()) {
+        if (Config.SCORING_END_CONDITION_OVER.getValue()) {
             if (getLevel(max.getValue()) < levelsToEnd) return null;
         } else {
             if (getLevel(min.getValue()) > levelsToEnd) return null;
