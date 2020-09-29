@@ -238,13 +238,14 @@ public class TagManager implements Listener {
                 boolean checkDistance = maxDistance > 0;
 
                 for (Player runner : getOnlineRunners()) {
-                    if (checkDistance && !isWithinRange(runner, getClosestHunter(runner, false), maxDistanceSquared))
+                    if (checkDistance && !isWithinRange(runner, getClosestHunter(runner, false), maxDistanceSquared, true))
                         continue;
                     tagScoreboard.addPoints(runner, runnerPointsPerTick);
                 }
 
                 for (Player hunter : getOnlineHunters(false)) {
-                    if (checkDistance && !isWithinRange(hunter, getClosestRunner(hunter), maxDistanceSquared)) continue;
+                    if (checkDistance && !isWithinRange(hunter, getClosestRunner(hunter), maxDistanceSquared, true))
+                        continue;
                     tagScoreboard.addPoints(hunter, hunterPointsPerTick);
                 }
 
@@ -264,10 +265,18 @@ public class TagManager implements Listener {
      * @param rangeSquared the range in blocks
      * @return if the specified players are within the specified range of each other
      */
-    private boolean isWithinRange(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared) {
+    private boolean isWithinRange(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared, boolean ignoreY) {
         if (otherPlayer == null) return false;
 
-        double distanceSquared = player.getLocation().distanceSquared(otherPlayer.getLocation());
+        Location location = player.getLocation();
+        Location otherLocation = otherPlayer.getLocation();
+
+        if (ignoreY) {
+            location.setY(0);
+            otherLocation.setY(0);
+        }
+
+        double distanceSquared = location.distanceSquared(otherLocation);
         return distanceSquared <= rangeSquared;
     }
 
@@ -576,17 +585,12 @@ public class TagManager implements Listener {
     private void deathTag(@NotNull Player player) {
         int tagDeathDistance = Config.TAG_DEATH_DISTANCE.getValue();
         if (tagDeathDistance <= 0) return;
+        int tagDeathDistanceSquared = tagDeathDistance * tagDeathDistance;
 
         Player closestHunter = getClosestHunter(player, false);
         if (closestHunter == null) return;
 
-        Location playerLocation2D = player.getLocation();
-        Location hunterLocation2D = closestHunter.getLocation();
-        playerLocation2D.setY(0);
-        hunterLocation2D.setY(0);
-
-        double distance2D = playerLocation2D.distance(hunterLocation2D);
-        if (distance2D > tagDeathDistance) return;
+        if (!isWithinRange(player, closestHunter, tagDeathDistanceSquared, true)) return;
 
         tag(player, closestHunter);
     }

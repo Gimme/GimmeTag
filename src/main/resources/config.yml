@@ -28,8 +28,8 @@ number-of-hunters: 1
 tag:
   # Sleep duration after being tagged (in seconds).
   sleep-time: 20
-  # Distance a hunter needs to be within of a player death for it to count as a tag event (ignores y-level).
-  death-distance: -1
+  # Range (ignoring y-level) a hunter needs to be within of a player death for it to count as a tag event.
+  death-distance: 10
 
 
 
@@ -58,7 +58,7 @@ scoring:
   points-on-tag: 0
   # Points gained for getting tagged by a hunter.
   points-on-tagged: 0
-  # Range (in blocks) to be within of a (non-sleeping) player of the opposite team (hunter/runner) to gain points.
+  # Range (ignoring y-level) to be within of a (non-sleeping) player of the opposite team (hunter/runner) to gain points.
   # -1 to disable this range check.
   hunter-distance: -1
 
