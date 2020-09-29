@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.sfx.SFX;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -72,7 +72,7 @@ public class HunterCompass extends AbilityItem {
         if (isActive(itemStack)) return false; // One use
 
         alwaysTargetClosestPlayer(itemStack, user);
-        SFX.ACTIVATE.play(user);
+        SoundEffect.ACTIVATE.play(user);
         return true;
     }
 

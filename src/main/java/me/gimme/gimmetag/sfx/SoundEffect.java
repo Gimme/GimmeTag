@@ -1,13 +1,24 @@
 package me.gimme.gimmetag.sfx;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.Instrument;
+import org.bukkit.Note;
+import org.bukkit.Sound;
 
 public abstract class SoundEffect {
-    public abstract void play(@NotNull Player player);
+    public static final SFX COUNTDOWN = new NoteSFX(Instrument.BASS_GUITAR, Note.natural(0, Note.Tone.C));
+    public static final SFX COUNTDOWN_FINISH = new NoteSFX(Instrument.GUITAR, Note.natural(1, Note.Tone.C));
 
-    protected static Location getFrontOfPlayer(@NotNull Player player) {
-        return player.getLocation().add(player.getLocation().getDirection());
-    }
+    public static final SFX TAG = new NoteSFX(Instrument.CHIME, Note.natural(1, Note.Tone.C));
+    public static final SFX TAGGED = new NoteSFX(Instrument.CHIME, Note.natural(0, Note.Tone.C));
+    public static final SFX TAG_BROADCAST = new NoteSFX(Instrument.CHIME, Note.natural(0,  Note.Tone.C));
+
+    public static final SFX TELEPORT = new SoundSFX(Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1.4f);
+    public static final SFX ACTIVATE = new NoteSFX(Instrument.BIT, Note.natural(1, Note.Tone.C));
+    public static final SFX USE_EFFECT = new SoundSFX(Sound.ENTITY_ZOMBIE_INFECT, 1f, 1.4f);
+    public static final SFX THROW = new SoundSFX(Sound.ENTITY_WITCH_THROW);
+
+    public static final SFX GAME_OVER = new SFXCombination(
+            new SoundSFX(Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR, true),
+            new SFXCombination(10, new SoundSFX(Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR, true))
+    );
 }

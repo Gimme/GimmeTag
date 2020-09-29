@@ -1,6 +1,6 @@
 package me.gimme.gimmetag.item;
 
-import me.gimme.gimmetag.sfx.SFX;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -66,7 +66,7 @@ public abstract class AbilityItem extends CustomItem {
         if (cooldownTicks > 0) user.setCooldown(itemStack.getType(), cooldownTicks);
         if (useResponseMessage != null && !useResponseMessage.isEmpty())
             user.sendMessage(USE_RESPONSE_MESSAGE_FORMAT + useResponseMessage);
-        if (!muted) SFX.USE_EFFECT.play(user);
+        if (!muted) SoundEffect.USE_EFFECT.play(user);
     }
 
     protected abstract boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user);

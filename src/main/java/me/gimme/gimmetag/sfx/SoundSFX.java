@@ -4,25 +4,25 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-class StandardSoundEffect extends SoundEffect {
+class SoundSFX extends SFX {
     private Sound sound;
     private float volume;
     private float pitch;
     private boolean local;
 
-    StandardSoundEffect(@NotNull Sound sound) {
+    SoundSFX(@NotNull Sound sound) {
         this(sound, 1f, 1f);
     }
 
-    StandardSoundEffect(@NotNull Sound sound, float volume, float pitch) {
+    SoundSFX(@NotNull Sound sound, float volume, float pitch) {
         this(sound, volume, pitch, false);
     }
 
-    StandardSoundEffect(@NotNull Sound sound, boolean local) {
+    SoundSFX(@NotNull Sound sound, boolean local) {
         this(sound, 1f, 1f, local);
     }
 
-    StandardSoundEffect(@NotNull Sound sound, float volume, float pitch, boolean local) {
+    SoundSFX(@NotNull Sound sound, float volume, float pitch, boolean local) {
         this.sound = sound;
         this.volume = volume;
         this.pitch = pitch;

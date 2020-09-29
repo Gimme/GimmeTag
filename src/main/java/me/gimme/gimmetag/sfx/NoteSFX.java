@@ -5,11 +5,11 @@ import org.bukkit.Note;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-class NoteSoundEffect extends SoundEffect {
+class NoteSFX extends SFX {
     private Instrument instrument;
     private Note note;
 
-    NoteSoundEffect(@NotNull Instrument instrument, @NotNull Note note){
+    NoteSFX(@NotNull Instrument instrument, @NotNull Note note){
         this.instrument = instrument;
         this.note = note;
     }

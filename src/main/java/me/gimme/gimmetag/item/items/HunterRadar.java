@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.sfx.SFX;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -100,7 +100,7 @@ public class HunterRadar extends AbilityItem {
             }.start();
         }
 
-        SFX.ACTIVATE.play(user);
+        SoundEffect.ACTIVATE.play(user);
         return true;
     }
 

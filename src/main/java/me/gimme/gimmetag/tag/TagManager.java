@@ -5,7 +5,7 @@ import me.gimme.gimmetag.events.PlayerRoleSetEvent;
 import me.gimme.gimmetag.events.PlayerTaggedEvent;
 import me.gimme.gimmetag.events.TagStartEvent;
 import me.gimme.gimmetag.item.ItemManager;
-import me.gimme.gimmetag.sfx.SFX;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -207,7 +207,7 @@ public class TagManager implements Listener {
                             .map(uuid -> server.getPlayer(uuid))
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                SFX.COUNTDOWN.play(p);
+                                SoundEffect.COUNTDOWN.play(p);
                                 if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", getSeconds() + "", 0, 25, 10);
                             });
                 }
@@ -219,7 +219,7 @@ public class TagManager implements Listener {
                         .map(uuid -> server.getPlayer(uuid))
                         .filter(Objects::nonNull)
                         .forEach(p -> {
-                            SFX.COUNTDOWN_FINISH.play(p);
+                            SoundEffect.COUNTDOWN_FINISH.play(p);
                             if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", "They're coming!", 0, 25, 10);
                         });
             }
@@ -321,7 +321,7 @@ public class TagManager implements Listener {
                 .filter(Objects::nonNull)
                 .forEach(p -> {
                     if (winner != null) {
-                        SFX.GAME_OVER.play(p);
+                        SoundEffect.GAME_OVER.play(p);
                         p.sendTitle(
                                 (p.equals(winner) ? ChatColor.GREEN : ChatColor.RED) + "GAME OVER",
                                 winner.getDisplayName() + ChatColor.YELLOW + " won",
@@ -357,8 +357,8 @@ public class TagManager implements Listener {
 
         applySleep(runner, this.sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
 
-        SFX.TAG.play(hunter);
-        SFX.TAGGED.play(runner);
+        SoundEffect.TAG.play(hunter);
+        SoundEffect.TAGGED.play(runner);
 
         tagScoreboard.addPoints(hunter, Config.SCORING_POINTS_ON_TAG.getValue());
         tagScoreboard.addPoints(runner, Config.SCORING_POINTS_ON_TAGGED.getValue());
@@ -368,7 +368,7 @@ public class TagManager implements Listener {
             if (p == hunter) continue;
 
             server.broadcastMessage(ChatColor.RED + runner.getDisplayName() + ChatColor.RED + " was tagged!");
-            SFX.TAG_BROADCAST.play(p);
+            SoundEffect.TAG_BROADCAST.play(p);
         }
     }
 

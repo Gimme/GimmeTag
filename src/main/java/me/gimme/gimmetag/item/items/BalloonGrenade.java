@@ -1,7 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.sfx.SFX;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,7 +49,7 @@ public class BalloonGrenade extends AbilityItem {
         ThrownPotion thrownPotion = user.launchProjectile(ThrownPotion.class);
         thrownPotion.setItem(itemStack);
 
-        SFX.THROW.play(user);
+        SoundEffect.THROW.play(user);
         return true;
     }
 }
