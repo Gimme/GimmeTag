@@ -2,6 +2,7 @@ package me.gimme.gimmetag.tag;
 
 import me.gimme.gimmecore.chat.Chat;
 import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.events.HunterSleepEvent;
 import me.gimme.gimmetag.events.PlayerRoleSetEvent;
 import me.gimme.gimmetag.events.PlayerTaggedEvent;
 import me.gimme.gimmetag.events.TagStartEvent;
@@ -392,6 +393,8 @@ public class TagManager implements Listener {
      * @param title   the title of the "waking up in" message
      */
     private void applySleep(@NotNull Player player, int seconds, @NotNull String title) {
+        Bukkit.getPluginManager().callEvent(new HunterSleepEvent(player, seconds));
+
         BukkitRunnable task = new BukkitRunnable() {
             @Override
             public void run() {
