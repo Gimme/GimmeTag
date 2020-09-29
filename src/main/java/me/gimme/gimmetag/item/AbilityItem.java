@@ -50,7 +50,7 @@ public abstract class AbilityItem extends CustomItem {
         if (cooldownTicks > 0 && !hideCooldown) {
             ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
             List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
-            lore.add(0, ChatColor.GRAY + getCooldown() + " Cooldown");
+            lore.add(0, ChatColor.GRAY + getCooldownString() + " Cooldown");
             itemMeta.setLore(lore);
             itemStack.setItemMeta(itemMeta);
         }
@@ -79,7 +79,11 @@ public abstract class AbilityItem extends CustomItem {
         hideCooldown = true;
     }
 
-    protected String getCooldown() {
+    protected void setDurationInfo(@NotNull ItemMeta itemMeta, int durationTicks) {
+        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY+ " (" + formatSeconds(durationTicks) + ")");
+    }
+
+    private String getCooldownString() {
         return formatSeconds(cooldownTicks);
     }
 }

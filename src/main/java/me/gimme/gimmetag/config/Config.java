@@ -54,4 +54,6 @@ public abstract class Config {
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration", Number.class);
 
     public static final AbilityItemConfig BALLOON_GRENADE = new AbilityItemConfig(CUSTOM_ITEM, "balloon_grenade");
+
+    public static final AbilityItemConfig HUNTER_RADAR = new AbilityItemConfig(CUSTOM_ITEM, "hunter_radar");
 }

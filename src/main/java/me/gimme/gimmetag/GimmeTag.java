@@ -90,7 +90,13 @@ public final class GimmeTag extends JavaPlugin {
                 Config.BALLOON_GRENADE.getDuration().doubleValue(),
                 Config.BALLOON_GRENADE.getLevel()
         ));
-        itemManager.registerItem(new HunterRadar(this));
+        itemManager.registerItem(new HunterRadar(
+                Config.HUNTER_RADAR.getCooldown().doubleValue(),
+                Config.HUNTER_RADAR.isConsumable(),
+                Config.HUNTER_RADAR.getDuration().doubleValue(),
+                Config.HUNTER_RADAR.getLevel(),
+                this
+        ));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {

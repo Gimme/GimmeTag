@@ -115,3 +115,11 @@ custom-item:
     cooldown: 0.0
     duration: 7.0
     level: 1
+
+  hunter_radar:
+    consumable: false
+    cooldown: 0.5
+    duration: -1
+    # Level 1: Show current distance as of activation (no duration)
+    # Level 2: Update distance every tick (duration)
+    level: 2

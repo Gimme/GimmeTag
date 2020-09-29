@@ -33,7 +33,7 @@ public class SpeedBoost extends AbilityItem {
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY+ " (" + formatSeconds(durationTicks) + ")");
+        setDurationInfo(itemMeta, durationTicks);
     }
 
     @Override

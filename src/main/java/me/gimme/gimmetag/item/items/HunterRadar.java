@@ -25,25 +25,31 @@ public class HunterRadar extends AbilityItem {
     private static final List<String> LORE = Collections.singletonList("" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)");
 
     private GimmeTag plugin;
+    private long durationMillis;
+    private int level;
+
     private Set<UUID> activeItems = new HashSet<>();
 
-    public HunterRadar(@NotNull GimmeTag plugin) {
+    public HunterRadar(double cooldown, boolean consumable, double duration, int level, @NotNull GimmeTag plugin) {
         super(
                 "Hunter Radar",
                 TYPE,
                 true,
-                0.5,
-                false,
+                cooldown,
+                consumable,
                 null
         );
 
         this.plugin = plugin;
+        this.durationMillis = Math.round(duration * 1000);
+        this.level = level;
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
         mute();
-        hideCooldown();
+        if (0 < durationMillis && durationMillis < 1000) setDurationInfo(itemMeta, (int) durationMillis * 50);
+        else hideCooldown();
         itemMeta.getPersistentDataContainer().set(getIdKey(), PersistentDataType.STRING, UUID.randomUUID().toString());
         itemMeta.setLore(LORE);
     }
@@ -55,35 +61,45 @@ public class HunterRadar extends AbilityItem {
         UUID uuid = UUID.fromString(Objects.requireNonNull(uuidString));
 
         if (activeItems.contains(uuid)) return false;
-        activeItems.add(uuid);
-        SoundEffect.ACTIVATE.play(user);
 
-        new HunterCompass.ItemOngoingUseTaskTimer(plugin, user, itemStack, 10, null) {
-            Entity closestTarget = null;
+        if (level <= 1) { // Level 1
+            Entity closestRunner = plugin.getTagManager().getClosestRunner(user);
+            if (closestRunner == null) return false;
 
-            @Override
-            public void onRecalculation() {
-                closestTarget = plugin.getTagManager().getClosestRunner(user);
-            }
+            double distance = user.getLocation().distance(closestRunner.getLocation());
+            sendActionBar(user, formatMeters(distance));
+        } else { // Level 2
+            activeItems.add(uuid);
+            long currentTime = System.currentTimeMillis();
+            new HunterCompass.ItemOngoingUseTaskTimer(plugin, user, itemStack, 10,
+                    () -> durationMillis > 0 && System.currentTimeMillis() > currentTime + durationMillis) {
+                Entity closestTarget = null;
 
-            @Override
-            public void onTick() {
-                if (closestTarget == null || !isItemInHand(user, item)) {
-                    hideActionBar(user);
-                    return;
+                @Override
+                public void onRecalculation() {
+                    closestTarget = plugin.getTagManager().getClosestRunner(user);
                 }
 
-                double distance = closestTarget.getLocation().distance(user.getLocation());
-                sendActionBar(user, ChatColor.YELLOW + formatMeters(distance));
-            }
+                @Override
+                public void onTick() {
+                    if (closestTarget == null || (durationMillis < 0 && !isItemInHand(user, item))) {
+                        hideActionBar(user);
+                        return;
+                    }
 
-            @Override
-            public void onFinish() {
-                hideActionBar(user);
-                activeItems.remove(uuid);
-            }
-        }.start();
+                    double distance = closestTarget.getLocation().distance(user.getLocation());
+                    sendActionBar(user, formatMeters(distance));
+                }
 
+                @Override
+                public void onFinish() {
+                    hideActionBar(user);
+                    activeItems.remove(uuid);
+                }
+            }.start();
+        }
+
+        SoundEffect.ACTIVATE.play(user);
         return true;
     }
 
@@ -92,7 +108,7 @@ public class HunterRadar extends AbilityItem {
     }
 
     private static boolean isItemInHand(@NotNull Player player, ItemStack itemStack) {
-        return itemStack.equals(player.getInventory().getItemInMainHand())  || itemStack.equals(player.getInventory().getItemInOffHand());
+        return itemStack.equals(player.getInventory().getItemInMainHand()) || itemStack.equals(player.getInventory().getItemInOffHand());
     }
 
     private static void sendActionBar(@NotNull Player player, @NotNull String text) {
@@ -104,6 +120,6 @@ public class HunterRadar extends AbilityItem {
     }
 
     private static String formatMeters(double blocks) {
-        return df.format(blocks) + " m";
+        return ChatColor.YELLOW + df.format(blocks) + " m";
     }
 }
