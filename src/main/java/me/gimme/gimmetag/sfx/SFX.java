@@ -8,6 +8,6 @@ public abstract class SFX {
     public abstract void play(@NotNull Player player);
 
     protected static Location getFrontOfPlayer(@NotNull Player player) {
-        return player.getLocation().add(player.getLocation().getDirection());
+        return player.getLocation().add(player.getLocation().getDirection().multiply(0.5));
     }
 }

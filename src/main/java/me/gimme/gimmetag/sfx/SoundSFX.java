@@ -32,6 +32,6 @@ class SoundSFX extends SFX {
     @Override
     public void play(@NotNull Player player) {
         if (local) player.playSound(getFrontOfPlayer(player), sound, volume, pitch);
-        else player.getWorld().playSound(player.getLocation(), sound, volume, pitch);
+        else player.getWorld().playSound(getFrontOfPlayer(player), sound, volume, pitch);
     }
 }
