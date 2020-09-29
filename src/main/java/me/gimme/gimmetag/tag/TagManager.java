@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.tag;
 
+import me.gimme.gimmecore.chat.Chat;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.events.PlayerRoleSetEvent;
 import me.gimme.gimmetag.events.PlayerTaggedEvent;
@@ -7,6 +8,8 @@ import me.gimme.gimmetag.events.TagStartEvent;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -172,6 +175,8 @@ public class TagManager implements Listener {
         }
 
         // Display countdown
+        Chat.sendProgressBar(plugin, () -> !isActiveRound(), getOnlineRunners(), sleepSeconds * 20,
+                Role.HUNTER.getColor() + "Hunter Waking Up", BarColor.RED, BarFlag.DARKEN_SKY, BarFlag.CREATE_FOG);
         new CountdownTimerTask(plugin, sleepSeconds) {
             @Override
             protected void onCount() {
