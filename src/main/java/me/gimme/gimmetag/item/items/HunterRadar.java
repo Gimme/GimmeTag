@@ -82,13 +82,14 @@ public class HunterRadar extends AbilityItem {
 
                 @Override
                 public void onTick() {
-                    if (closestTarget == null || (durationMillis < 0 && !isItemInHand(user, item))) {
+                    if (durationMillis < 0 && !isItemInHand(user, item)) {
                         hideActionBar(user);
-                        return;
+                    } else if (closestTarget == null) {
+                        sendActionBar(user, ChatColor.YELLOW + "---");
+                    } else {
+                        double distance = closestTarget.getLocation().distance(user.getLocation());
+                        sendActionBar(user, formatMeters(distance));
                     }
-
-                    double distance = closestTarget.getLocation().distance(user.getLocation());
-                    sendActionBar(user, formatMeters(distance));
                 }
 
                 @Override
