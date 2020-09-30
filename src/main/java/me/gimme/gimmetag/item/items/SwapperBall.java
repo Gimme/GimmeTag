@@ -37,8 +37,7 @@ public class SwapperBall extends AbilityItem {
                 MATERIAL,
                 true,
                 cooldown,
-                consumable,
-                null
+                consumable
         );
 
         this.allowHunterSwap = allowHunterSwap;

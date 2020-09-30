@@ -28,7 +28,6 @@ public class HunterRadar extends ContinuousAbilityItem {
                 TYPE,
                 true,
                 consumable,
-                null,
                 level <= 1 ? 0 : duration
         );
 

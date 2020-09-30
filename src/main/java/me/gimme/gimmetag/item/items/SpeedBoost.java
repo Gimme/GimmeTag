@@ -23,8 +23,7 @@ public class SpeedBoost extends AbilityItem {
                 Material.SUGAR,
                 true,
                 cooldown,
-                consumable,
-                null
+                consumable
         );
 
         this.durationTicks = (int) Math.round(duration * 20);

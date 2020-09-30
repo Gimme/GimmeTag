@@ -20,12 +20,12 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
     private Set<UUID> activeItems = new HashSet<>();
 
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, boolean consumable, @Nullable String useResponseMessage) {
-        this(name, type, glowing, consumable, useResponseMessage, -1);
+    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, boolean consumable) {
+        this(name, type, glowing, consumable, -1);
     }
 
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, boolean consumable, @Nullable String useResponseMessage, double duration) {
-        super(name, type, glowing, 0.5d, consumable, useResponseMessage);
+    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, boolean consumable, double duration) {
+        super(name, type, glowing, 0.5d, consumable);
 
         setDuration(duration);
         mute();

@@ -25,10 +25,10 @@ public class HunterCompass extends ContinuousAbilityItem {
                 "Hunter Compass",
                 TYPE,
                 true,
-                false,
-                "Compass: points to closest runner"
+                false
         );
 
+        setUseResponseMessage("Compass: points to closest runner");
         this.tagManager = tagManager;
     }
 

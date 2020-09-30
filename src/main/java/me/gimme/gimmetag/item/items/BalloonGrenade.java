@@ -26,8 +26,7 @@ public class BalloonGrenade extends AbilityItem {
                 Material.SPLASH_POTION,
                 true,
                 cooldown,
-                consumable,
-                null
+                consumable
         );
 
         this.durationTicks = (int) Math.round(duration * 20);

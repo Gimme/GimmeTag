@@ -20,28 +20,25 @@ public abstract class AbilityItem extends CustomItem {
     private int cooldownTicks;
     private boolean consumable;
     @Nullable
-    private String useResponseMessage;
+    private String useResponseMessage = null;
     private boolean muted = false;
     private boolean hideCooldown = false;
     private boolean showDuration = false;
     private int durationTicks = 0;
 
-    public AbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, double cooldown, boolean consumable,
-                       @Nullable String useResponseMessage) {
+    public AbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, double cooldown, boolean consumable) {
         super(name, type, glowing);
 
         setCooldown(cooldown);
         this.consumable = consumable;
-        this.useResponseMessage = useResponseMessage;
     }
 
     public AbilityItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, boolean glowing,
-                       double cooldown, boolean consumable, @Nullable String useResponseMessage) {
+                       double cooldown, boolean consumable) {
         super(id, displayName, type, glowing);
 
-        this.cooldownTicks = (int) Math.round(cooldown * 20);
+        setCooldown(cooldown);
         this.consumable = consumable;
-        this.useResponseMessage = useResponseMessage;
     }
 
     @Override
@@ -77,6 +74,10 @@ public abstract class AbilityItem extends CustomItem {
 
     protected void setCooldown(double seconds) {
         this.cooldownTicks = (int) Math.round(seconds * 20);
+    }
+
+    protected void setUseResponseMessage(@Nullable String message) {
+        this.useResponseMessage = message;
     }
 
     protected void mute() {
