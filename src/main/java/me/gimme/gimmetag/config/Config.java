@@ -38,10 +38,12 @@ public abstract class Config {
 
     private static final AbstractConfig<ConfigurationSection> HUNTER = new ValueConfig<>("hunter", ConfigurationSection.class);
     public static final AbstractConfig<Integer> HUNTER_LEATHER_COLOR = new ValueConfig<>(HUNTER, "leather-color", Integer.class);
+    public static final AbstractConfig<Boolean> HUNTER_TEAMMATE_OUTLINE = new ValueConfig<>(HUNTER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> HUNTER_HIDE_NAME_TAG = new ValueConfig<>(HUNTER, "hide-name-tag", Boolean.class);
     public static final AbstractConfig<Map<String, Integer>> HUNTER_ITEMS = new MapConfig<>(HUNTER, "items");
 
     private static final AbstractConfig<ConfigurationSection> RUNNER = new ValueConfig<>("runner", ConfigurationSection.class);
+    public static final AbstractConfig<Boolean> RUNNER_TEAMMATE_OUTLINE = new ValueConfig<>(RUNNER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_HIDE_NAME_TAG = new ValueConfig<>(RUNNER, "hide-name-tag", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_RUNNER = new ValueConfig<>(RUNNER, "collision-with-runner", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_HUNTER = new ValueConfig<>(RUNNER, "collision-with-hunter", Boolean.class);

@@ -258,29 +258,6 @@ public class TagManager implements Listener {
     }
 
     /**
-     * Returns if the specified players are within the specified range of each other.
-     *
-     * @param player       the first player to check
-     * @param otherPlayer  the second player to check
-     * @param rangeSquared the range in blocks
-     * @return if the specified players are within the specified range of each other
-     */
-    private boolean isWithinRange(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared, boolean ignoreY) {
-        if (otherPlayer == null) return false;
-
-        Location location = player.getLocation();
-        Location otherLocation = otherPlayer.getLocation();
-
-        if (ignoreY) {
-            location.setY(0);
-            otherLocation.setY(0);
-        }
-
-        double distanceSquared = location.distanceSquared(otherLocation);
-        return distanceSquared <= rangeSquared;
-    }
-
-    /**
      * Stops the current round of tag.
      *
      * @return if an active round was successfully stopped
@@ -314,6 +291,15 @@ public class TagManager implements Listener {
         tagScoreboard.reset();
 
         return true;
+    }
+
+    /**
+     * @param player the player to get the role of
+     * @return the role of the specified player, or null if the player has no role
+     */
+    @Nullable
+    public Role getRole(@NotNull OfflinePlayer player) {
+        return roleByPlayer.get(player.getUniqueId());
     }
 
     /**
@@ -492,15 +478,6 @@ public class TagManager implements Listener {
      */
     private void clearDesiredRoles() {
         desiredHunters.clear();
-    }
-
-    /**
-     * @param player the player to get the role of
-     * @return the role of the specified player, or null if the player has no role
-     */
-    @Nullable
-    private Role getRole(@NotNull OfflinePlayer player) {
-        return roleByPlayer.get(player.getUniqueId());
     }
 
     /**
@@ -724,6 +701,35 @@ public class TagManager implements Listener {
      */
     public Set<UUID> getRunners() {
         return runners;
+    }
+
+    public Set<UUID> getPlayersByRole(@NotNull Role role) {
+        if (role.equals(Role.RUNNER)) return getRunners();
+        else return getHunters();
+    }
+
+
+    /**
+     * Returns if the specified players are within the specified range of each other.
+     *
+     * @param player       the first player to check
+     * @param otherPlayer  the second player to check
+     * @param rangeSquared the range in blocks
+     * @return if the specified players are within the specified range of each other
+     */
+    private static boolean isWithinRange(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared, boolean ignoreY) {
+        if (otherPlayer == null) return false;
+
+        Location location = player.getLocation();
+        Location otherLocation = otherPlayer.getLocation();
+
+        if (ignoreY) {
+            location.setY(0);
+            otherLocation.setY(0);
+        }
+
+        double distanceSquared = location.distanceSquared(otherLocation);
+        return distanceSquared <= rangeSquared;
     }
 
 

@@ -4,6 +4,7 @@ main: ${project.groupId}.${project.artifactId}
 api-version: 1.13
 authors: [Gimme]
 description: ${project.description}
+softdepend: [ProtocolLib]
 
 commands:
   tag:

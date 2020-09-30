@@ -70,6 +70,7 @@ scoring:
 
 hunter:
   leather-color: 0xFF0000
+  teammate-outline: true
   hide-name-tag: true
   items:
     hunter_compass: 1
@@ -79,6 +80,7 @@ hunter:
     arrow: 1
 
 runner:
+  teammate-outline: true
   hide-name-tag: true
   collision-with-runner: true
   collision-with-hunter: false

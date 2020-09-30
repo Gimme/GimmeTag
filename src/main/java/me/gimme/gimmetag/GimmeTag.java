@@ -7,6 +7,7 @@ import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.extension.ResultsDisplay;
 import me.gimme.gimmetag.extension.SleepProgressbar;
 import me.gimme.gimmetag.extension.TagEventEffects;
+import me.gimme.gimmetag.extension.TeamOutline;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
 import me.gimme.gimmetag.item.ItemManager;
@@ -20,6 +21,8 @@ public final class GimmeTag extends JavaPlugin {
 
     public static final String PERMISSIONS_PATH = "gimmetag";
     public static final String TAG_COMMAND = "tag";
+
+    private static final String PROTOCOL_LIB_NAME = "ProtocolLib";
 
     private CommandManager commandManager;
     private ItemManager itemManager;
@@ -66,6 +69,9 @@ public final class GimmeTag extends JavaPlugin {
         registerEvents(new SleepProgressbar(this, tagManager));
         registerEvents(new TagEventEffects(getServer()));
         registerEvents(new ResultsDisplay(getServer()));
+        if (getServer().getPluginManager().getPlugin(PROTOCOL_LIB_NAME) != null)
+            registerEvents(new TeamOutline(this, tagManager));
+        else getLogger().warning(PROTOCOL_LIB_NAME + " is needed to show team outlines.");
     }
 
     private void registerCustomItems() {
