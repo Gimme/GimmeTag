@@ -32,7 +32,6 @@ public class TagScoreboard implements Listener {
     private static final ChatColor HUNTERS_TEAM_COLOR = ChatColor.RED;
     private static final String RUNNERS_TEAM_NAME = "Runners";
     private static final ChatColor RUNNERS_TEAM_COLOR = ChatColor.BLUE;
-    private static final boolean RUNNERS_FRIENDLY_FIRE = false; // TODO
 
     private Server server;
 
@@ -53,13 +52,25 @@ public class TagScoreboard implements Listener {
         huntersTeam.setColor(HUNTERS_TEAM_COLOR);
         huntersTeam.setPrefix("" + HUNTERS_TEAM_COLOR);
         huntersTeam.setCanSeeFriendlyInvisibles(true);
-        huntersTeam.setAllowFriendlyFire(false);
+        huntersTeam.setAllowFriendlyFire(Config.ENABLE_PVP.getValue());
+        if (Config.HUNTER_HIDE_NAME_TAG.getValue())
+            huntersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
+        huntersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
 
         runnersTeam = scoreboard.registerNewTeam(RUNNERS_TEAM_NAME);
         runnersTeam.setColor(RUNNERS_TEAM_COLOR);
         runnersTeam.setPrefix("" + RUNNERS_TEAM_COLOR);
         runnersTeam.setCanSeeFriendlyInvisibles(true);
-        runnersTeam.setAllowFriendlyFire(RUNNERS_FRIENDLY_FIRE);
+        runnersTeam.setAllowFriendlyFire(Config.ENABLE_PVP.getValue());
+        if (Config.RUNNER_HIDE_NAME_TAG.getValue())
+            runnersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
+        if (Config.RUNNER_COLLISION_WITH_RUNNER.getValue() && Config.RUNNER_COLLISION_WITH_HUNTER.getValue()) {
+            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        } else if (Config.RUNNER_COLLISION_WITH_RUNNER.getValue()) {
+            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
+        } else if (Config.RUNNER_COLLISION_WITH_HUNTER.getValue()) {
+            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
+        }
 
         objective = scoreboard.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA, OBJECTIVE_DISPLAyNAME, RenderType.INTEGER);
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);

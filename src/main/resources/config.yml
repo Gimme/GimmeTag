@@ -64,10 +64,11 @@ scoring:
 
 
 
-# ---------- INVENTORY ----------
+# ---------- TEAMS ----------
 
 hunter:
   leather-color: 0xFF0000
+  hide-name-tag: true
   items:
     hunter_compass: 1
     hunter_radar: 1
@@ -76,7 +77,9 @@ hunter:
     arrow: 1
 
 runner:
-  leather-color: 0x0000FF
+  hide-name-tag: true
+  collision-with-runner: true
+  collision-with-hunter: false
   items:
     swapper_ball: 1
     egg: 5
