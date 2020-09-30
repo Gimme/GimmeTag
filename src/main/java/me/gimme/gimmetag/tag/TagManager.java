@@ -158,8 +158,12 @@ public class TagManager implements Listener {
 
         // Assign roles
         for (Player player : server.getOnlinePlayers()) {
-            if (chosenHunters.contains(player.getUniqueId())) setRole(player, Role.HUNTER);
-            else setRole(player, Role.RUNNER);
+            if (chosenHunters.contains(player.getUniqueId())) {
+                setRole(player, Role.HUNTER);
+                tagScoreboard.addLevels(player, Config.SCORING_INITIAL_HUNTER_STARTING_LEVEL.getValue() - Config.SCORING_STARTING_LEVEL.getValue());
+            } else {
+                setRole(player, Role.RUNNER);
+            }
         }
 
         // Make hunters sleep

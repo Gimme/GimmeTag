@@ -22,6 +22,7 @@ public abstract class Config {
 
     private static final AbstractConfig<ConfigurationSection> SCORING = new ValueConfig<>("scoring", ConfigurationSection.class);
     public static final AbstractConfig<Integer> SCORING_STARTING_LEVEL = new ValueConfig<>(SCORING, "starting-level", Integer.class);
+    public static final AbstractConfig<Integer> SCORING_INITIAL_HUNTER_STARTING_LEVEL = new ValueConfig<>(SCORING, "initial-hunter-starting-level", Integer.class);
     public static final AbstractConfig<Integer> SCORING_LEVELS_TO_END = new ValueConfig<>(SCORING, "levels-to-end", Integer.class);
     public static final AbstractConfig<Boolean> SCORING_END_CONDITION_OVER = new ValueConfig<>(SCORING, "end-condition-over", Boolean.class);
     public static final AbstractConfig<Boolean> SCORING_HIGHEST_SCORE_WINS = new ValueConfig<>(SCORING, "highest-score-wins", Boolean.class);

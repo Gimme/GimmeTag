@@ -140,6 +140,16 @@ public class TagScoreboard implements Listener {
         objective.getScore(entry(player)).setScore(floorLevel);
     }
 
+    /**
+     * Adds the specified amount of levels to the specified player's score.
+     *
+     * @param player the player to give the levels to
+     * @param levels the levels to give to the player
+     */
+    void addLevels(@NotNull Player player, int levels) {
+        addPoints(player, getPoints(levels));
+    }
+
     void setLevelsToEnd(int levelsToEnd) {
         this.levelsToEnd = levelsToEnd;
     }

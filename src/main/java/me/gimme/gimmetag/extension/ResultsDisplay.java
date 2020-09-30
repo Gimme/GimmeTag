@@ -70,6 +70,9 @@ public class ResultsDisplay implements Listener {
                 .setEllipsize(true)
                 .addCol(ChatTableBuilder.Alignment.LEFT, 0.3)
                 .addCol(ChatTableBuilder.Alignment.LEFT, 0.7)
+                .addRow()
+                .addRow()
+                .addRow()
                 .addRow("" + ChatColor.UNDERLINE + ChatColor.GOLD + "Player", "" + ChatColor.UNDERLINE + ChatColor.GOLD + "Score")
                 .addRow();
 
