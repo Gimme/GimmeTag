@@ -82,7 +82,7 @@ public class ResultsDisplay implements Listener {
             tableBuilder.addRow(player.getName(), "" + ChatColor.YELLOW + TagScoreboard.getLevel(scores.get(player.getUniqueId())));
         }
 
-        String border = "---------------";
+        String border = ChatColor.BLACK + "----------------------" + ChatColor.RESET;
         server.broadcastMessage(border + "\n"
                 + tableBuilder.build() + "\n"
                 + border
