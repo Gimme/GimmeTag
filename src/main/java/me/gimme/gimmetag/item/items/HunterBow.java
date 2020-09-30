@@ -12,9 +12,10 @@ public class HunterBow extends CustomItem {
     public HunterBow() {
         super(
                 "Hunter Bow",
-                Material.BOW,
-                false
+                Material.BOW
         );
+
+        setGlowing(false);
     }
 
     @Override

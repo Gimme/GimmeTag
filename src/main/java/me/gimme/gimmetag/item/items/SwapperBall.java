@@ -35,7 +35,6 @@ public class SwapperBall extends AbilityItem {
         super(
                 DISPLAY_NAME,
                 MATERIAL,
-                true,
                 cooldown,
                 consumable
         );

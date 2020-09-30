@@ -27,21 +27,19 @@ public abstract class CustomItem {
     private String id;
     private String displayName;
     private Material type;
-    private boolean glowing;
+    private boolean glowing = true;
 
-    public CustomItem(@NotNull String name, @NotNull Material type, boolean glowing) {
+    public CustomItem(@NotNull String name, @NotNull Material type) {
         this(
                 ChatColor.stripColor(name).toLowerCase().replaceAll(" ", "_"),
                 name,
-                type,
-                glowing);
+                type);
     }
 
-    public CustomItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, boolean glowing) {
+    public CustomItem(@NotNull String id, @NotNull String displayName, @NotNull Material type) {
         this.id = id;
         this.displayName = displayName;
         this.type = type;
-        this.glowing = glowing;
     }
 
     @NotNull
@@ -102,6 +100,11 @@ public abstract class CustomItem {
 
         return itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
     }
+
+    protected void setGlowing(boolean glowing) {
+        this.glowing = glowing;
+    }
+
 
     private static DecimalFormat df = new DecimalFormat("#.##");
     protected static String formatSeconds(int ticks) {

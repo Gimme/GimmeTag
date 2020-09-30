@@ -24,7 +24,6 @@ public class BalloonGrenade extends AbilityItem {
         super(
                 "Balloon Grenade",
                 Material.SPLASH_POTION,
-                true,
                 cooldown,
                 consumable
         );

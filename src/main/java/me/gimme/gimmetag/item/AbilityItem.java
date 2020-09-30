@@ -26,16 +26,16 @@ public abstract class AbilityItem extends CustomItem {
     private boolean showDuration = false;
     private int durationTicks = 0;
 
-    public AbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, double cooldown, boolean consumable) {
-        super(name, type, glowing);
+    public AbilityItem(@NotNull String name, @NotNull Material type, double cooldown, boolean consumable) {
+        super(name, type);
 
         setCooldown(cooldown);
         this.consumable = consumable;
     }
 
-    public AbilityItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, boolean glowing,
-                       double cooldown, boolean consumable) {
-        super(id, displayName, type, glowing);
+    public AbilityItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, double cooldown,
+                       boolean consumable) {
+        super(id, displayName, type);
 
         setCooldown(cooldown);
         this.consumable = consumable;

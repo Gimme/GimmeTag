@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,12 +19,12 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
     private Set<UUID> activeItems = new HashSet<>();
 
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, boolean consumable) {
-        this(name, type, glowing, consumable, -1);
+    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean consumable) {
+        this(name, type, consumable, -1);
     }
 
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, boolean consumable, double duration) {
-        super(name, type, glowing, 0.5d, consumable);
+    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean consumable, double duration) {
+        super(name, type, 0.5d, consumable);
 
         setDuration(duration);
         mute();

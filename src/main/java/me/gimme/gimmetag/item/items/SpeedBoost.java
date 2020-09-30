@@ -2,7 +2,6 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmecore.util.RomanNumerals;
 import me.gimme.gimmetag.item.AbilityItem;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +20,6 @@ public class SpeedBoost extends AbilityItem {
                 id,
                 "Speed Boost " + RomanNumerals.toRoman(level),
                 Material.SUGAR,
-                true,
                 cooldown,
                 consumable
         );

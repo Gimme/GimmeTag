@@ -22,10 +22,10 @@ public class InvisPotion extends CustomItem {
         super(
                 "invis_potion",
                 "Potion of Invisibility",
-                Material.POTION,
-                false
+                Material.POTION
         );
 
+        setGlowing(false);
         this.durationTicks = (int) Math.round(duration * 20);
     }
 

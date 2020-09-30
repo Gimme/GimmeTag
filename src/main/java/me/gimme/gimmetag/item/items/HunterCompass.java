@@ -24,7 +24,6 @@ public class HunterCompass extends ContinuousAbilityItem {
         super(
                 "Hunter Compass",
                 TYPE,
-                true,
                 false
         );
 

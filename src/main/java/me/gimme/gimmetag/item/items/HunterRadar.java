@@ -26,7 +26,6 @@ public class HunterRadar extends ContinuousAbilityItem {
         super(
                 "Hunter Radar",
                 TYPE,
-                true,
                 consumable,
                 level <= 1 ? 0 : duration
         );
