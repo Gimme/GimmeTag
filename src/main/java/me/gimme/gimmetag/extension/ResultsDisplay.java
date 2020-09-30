@@ -70,9 +70,6 @@ public class ResultsDisplay implements Listener {
                 .setEllipsize(true)
                 .addCol(ChatTableBuilder.Alignment.LEFT, 0.3)
                 .addCol(ChatTableBuilder.Alignment.LEFT, 0.7)
-                .addRow()
-                .addRow()
-                .addRow()
                 .addRow("" + ChatColor.UNDERLINE + ChatColor.GOLD + "Player", "" + ChatColor.UNDERLINE + ChatColor.GOLD + "Score")
                 .addRow();
 
@@ -85,6 +82,10 @@ public class ResultsDisplay implements Listener {
             tableBuilder.addRow(player.getName(), "" + ChatColor.YELLOW + TagScoreboard.getLevel(scores.get(player.getUniqueId())));
         }
 
-        server.broadcastMessage(tableBuilder.build());
+        String border = "---------------";
+        server.broadcastMessage(border + "\n"
+                + tableBuilder.build() + "\n"
+                + border
+        );
     }
 }
