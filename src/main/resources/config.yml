@@ -38,7 +38,7 @@ tag:
 scoring:
   # Everyone's level at the start of the round.
   starting-level: 0
-  # The starting level of the first hunter of the round
+  # The starting level of the first hunter of the round.
   initial-hunter-starting-level: -6
   # Levels required to end the round (1 level equals the number of points defined below).
   levels-to-end: 100

@@ -132,9 +132,10 @@ public class TagScoreboard implements Listener {
         int score = scores.merge(player.getUniqueId(), points, Integer::sum);
 
         float level = getLevel(score);
-        int floorLevel = (int) level;
+        int floorLevel = (int) Math.floor(level);
+        int shownExpLevel = Math.max(floorLevel, 0); // Players can't have negative experience levels
 
-        player.setLevel(floorLevel);
+        player.setLevel(shownExpLevel);
         player.setExp(level - floorLevel);
 
         objective.getScore(entry(player)).setScore(floorLevel);
