@@ -2,6 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.item.AbilityItem;
+import me.gimme.gimmetag.item.ItemOngoingUseTaskTimer;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -17,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -158,70 +158,6 @@ public class HunterCompass extends AbilityItem {
             compassMeta.setLodestone(new Location(Bukkit.getWorlds().get(0), 0, 0, 0)); // Location should be null but for some reason it does not work.
         else compassMeta.setLodestone(location);
         item.setItemMeta(compassMeta);
-    }
-
-
-    abstract static class ItemOngoingUseTaskTimer extends BukkitRunnable {
-        protected GimmeTag plugin;
-        protected Player user;
-        protected ItemStack item;
-        private int ticksPerRecalculation;
-        @Nullable
-        private StopCondition stopCondition;
-
-        private int ticksUntilRecalculation = 0;
-
-        ItemOngoingUseTaskTimer(@NotNull GimmeTag plugin, @NotNull Player user, @NotNull ItemStack item,
-                                int ticksPerRecalculation, @Nullable StopCondition stopCondition) {
-            this.plugin = plugin;
-            this.user = user;
-            this.item = item;
-            this.ticksPerRecalculation = ticksPerRecalculation;
-            this.stopCondition = stopCondition;
-        }
-
-        @Override
-        public void run() {
-            if (--ticksUntilRecalculation <= 0) {
-                ticksUntilRecalculation = ticksPerRecalculation;
-
-                if (!user.isOnline() || item.getType().equals(Material.AIR) || (stopCondition != null && stopCondition.shouldStop())) {
-                    cancel();
-                    return;
-                }
-
-                onRecalculation();
-            }
-
-            onTick();
-        }
-
-        public abstract void onRecalculation();
-
-        public abstract void onTick();
-
-        public abstract void onFinish();
-
-        @Override
-        public synchronized void cancel() throws IllegalStateException {
-            super.cancel();
-            onFinish();
-        }
-
-        @NotNull
-        public ItemOngoingUseTaskTimer start() {
-            return start(1);
-        }
-
-        @NotNull
-        public ItemOngoingUseTaskTimer start(long period) {
-            runTaskTimer(plugin, 0, period);
-            return this;
-        }
-
-        interface StopCondition {
-            boolean shouldStop();
-        }
     }
 
 

@@ -3,17 +3,15 @@ package me.gimme.gimmetag.item.items;
 import me.gimme.gimmecore.chat.Chat;
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.item.AbilityItem;
+import me.gimme.gimmetag.item.ItemOngoingUseTaskTimer;
 import me.gimme.gimmetag.sfx.SoundEffect;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
@@ -51,15 +49,12 @@ public class HunterRadar extends AbilityItem {
         mute();
         if (0 < durationMillis && durationMillis < 1000) setDurationInfo(itemMeta, (int) durationMillis * 50);
         else hideCooldown();
-        itemMeta.getPersistentDataContainer().set(getIdKey(), PersistentDataType.STRING, UUID.randomUUID().toString());
         itemMeta.setLore(LORE);
     }
 
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
-        String uuidString = itemMeta.getPersistentDataContainer().get(getIdKey(), PersistentDataType.STRING);
-        UUID uuid = UUID.fromString(Objects.requireNonNull(uuidString));
+        UUID uuid = getUniqueId(itemStack);
 
         if (activeItems.contains(uuid)) return false;
 
@@ -72,7 +67,7 @@ public class HunterRadar extends AbilityItem {
         } else { // Level 2
             activeItems.add(uuid);
             long currentTime = System.currentTimeMillis();
-            new HunterCompass.ItemOngoingUseTaskTimer(plugin, user, itemStack, 10,
+            new ItemOngoingUseTaskTimer(plugin, user, itemStack, 10,
                     () -> durationMillis > 0 && System.currentTimeMillis() > currentTime + durationMillis) {
                 Entity closestTarget = null;
 
@@ -105,12 +100,13 @@ public class HunterRadar extends AbilityItem {
         return true;
     }
 
-    private NamespacedKey getIdKey() {
-        return new NamespacedKey(plugin, getId());
-    }
+    private static boolean isItemInHand(@NotNull Player player, @NotNull ItemStack itemStack) {
+        UUID uuid = getUniqueId(itemStack);
+        if (uuid == null) return false;
 
-    private static boolean isItemInHand(@NotNull Player player, ItemStack itemStack) {
-        return itemStack.equals(player.getInventory().getItemInMainHand()) || itemStack.equals(player.getInventory().getItemInOffHand());
+        PlayerInventory inventory = player.getInventory();
+
+        return uuid.equals(getUniqueId(inventory.getItemInMainHand())) || uuid.equals(getUniqueId(inventory.getItemInOffHand()));
     }
 
     private static String formatMeters(double blocks) {
