@@ -13,6 +13,8 @@ public class StopCommand extends BaseCommand {
     public StopCommand(@NotNull TagManager tagManager) {
         super("stop");
 
+        addAlias("end");
+        addAlias("e");
         setDescription("Stops the ongoing round of tag");
 
         this.tagManager = tagManager;
