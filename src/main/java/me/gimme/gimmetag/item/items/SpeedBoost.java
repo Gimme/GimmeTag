@@ -29,11 +29,12 @@ public class SpeedBoost extends AbilityItem {
 
         this.durationTicks = (int) Math.round(duration * 20);
         this.level = level;
+
+        showDuration(durationTicks);
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        setDurationInfo(itemMeta, durationTicks);
     }
 
     @Override

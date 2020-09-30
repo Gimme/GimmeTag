@@ -23,12 +23,14 @@ public abstract class AbilityItem extends CustomItem {
     private String useResponseMessage;
     private boolean muted = false;
     private boolean hideCooldown = false;
+    private boolean showDuration = false;
+    private int durationTicks = 0;
 
     public AbilityItem(@NotNull String name, @NotNull Material type, boolean glowing, double cooldown, boolean consumable,
                        @Nullable String useResponseMessage) {
         super(name, type, glowing);
 
-        this.cooldownTicks = (int) Math.round(cooldown * 20);
+        setCooldown(cooldown);
         this.consumable = consumable;
         this.useResponseMessage = useResponseMessage;
     }
@@ -46,15 +48,17 @@ public abstract class AbilityItem extends CustomItem {
     @NotNull
     public ItemStack createItemStack(int amount) {
         ItemStack itemStack = super.createItemStack(amount);
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
 
         if (cooldownTicks > 0 && !hideCooldown) {
-            ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
             List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
             lore.add(0, ChatColor.GRAY + getCooldownString() + " Cooldown");
             itemMeta.setLore(lore);
-            itemStack.setItemMeta(itemMeta);
         }
 
+        if (showDuration) setDurationInfo(itemMeta, durationTicks);
+
+        itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
 
@@ -71,6 +75,10 @@ public abstract class AbilityItem extends CustomItem {
 
     protected abstract boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user);
 
+    protected void setCooldown(double seconds) {
+        this.cooldownTicks = (int) Math.round(seconds * 20);
+    }
+
     protected void mute() {
         muted = true;
     }
@@ -79,8 +87,13 @@ public abstract class AbilityItem extends CustomItem {
         hideCooldown = true;
     }
 
-    protected void setDurationInfo(@NotNull ItemMeta itemMeta, int durationTicks) {
-        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY+ " (" + formatSeconds(durationTicks) + ")");
+    protected void showDuration(int durationTicks) {
+        this.showDuration = true;
+        this.durationTicks = durationTicks;
+    }
+
+    private void setDurationInfo(@NotNull ItemMeta itemMeta, int durationTicks) {
+        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY + " (" + formatSeconds(durationTicks) + ")");
     }
 
     private String getCooldownString() {

@@ -16,6 +16,7 @@ import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public final class GimmeTag extends JavaPlugin {
 
@@ -28,6 +29,7 @@ public final class GimmeTag extends JavaPlugin {
     private ItemManager itemManager;
     private TagManager tagManager;
 
+    @NotNull
     public TagManager getTagManager() {
         return tagManager;
     }
@@ -86,7 +88,7 @@ public final class GimmeTag extends JavaPlugin {
                     itemConfig.getLevel()
             ));
         }
-        itemManager.registerItem(new HunterCompass("hunter_compass", this));
+        itemManager.registerItem(new HunterCompass(tagManager));
         itemManager.registerItem(new SwapperBall(
                 Config.SWAPPER_BALL.getCooldown().doubleValue(),
                 Config.SWAPPER_BALL.isConsumable(),
@@ -107,7 +109,7 @@ public final class GimmeTag extends JavaPlugin {
                 Config.HUNTER_RADAR.isConsumable(),
                 Config.HUNTER_RADAR.getDuration().doubleValue(),
                 Config.HUNTER_RADAR.getLevel(),
-                this
+                tagManager
         ));
     }
 
