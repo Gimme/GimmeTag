@@ -30,11 +30,11 @@ public class BalloonGrenade extends AbilityItem {
 
         this.durationTicks = (int) Math.round(duration * 20);
         this.level = level;
+        mute();
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        mute();
         PotionEffect potionEffect = new PotionEffect(PotionEffectType.LEVITATION, durationTicks, level - 1);
 
         PotionMeta potionMeta = (PotionMeta) itemMeta;

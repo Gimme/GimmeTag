@@ -41,13 +41,13 @@ public class SwapperBall extends AbilityItem {
 
         this.allowHunterSwap = allowHunterSwap;
         this.tagManager = tagManager;
+        mute();
 
         plugin.getServer().getPluginManager().registerEvents(onHitListener, plugin);
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        mute();
         itemMeta.setLore(LORE);
     }
 
