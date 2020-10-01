@@ -177,8 +177,8 @@ public class TagManager implements Listener {
         new CountdownTimerTask(plugin, sleepSeconds) {
             @Override
             protected void onCount() {
-                Function<Long, String> title = i -> "Hunters waking up in " + i + "s";
-                Function<Long, Boolean> shouldDisplay = i -> i > sleepSeconds - 3;
+                Function<Long, String> title = i -> "Starting in " + i + "s";
+                Function<Long, Boolean> shouldDisplay = i -> i > sleepSeconds - 4;
 
                 runners.stream()
                         .map(r -> server.getPlayer(r))
