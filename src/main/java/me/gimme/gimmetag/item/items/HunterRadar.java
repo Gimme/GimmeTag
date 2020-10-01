@@ -18,16 +18,18 @@ public class HunterRadar extends ContinuousAbilityItem {
 
     private static DecimalFormat df = new DecimalFormat("0.00");
     private static final Material TYPE = Material.CLOCK;
-    private static final List<String> LORE = Collections.singletonList("" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)");
+    private static final List<String> LORE = Arrays.asList(
+            "" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)",
+            "Shows distance to nearest runner");
 
     private TagManager tagManager;
 
-    public HunterRadar(double cooldown, boolean consumable, double duration, int level, @NotNull TagManager tagManager) {
+    public HunterRadar(double cooldown, boolean consumable, double duration, @NotNull TagManager tagManager) {
         super(
                 "Hunter Radar",
                 TYPE,
                 consumable,
-                level <= 1 ? 0 : duration
+                duration
         );
 
         setCooldown(cooldown);
@@ -52,9 +54,7 @@ public class HunterRadar extends ContinuousAbilityItem {
 
             @Override
             public void onTick() {
-                if (isInfinite() && !isItemInHand(user, itemStack)) {
-                    Chat.hideActionBar(user);
-                } else if (closestTarget == null) {
+                if (closestTarget == null) {
                     Chat.sendActionBar(user, ChatColor.YELLOW + "---");
                 } else {
                     double distance = closestTarget.getLocation().distance(user.getLocation());
@@ -64,7 +64,7 @@ public class HunterRadar extends ContinuousAbilityItem {
 
             @Override
             public void onFinish() {
-                Chat.hideActionBar(user);
+                if (getDurationTicks() != 0) Chat.hideActionBar(user);
             }
         };
     }

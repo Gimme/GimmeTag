@@ -16,7 +16,9 @@ import java.util.*;
 public class HunterCompass extends ContinuousAbilityItem {
 
     private static final Material TYPE = Material.COMPASS;
-    private static final List<String> LORE = Collections.singletonList("" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)");
+    private static final List<String> LORE = Arrays.asList(
+            "" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)",
+            "Points to nearest runner");
 
     private TagManager tagManager;
 
@@ -27,7 +29,6 @@ public class HunterCompass extends ContinuousAbilityItem {
                 false
         );
 
-        setUseResponseMessage("Compass: points to closest runner");
         this.tagManager = tagManager;
     }
 

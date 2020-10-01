@@ -108,7 +108,6 @@ public final class GimmeTag extends JavaPlugin {
                 Config.HUNTER_RADAR.getCooldown().doubleValue(),
                 Config.HUNTER_RADAR.isConsumable(),
                 Config.HUNTER_RADAR.getDuration().doubleValue(),
-                Config.HUNTER_RADAR.getLevel(),
                 tagManager
         ));
     }

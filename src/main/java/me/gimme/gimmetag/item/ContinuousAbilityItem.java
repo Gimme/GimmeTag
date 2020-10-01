@@ -9,15 +9,14 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class ContinuousAbilityItem extends AbilityItem {
     private int durationTicks;
     private int ticksPerCalculation = 10;
+    private boolean toggleable;
 
-    private Set<UUID> activeItems = new HashSet<>();
+    private Map<UUID, BukkitRunnable> activeItems = new HashMap<>();
 
     public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean consumable) {
         this(name, type, consumable, -1);
@@ -31,6 +30,8 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
         if (0 < duration && duration < 1000) showDuration(durationTicks);
         else hideCooldown();
+
+        setToggleable(isInfinite());
     }
 
     @NotNull
@@ -42,6 +43,10 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
     protected void setTicksPerCalculation(int ticks) {
         this.ticksPerCalculation = ticks;
+    }
+
+    protected void setToggleable(boolean toggleable) {
+        this.toggleable = toggleable;
     }
 
     /**
@@ -63,12 +68,19 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         UUID uuid = getUniqueId(itemStack);
 
-        if (activeItems.contains(uuid)) return false;
-        activeItems.add(uuid);
+        BukkitRunnable currentTask = activeItems.get(uuid);
+        if (currentTask != null) {
+            currentTask.cancel();
+
+            if (toggleable) {
+                SoundEffect.DEACTIVATE.play(user);
+                return true;
+            }
+        }
 
         ContinuousUse continuousUse = createContinuousUse(itemStack, user);
 
-        new ItemOngoingUseTaskTimer(user, itemStack, ticksPerCalculation, durationTicks) {
+        activeItems.put(uuid, new ItemOngoingUseTaskTimer(user, itemStack, ticksPerCalculation, durationTicks) {
             @Override
             public void onCalculate() {
                 continuousUse.onCalculate();
@@ -84,7 +96,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
                 continuousUse.onFinish();
                 activeItems.remove(uuid);
             }
-        }.start();
+        }.start());
 
         SoundEffect.ACTIVATE.play(user);
         return true;
