@@ -18,8 +18,8 @@ public abstract class SoundEffect {
     public static final SFX USE_EFFECT = new SoundSFX(Sound.ENTITY_ZOMBIE_INFECT, 1f, 1.4f);
     public static final SFX THROW = new SoundSFX(Sound.ENTITY_WITCH_THROW);
 
-    public static final SFX HUNTER_GAME_START = new SoundSFX(Sound.BLOCK_END_PORTAL_SPAWN, 0.5f, 1f, true); // TODO: find better sound
-    public static final SFX RUNNER_GAME_START = new SoundSFX(Sound.BLOCK_END_PORTAL_FRAME_FILL, 0.5f, 1f, true);
+    public static final SFX HUNTER_GAME_START = new SoundSFX(Sound.BLOCK_END_PORTAL_SPAWN, 0.5f, 1f, true);
+    public static final SFX RUNNER_GAME_START = new SoundSFX(Sound.BLOCK_BEACON_POWER_SELECT, true);
     public static final SFX GAME_OVER = new SFXCombination(
             new SoundSFX(Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR, true),
             new SFXCombination(10, new SoundSFX(Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR, true))
