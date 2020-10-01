@@ -15,7 +15,7 @@ class NoteSFX extends SFX {
         this(instrument, note, false);
     }
 
-    NoteSFX(@NotNull Instrument instrument, @NotNull Note note, boolean local){
+    NoteSFX(@NotNull Instrument instrument, @NotNull Note note, boolean local) {
         this.instrument = instrument;
         this.note = note;
         this.local = local;
@@ -26,7 +26,7 @@ class NoteSFX extends SFX {
         if (local) {
             player.playNote(getFrontOfPlayer(player), instrument, note);
         } else {
-            for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+            for (Player p : player.getWorld().getPlayers()) {
                 p.playNote(getFrontOfPlayer(player), instrument, note);
             }
         }
