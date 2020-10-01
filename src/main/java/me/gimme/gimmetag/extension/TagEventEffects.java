@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.extension;
 
+import me.gimme.gimmetag.events.PlayerRoleSetEvent;
 import me.gimme.gimmetag.events.PlayerTaggedEvent;
 import me.gimme.gimmetag.events.TagEndEvent;
 import me.gimme.gimmetag.events.TagStartEvent;
@@ -20,7 +21,7 @@ public class TagEventEffects implements Listener {
     }
 
     /**
-     * Signals tag events with sound effects and chat message.
+     * Signals tag events with sound effects, chat message and lightning.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     private void onTag(PlayerTaggedEvent event) {
@@ -41,7 +42,20 @@ public class TagEventEffects implements Listener {
         }
 
         // Lightning effect
-        runner.getWorld().strikeLightningEffect(runner.getLocation());
+        runner.getWorld().spigot().strikeLightningEffect(runner.getLocation(), true);
+    }
+
+    /**
+     * Lightning effect on the first chosen hunters.
+     */
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onPlayerRoleSet(PlayerRoleSetEvent event) {
+        if (event.getRole() == null || !event.getRole().equals(Role.HUNTER)) return;
+        if (!event.getReason().equals(PlayerRoleSetEvent.Reason.ROUND_START)) return;
+
+        Player hunter = event.getPlayer();
+
+        hunter.getWorld().spigot().strikeLightningEffect(hunter.getLocation(), true);
     }
 
     /**
