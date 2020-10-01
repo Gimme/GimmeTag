@@ -17,6 +17,7 @@ public abstract class SoundEffect {
     public static final SFX DEACTIVATE = new NoteSFX(Instrument.BIT, Note.natural(0, Note.Tone.C));
     public static final SFX USE_EFFECT = new SoundSFX(Sound.ENTITY_ZOMBIE_INFECT, 1f, 1.4f);
     public static final SFX THROW = new SoundSFX(Sound.ENTITY_WITCH_THROW);
+    public static final SFX THUNDER = new SoundSFX(Sound.ENTITY_LIGHTNING_BOLT_THUNDER);
 
     public static final SFX HUNTER_GAME_START = new SoundSFX(Sound.BLOCK_END_PORTAL_SPAWN, 0.5f);
     public static final SFX RUNNER_GAME_START = new SoundSFX(Sound.BLOCK_BEACON_POWER_SELECT);

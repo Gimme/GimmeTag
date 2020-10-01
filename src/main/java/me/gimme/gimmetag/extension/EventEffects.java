@@ -6,6 +6,7 @@ import me.gimme.gimmetag.events.TagEndEvent;
 import me.gimme.gimmetag.events.TagStartEvent;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.tag.Role;
+import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,8 +42,22 @@ public class EventEffects implements Listener {
             SoundEffect.TAG_BROADCAST.playLocal(p);
         }
 
-        // Lightning effect
+        // Lightning visual
         runner.getWorld().spigot().strikeLightningEffect(runner.getLocation(), true);
+
+        // Lightning sound
+        Location location = runner.getLocation();
+        double offset = 7;
+        for (Player p : server.getOnlinePlayers()) {
+            if (!p.getWorld().equals(location.getWorld())) continue;
+            Location pLocation = p.getLocation();
+            location.setY(pLocation.getY());
+
+            if (pLocation.distanceSquared(location) > offset * offset) {
+                location = pLocation.add(location.subtract(pLocation).toVector().normalize().multiply(offset));
+            }
+            SoundEffect.THUNDER.playLocal(p, location);
+        }
     }
 
     /**
