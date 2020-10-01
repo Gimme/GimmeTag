@@ -39,6 +39,9 @@ public class TagEventEffects implements Listener {
 
             SoundEffect.TAG_BROADCAST.play(p);
         }
+
+        // Lightning effect
+        runner.getWorld().strikeLightningEffect(runner.getLocation());
     }
 
     /**
