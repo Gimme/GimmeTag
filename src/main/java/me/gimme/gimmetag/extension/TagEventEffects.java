@@ -57,10 +57,13 @@ public class TagEventEffects implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     private void onTagEnd(TagEndEvent event) {
-        if (event.getWinner() != null) {
-            for (Player player : server.getOnlinePlayers()) {
-                SoundEffect.GAME_OVER.play(player);
-            }
+        Player winner = event.getWinner();
+        if (winner == null) return;
+
+        SoundEffect.GAME_OVER_WIN.play(winner);
+        for (Player player : server.getOnlinePlayers()) {
+            if (player.getUniqueId().equals(winner.getUniqueId())) continue;
+            SoundEffect.GAME_OVER.play(player);
         }
     }
 }

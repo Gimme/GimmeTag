@@ -24,4 +24,8 @@ public abstract class SoundEffect {
             new SoundSFX(Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR, true),
             new SFXCombination(10, new SoundSFX(Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR, true))
     );
+    public static final SFX GAME_OVER_WIN = new SFXCombination(
+            GAME_OVER,
+            new SoundSFX(Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1f, true)
+    );
 }
