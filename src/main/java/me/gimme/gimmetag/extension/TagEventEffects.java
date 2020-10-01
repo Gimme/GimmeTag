@@ -48,7 +48,7 @@ public class TagEventEffects implements Listener {
     private void onTagStart(TagStartEvent event) {
         for (Player player : server.getOnlinePlayers()) {
             if (event.getHunters().contains(player.getUniqueId())) SoundEffect.HUNTER_GAME_START.play(player);
-            SoundEffect.RUNNER_GAME_START.play(player);
+            else if (event.getRunners().contains(player.getUniqueId())) SoundEffect.RUNNER_GAME_START.play(player);
         }
     }
 

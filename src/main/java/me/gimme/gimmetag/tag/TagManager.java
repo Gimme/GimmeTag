@@ -148,7 +148,12 @@ public class TagManager implements Listener {
      * @return if a new round of tag was successfully started
      */
     private boolean start(int levelsToEnd, int sleepSeconds, @NotNull Set<UUID> chosenHunters) {
-        TagStartEvent event = new TagStartEvent(chosenHunters);
+        Set<UUID> chosenRunners = server.getOnlinePlayers().stream()
+                .map(Player::getUniqueId)
+                .filter(uuid -> !chosenHunters.contains(uuid))
+                .collect(Collectors.toSet());
+
+        TagStartEvent event = new TagStartEvent(chosenHunters, chosenRunners);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
@@ -161,16 +166,10 @@ public class TagManager implements Listener {
             if (chosenHunters.contains(player.getUniqueId())) {
                 setRole(player, Role.HUNTER);
                 tagScoreboard.addLevels(player, Config.SCORING_INITIAL_HUNTER_STARTING_LEVEL.getValue() - Config.SCORING_STARTING_LEVEL.getValue());
-            } else {
+                applySleep(player, sleepSeconds, Role.HUNTER.getDisplayName());
+            } else if (chosenRunners.contains(player.getUniqueId())) {
                 setRole(player, Role.RUNNER);
             }
-        }
-
-        // Make hunters sleep
-        for (UUID h : hunters) {
-            Player hunter = server.getPlayer(h);
-            if (hunter == null) continue;
-            applySleep(hunter, sleepSeconds, Role.HUNTER.getDisplayName());
         }
 
         // Display countdown

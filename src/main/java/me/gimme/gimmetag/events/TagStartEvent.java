@@ -9,15 +9,16 @@ import java.util.Set;
 import java.util.UUID;
 
 public class TagStartEvent extends Event implements Cancellable {
-
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean cancelled;
 
     private Set<UUID> hunters;
+    private Set<UUID> runners;
 
-    public TagStartEvent(@NotNull Set<UUID> hunters) {
+    public TagStartEvent(@NotNull Set<UUID> hunters, @NotNull Set<UUID> runners) {
         this.cancelled = false;
         this.hunters = hunters;
+        this.runners = runners;
     }
 
     /**
@@ -25,6 +26,13 @@ public class TagStartEvent extends Event implements Cancellable {
      */
     public Set<UUID> getHunters() {
         return hunters;
+    }
+
+    /**
+     * @return the chosen runners
+     */
+    public Set<UUID> getRunners() {
+        return runners;
     }
 
     public boolean isCancelled() {
