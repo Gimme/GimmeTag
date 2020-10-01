@@ -124,6 +124,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
     protected abstract static class ItemOngoingUseTaskTimer extends BukkitRunnable {
         private Player user;
         private ItemStack item;
+        private int itemSlot;
         private int durationTicks;
         private int ticksPerCalculation;
 
@@ -134,6 +135,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
                                           int durationTicks) {
             this.user = user;
             this.item = item;
+            this.itemSlot = user.getInventory().getHeldItemSlot();
             this.ticksPerCalculation = ticksPerCalculation;
             this.durationTicks = durationTicks;
 
@@ -151,7 +153,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             if (--ticksUntilCalculation <= 0) {
                 ticksUntilCalculation = ticksPerCalculation;
 
-                if (!user.isOnline() || item.getType().equals(Material.AIR)) {
+                if (!user.isOnline() || item.getType().equals(Material.AIR) || !isItemInSlot(item, user, itemSlot)) {
                     cancel();
                     return;
                 }
@@ -178,6 +180,20 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         protected ContinuousAbilityItem.ItemOngoingUseTaskTimer start() {
             runTaskTimer(GimmeTag.getPlugin(), 0, 1);
             return this;
+        }
+
+        /**
+         * Returns if the specified item is in the specified slot of the specified player's inventory.
+         *
+         * @param itemStack the item
+         * @param player    the player whose inventory to check
+         * @param slot      the slot in the inventory to check
+         * @return if the item is in the specified slot of the player's inventory
+         */
+        private static boolean isItemInSlot(@NotNull ItemStack itemStack, @NotNull Player player, int slot) {
+            ItemStack itemInSlot = player.getInventory().getItem(slot);
+            if (itemInSlot == null) return false;
+            return itemStack.equals(itemInSlot);
         }
     }
 }
