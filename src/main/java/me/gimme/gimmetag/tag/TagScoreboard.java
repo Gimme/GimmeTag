@@ -117,7 +117,7 @@ public class TagScoreboard implements Listener {
      */
     void reset() {
         scores.clear();
-        scoreboard.getEntries().forEach(e -> scoreboard.resetScores(e)); // TODO: might be unnecessary because scores are set to 0 in initPlayer
+        scoreboard.getEntries().forEach(e -> scoreboard.resetScores(e));
         huntersTeam.getEntries().forEach(e -> huntersTeam.removeEntry(e));
         runnersTeam.getEntries().forEach(e -> runnersTeam.removeEntry(e));
     }
