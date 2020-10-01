@@ -164,11 +164,11 @@ public class TagManager implements Listener {
         // Assign roles
         for (Player player : server.getOnlinePlayers()) {
             if (chosenHunters.contains(player.getUniqueId())) {
-                setRole(player, Role.HUNTER);
+                setRole(player, Role.HUNTER, PlayerRoleSetEvent.Reason.ROUND_START);
                 tagScoreboard.addLevels(player, Config.SCORING_INITIAL_HUNTER_STARTING_LEVEL.getValue() - Config.SCORING_STARTING_LEVEL.getValue());
                 applySleep(player, sleepSeconds, Role.HUNTER.getDisplayName());
             } else if (chosenRunners.contains(player.getUniqueId())) {
-                setRole(player, Role.RUNNER);
+                setRole(player, Role.RUNNER, PlayerRoleSetEvent.Reason.ROUND_START);
             }
         }
 
@@ -314,8 +314,8 @@ public class TagManager implements Listener {
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
 
-        setRole(runner, Role.HUNTER);
-        setRole(hunter, Role.RUNNER);
+        setRole(runner, Role.HUNTER, PlayerRoleSetEvent.Reason.TAG);
+        setRole(hunter, Role.RUNNER, PlayerRoleSetEvent.Reason.TAG);
 
         applySleep(runner, this.sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
 
@@ -384,8 +384,9 @@ public class TagManager implements Listener {
      *
      * @param player the player to set the role of
      * @param role   the role to set the player to, or null to only unset the role
+     * @param reason the reason that the player's role gets set
      */
-    private void setRole(@NotNull Player player, @Nullable Role role) {
+    private void setRole(@NotNull Player player, @Nullable Role role, PlayerRoleSetEvent.Reason reason) {
         UUID uuid = player.getUniqueId();
         Role previousRole = getRole(player);
 
@@ -405,7 +406,7 @@ public class TagManager implements Listener {
             restoreGameplayState(player);
         }
 
-        Bukkit.getPluginManager().callEvent(new PlayerRoleSetEvent(player, role));
+        Bukkit.getPluginManager().callEvent(new PlayerRoleSetEvent(player, role, reason));
     }
 
     /**
@@ -463,7 +464,7 @@ public class TagManager implements Listener {
         for (UUID uuid : new HashSet<>(roleByPlayer.keySet())) {
             Player player = server.getPlayer(uuid);
             if (player == null) continue;
-            setRole(player, null);
+            setRole(player, null, PlayerRoleSetEvent.Reason.ROUND_END);
         }
 
         // Clear any offline players left
@@ -594,7 +595,7 @@ public class TagManager implements Listener {
         // Restore role if joining in the same round
         Role role = logoutRoleByPlayer.get(player.getUniqueId());
         if (role == null) role = Role.RUNNER; // Set new players to runners
-        setRole(player, role);
+        setRole(player, role, PlayerRoleSetEvent.Reason.JOIN);
 
         // Restore inventory if joining in the same round
         ItemStack[] logoutItems = logoutItemsByPlayer.get(player.getUniqueId());
@@ -616,7 +617,7 @@ public class TagManager implements Listener {
             PlayerInventory inventory = player.getInventory();
             logoutItemsByPlayer.put(uuid, inventory.getContents());
             logoutRoleByPlayer.put(uuid, role);
-            setRole(player, null); // Clears inventory
+            setRole(player, null, PlayerRoleSetEvent.Reason.QUIT); // Clears inventory
         }
     }
 

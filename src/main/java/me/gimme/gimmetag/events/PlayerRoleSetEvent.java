@@ -14,11 +14,13 @@ public class PlayerRoleSetEvent extends PlayerEvent {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private Role role;
+    private Reason reason;
 
-    public PlayerRoleSetEvent(@NotNull final Player player, @Nullable final Role role) {
+    public PlayerRoleSetEvent(@NotNull final Player player, @Nullable final Role role, @NotNull Reason reason) {
         super(player);
 
         this.role = role;
+        this.reason = reason;
     }
 
     /**
@@ -27,6 +29,14 @@ public class PlayerRoleSetEvent extends PlayerEvent {
     @Nullable
     public Role getRole() {
         return role;
+    }
+
+    /**
+     * @return the reason that the role was set
+     */
+    @NotNull
+    public Reason getReason() {
+        return reason;
     }
 
     @NotNull
@@ -38,5 +48,14 @@ public class PlayerRoleSetEvent extends PlayerEvent {
     @NotNull
     public static HandlerList getHandlerList() {
         return HANDLERS;
+    }
+
+
+    public enum Reason {
+        TAG,
+        ROUND_START,
+        ROUND_END,
+        JOIN,
+        QUIT
     }
 }
