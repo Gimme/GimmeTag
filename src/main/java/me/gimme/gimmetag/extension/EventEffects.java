@@ -13,10 +13,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-public class TagEventEffects implements Listener {
+public class EventEffects implements Listener {
     private Server server;
 
-    public TagEventEffects(@NotNull Server server) {
+    public EventEffects(@NotNull Server server) {
         this.server = server;
     }
 

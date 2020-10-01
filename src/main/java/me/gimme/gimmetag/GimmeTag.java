@@ -6,7 +6,7 @@ import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.extension.ResultsDisplay;
 import me.gimme.gimmetag.extension.SleepProgressbar;
-import me.gimme.gimmetag.extension.TagEventEffects;
+import me.gimme.gimmetag.extension.EventEffects;
 import me.gimme.gimmetag.extension.TeamOutline;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
@@ -69,7 +69,7 @@ public final class GimmeTag extends JavaPlugin {
         if (Config.DISABLE_HUNGER.getValue()) registerEvents(new DisableHunger(() -> tagManager.isActiveRound()));
         registerEvents(new EnableProjectileKnockback(() -> tagManager.isActiveRound()));
         registerEvents(new SleepProgressbar(this, tagManager));
-        registerEvents(new TagEventEffects(getServer()));
+        registerEvents(new EventEffects(getServer()));
         registerEvents(new ResultsDisplay(getServer()));
         if (getServer().getPluginManager().getPlugin(PROTOCOL_LIB_NAME) != null)
             registerEvents(new TeamOutline(this, tagManager));
