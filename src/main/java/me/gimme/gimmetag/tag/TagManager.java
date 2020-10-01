@@ -520,7 +520,7 @@ public class TagManager implements Listener {
         if (tagDeathDistance <= 0) return;
         int tagDeathDistanceSquared = tagDeathDistance * tagDeathDistance;
 
-        Player closestHunter = getClosestHunter(player, false);
+        Player closestHunter = getClosestHunter(player, true);
         if (closestHunter == null) return;
 
         if (!isWithinRange(player, closestHunter, tagDeathDistanceSquared, true)) return;
