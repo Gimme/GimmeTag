@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.sfx;
 
 import me.gimme.gimmetag.GimmeTag;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -19,12 +20,24 @@ class SFXCombination extends SFX {
     }
 
     @Override
-    public void play(@NotNull Player player) {
+    public void playLocal(@NotNull Player player, @NotNull Location location) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (SFX soundEffect : soundEffects) {
-                    soundEffect.play(player);
+                    soundEffect.playLocal(player, location);
+                }
+            }
+        }.runTaskLater(GimmeTag.getPlugin(), delayTicks);
+    }
+
+    @Override
+    public void play(@NotNull Location location) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (SFX soundEffect : soundEffects) {
+                    soundEffect.play(location);
                 }
             }
         }.runTaskLater(GimmeTag.getPlugin(), delayTicks);

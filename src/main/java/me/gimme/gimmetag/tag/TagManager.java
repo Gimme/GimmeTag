@@ -206,7 +206,7 @@ public class TagManager implements Listener {
                             .map(uuid -> server.getPlayer(uuid))
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                SoundEffect.COUNTDOWN.play(p);
+                                SoundEffect.COUNTDOWN.playLocal(p);
                                 if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", getSeconds() + "", 0, 25, 10);
                             });
                 }
@@ -218,7 +218,7 @@ public class TagManager implements Listener {
                         .map(uuid -> server.getPlayer(uuid))
                         .filter(Objects::nonNull)
                         .forEach(p -> {
-                            SoundEffect.COUNTDOWN_FINISH.play(p);
+                            SoundEffect.COUNTDOWN_FINISH.playLocal(p);
                             if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", "They're coming!", 0, 25, 10);
                         });
             }

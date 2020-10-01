@@ -30,15 +30,15 @@ public class EventEffects implements Listener {
         Player hunter = event.getHunter();
         Player runner = event.getRunner();
 
-        SoundEffect.TAG.play(hunter);
-        SoundEffect.TAGGED.play(runner);
+        SoundEffect.TAG.playLocal(hunter);
+        SoundEffect.TAGGED.playLocal(runner);
 
         server.broadcastMessage(Role.HUNTER.playerDisplayName(runner) + " was tagged!");
         for (Player p : server.getOnlinePlayers()) {
             if (p.getUniqueId().equals(runner.getUniqueId())) continue;
             if (p.getUniqueId().equals(hunter.getUniqueId())) continue;
 
-            SoundEffect.TAG_BROADCAST.play(p);
+            SoundEffect.TAG_BROADCAST.playLocal(p);
         }
 
         // Lightning effect
@@ -64,8 +64,8 @@ public class EventEffects implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     private void onTagStart(TagStartEvent event) {
         for (Player player : server.getOnlinePlayers()) {
-            if (event.getHunters().contains(player.getUniqueId())) SoundEffect.HUNTER_GAME_START.play(player);
-            else if (event.getRunners().contains(player.getUniqueId())) SoundEffect.RUNNER_GAME_START.play(player);
+            if (event.getHunters().contains(player.getUniqueId())) SoundEffect.HUNTER_GAME_START.playLocal(player);
+            else if (event.getRunners().contains(player.getUniqueId())) SoundEffect.RUNNER_GAME_START.playLocal(player);
         }
     }
 
@@ -77,10 +77,10 @@ public class EventEffects implements Listener {
         Player winner = event.getWinner();
         if (winner == null) return;
 
-        SoundEffect.GAME_OVER_WIN.play(winner);
+        SoundEffect.GAME_OVER_WIN.playLocal(winner);
         for (Player player : server.getOnlinePlayers()) {
             if (player.getUniqueId().equals(winner.getUniqueId())) continue;
-            SoundEffect.GAME_OVER.play(player);
+            SoundEffect.GAME_OVER.playLocal(player);
         }
     }
 }
