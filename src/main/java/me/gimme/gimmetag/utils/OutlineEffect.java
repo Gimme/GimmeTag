@@ -8,6 +8,7 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -66,23 +67,35 @@ public class OutlineEffect {
 
 
     /**
-     * Refreshes all players on the server to send new server metadata packets.
+     * Refreshes the outline status on all players on the server.
      */
-    public static void refresh() {
+    public static void refreshPlayers() {
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             refresh(player);
         }
     }
 
     /**
-     * Refreshes the specified player to send new server metadata packets.
-     *
-     * @param player the player to refresh
+     * Refreshes the outline status on the specified entities.
      */
-    private static void refresh(@NotNull Player player) {
-        boolean isGlowing = player.isGlowing();
-        player.setGlowing(!isGlowing);
-        player.setGlowing(isGlowing);
+    public static void refresh(@NotNull Iterable<Entity> entities) {
+        for (Entity entity : entities) {
+            refresh(entity);
+        }
+    }
+
+    /**
+     * Refreshes the specified entity.
+     * <p>
+     * This forces the server send new metadata packets for that entity, which can then be intercepted and have the
+     * outline effect added.
+     *
+     * @param entity the entity to refresh
+     */
+    public static void refresh(@NotNull Entity entity) {
+        boolean isGlowing = entity.isGlowing();
+        entity.setGlowing(!isGlowing);
+        entity.setGlowing(isGlowing);
     }
 
 

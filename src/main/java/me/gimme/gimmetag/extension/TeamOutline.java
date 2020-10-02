@@ -34,7 +34,7 @@ public class TeamOutline implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     private void onPlayerRoleSet(PlayerRoleSetEvent event) {
-        OutlineEffect.refresh();
+        OutlineEffect.refreshPlayers();
     }
 
     /**
