@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.item;
 
 import org.bukkit.block.Block;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -47,26 +48,35 @@ public class ItemManager {
 
 
     private class OnUseListener implements Listener {
-        @EventHandler(priority = EventPriority.MONITOR)
+        @EventHandler(priority = EventPriority.HIGH)
         private void onInteract(PlayerInteractEvent event) {
+            if (event.useItemInHand().equals(Event.Result.DENY)) return;
+
             ItemStack item = event.getItem();
             if (item == null) return;
-            if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)))
-                return;
-
-            // Don't use if clicked an interactable block
-            Block clickedBlock = event.getClickedBlock();
-            if (clickedBlock != null && clickedBlock.getType().isInteractable()) return;
 
             // Check if custom item
             String itemId = CustomItem.getCustomItemId(item);
             if (itemId == null) return;
 
+            // Check if ability item
             AbilityItem abilityItem = abilityItemById.get(itemId);
             if (abilityItem == null) return;
 
-            abilityItem.use(item, event.getPlayer());
-            event.setCancelled(true);
+            // Deny the use of the regular item behind the ability
+            event.setUseItemInHand(Event.Result.DENY);
+
+            // Check if right click
+            if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)))
+                return;
+
+            // Don't use if clicked an interactable block while not sneaking
+            Block clickedBlock = event.getClickedBlock();
+            if (clickedBlock != null && clickedBlock.getType().isInteractable() && !event.getPlayer().isSneaking())
+                return;
+
+            // Use the ability
+            if (abilityItem.use(item, event.getPlayer())) event.setUseInteractedBlock(Event.Result.DENY);
         }
     }
 }
