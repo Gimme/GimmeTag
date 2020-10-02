@@ -59,15 +59,17 @@ public abstract class AbilityItem extends CustomItem {
         return itemStack;
     }
 
-    public void use(@NotNull ItemStack itemStack, @NotNull Player user) {
-        if (user.hasCooldown(itemStack.getType())) return;
-        if (!onUse(itemStack, user)) return;
+    public boolean use(@NotNull ItemStack itemStack, @NotNull Player user) {
+        if (user.hasCooldown(itemStack.getType())) return false;
+        if (!onUse(itemStack, user)) return false;
 
         if (consumable) itemStack.setAmount(itemStack.getAmount() - 1);
         if (cooldownTicks > 0) user.setCooldown(itemStack.getType(), cooldownTicks);
         if (useResponseMessage != null && !useResponseMessage.isEmpty())
             user.sendMessage(USE_RESPONSE_MESSAGE_FORMAT + useResponseMessage);
         if (!muted) SoundEffect.USE_EFFECT.play(user);
+
+        return true;
     }
 
     protected abstract boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user);
