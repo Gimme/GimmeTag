@@ -91,6 +91,7 @@ runner:
     invis_potion: 1
     runner_speed_boost: 3
     balloon_grenade: 1
+    smoke_grenade: 3
 
 
 
@@ -99,13 +100,13 @@ runner:
 custom-item:
   swapper_ball:
     consumable: false
-    cooldown: 30.0
-    allow-hunter-swap: false
+    cooldown: 20.0
+    allow-hunter-swap: true
 
   speed-boosts:
     hunter_speed_boost:
       consumable: false
-      cooldown: 10.0
+      cooldown: 15.0
       duration: 5.0
       level: 1
     runner_speed_boost:
@@ -126,6 +127,18 @@ custom-item:
   hunter_radar:
     consumable: false
     cooldown: 0.5
-    # -1: Infinite
-    # 0: Show current distance as of activation
+    # -1: Infinite.
+    # 0: Show current distance as of activation.
     duration: -1
+
+  smoke_grenade:
+    consumable: true
+    cooldown: 20.0
+    # How long the smoke shroud lasts.
+    duration: 10.0
+    # Max travel time before explosion.
+    max-explosion-timer: 4.0
+    # Time after coming to a stop on the ground before explosion.
+    still-explosion-timer: 0.5
+    # Initial velocity of the projectile, where 1.0 is the Minecraft projectile standard.
+    velocity: 0.5

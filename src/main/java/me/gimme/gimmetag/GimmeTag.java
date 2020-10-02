@@ -110,6 +110,15 @@ public final class GimmeTag extends JavaPlugin {
                 Config.HUNTER_RADAR.getDuration().doubleValue(),
                 tagManager
         ));
+        itemManager.registerItem(new SmokeGrenade(
+                Config.SMOKE_GRENADE.getCooldown().doubleValue(),
+                Config.SMOKE_GRENADE.isConsumable(),
+                Config.SMOKE_GRENADE.getDuration().doubleValue(),
+                Config.SMOKE_GRENADE_MAX_EXPLOSION_TIMER.getValue().doubleValue(),
+                Config.SMOKE_GRENADE_STILL_EXPLOSION_TIMER.getValue().doubleValue(),
+                Config.SMOKE_GRENADE_VELOCITY.getValue().doubleValue(),
+                this
+        ));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {
