@@ -54,6 +54,7 @@ public class SwapperBall extends AbilityItem {
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         Projectile projectile = user.launchProjectile(PROJECTILE_CLASS);
+        projectile.setShooter(user);
         onHitListener.onLaunch(projectile);
         SoundEffect.THROW.play(user);
         return true;

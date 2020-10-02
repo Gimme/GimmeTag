@@ -45,6 +45,7 @@ public class BalloonGrenade extends AbilityItem {
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         ThrownPotion thrownPotion = user.launchProjectile(ThrownPotion.class);
+        thrownPotion.setShooter(user);
         thrownPotion.setItem(itemStack);
 
         SoundEffect.THROW.play(user);
