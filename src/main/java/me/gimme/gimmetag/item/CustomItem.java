@@ -101,6 +101,14 @@ public abstract class CustomItem {
         return itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
     }
 
+    /**
+     * @param itemStack the ItemStack to check if a custom item
+     * @return if the specified ItemStack is a custom item
+     */
+    public static boolean isCustomItem(@NotNull ItemStack itemStack) {
+        return getCustomItemId(itemStack) != null;
+    }
+
     protected void setGlowing(boolean glowing) {
         this.glowing = glowing;
     }
