@@ -29,14 +29,14 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     }
 
     public double getGravity() {
-        return getValue().getDouble(GRAVITY_PATH, defaultConfig != null ? defaultConfig.getSpeed() : 0);
+        return getValue().getDouble(GRAVITY_PATH, defaultConfig != null ? defaultConfig.getGravity() : 0);
     }
 
     public double getMaxExplosionTimer() {
-        return getValue().getDouble(MAX_EXPLOSION_TIMER_PATH, defaultConfig != null ? defaultConfig.getSpeed() : 0);
+        return getValue().getDouble(MAX_EXPLOSION_TIMER_PATH, defaultConfig != null ? defaultConfig.getMaxExplosionTimer() : 0);
     }
 
     public double getGroundExplosionTimer() {
-        return getValue().getDouble(GROUND_EXPLOSION_TIMER_PATH, defaultConfig != null ? defaultConfig.getSpeed() : 0);
+        return getValue().getDouble(GROUND_EXPLOSION_TIMER_PATH, defaultConfig != null ? defaultConfig.getGroundExplosionTimer() : 0);
     }
 }
