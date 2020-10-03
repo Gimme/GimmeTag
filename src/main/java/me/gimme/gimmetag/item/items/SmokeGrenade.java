@@ -21,16 +21,12 @@ public class SmokeGrenade extends BouncyProjectileItem {
     private static final int PARTICAL_COUNT = 1000;
     private static final int INTERVAL_TICKS = 5;
 
-    private final int durationTicks;
-
     public SmokeGrenade(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
         super(
                 "Smoke Grenade",
                 Material.CLAY_BALL,
                 config, plugin
         );
-
-        this.durationTicks = (int) Math.round(config.getDuration() * 20);
     }
 
     @Override
@@ -41,7 +37,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
     protected void onExplode(@NotNull Projectile projectile) {
         Location location = projectile.getLocation();
 
-        for (int i = 0; i <= durationTicks; i += INTERVAL_TICKS) {
+        for (int i = 0; i <= getDurationTicks(); i += INTERVAL_TICKS) {
             new BukkitRunnable() {
                 @Override
                 public void run() {

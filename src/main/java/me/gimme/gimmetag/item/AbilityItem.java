@@ -3,6 +3,7 @@ package me.gimme.gimmetag.item;
 import me.gimme.gimmecore.util.RomanNumerals;
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -89,11 +90,11 @@ public abstract class AbilityItem extends CustomItem {
     protected abstract boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user);
 
     protected void setCooldown(double seconds) {
-        this.cooldownTicks = (int) Math.round(seconds * 20);
+        this.cooldownTicks = Ticks.secondsToTicks(seconds);
     }
 
     protected double getCooldown() {
-        return cooldownTicks / 20d;
+        return Ticks.ticksToSeconds(cooldownTicks);
     }
 
     protected int getCooldownTicks() {
@@ -101,11 +102,11 @@ public abstract class AbilityItem extends CustomItem {
     }
 
     protected void setDuration(double seconds) {
-        this.durationTicks = (int) Math.round(seconds * 20);
+        this.durationTicks = Ticks.secondsToTicks(seconds);
     }
 
     protected double getDuration() {
-        return durationTicks / 20d;
+        return Ticks.ticksToSeconds(durationTicks);
     }
 
     protected int getDurationTicks() {

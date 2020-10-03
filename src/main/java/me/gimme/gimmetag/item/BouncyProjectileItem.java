@@ -3,6 +3,7 @@ package me.gimme.gimmetag.item;
 import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -30,8 +31,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.plugin = plugin;
         this.speed = config.getSpeed();
         this.gravity = config.getGravity();
-        this.maxExplosionTimerTicks = (int) Math.round(config.getMaxExplosionTimer() * 20);
-        this.groundExplosionTimerTicks = (int) Math.round(config.getGroundExplosionTimer() * 20);
+        this.maxExplosionTimerTicks = Ticks.secondsToTicks(config.getMaxExplosionTimer());
+        this.groundExplosionTimerTicks = Ticks.secondsToTicks(config.getGroundExplosionTimer());
         this.restitutionFactor = config.getRestitutionFactor();
         this.frictionFactor = config.getFrictionFactor();
 

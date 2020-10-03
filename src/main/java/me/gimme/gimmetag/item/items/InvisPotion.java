@@ -2,6 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.item.CustomItem;
+import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +25,7 @@ public class InvisPotion extends CustomItem {
                 Material.POTION
         );
 
-        this.durationTicks = (int) Math.round(duration * 20);
+        this.durationTicks = Ticks.secondsToTicks(duration);
 
         setGlowing(false);
     }

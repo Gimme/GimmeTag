@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.item;
 
 import me.gimme.gimmetag.GimmeTag;
+import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -13,7 +14,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -125,9 +125,7 @@ public abstract class CustomItem {
         itemStack.setItemMeta(itemMeta);
     }
 
-    private static final DecimalFormat DF = new DecimalFormat("#.##");
-
     protected static String formatSeconds(int ticks) {
-        return DF.format(ticks / 20d) + "s";
+        return Ticks.ticksToSecondsString(ticks) + "s";
     }
 }
