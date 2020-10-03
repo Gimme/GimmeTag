@@ -37,6 +37,7 @@ public class BouncyProjectile implements Listener {
     private static final double SURFACE_FRICTION_MULTIPLIER = 0.8;      // Applied every tick when grounded
     private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when it should stop bouncing
     private static final double RADIUS = 0.07;                          // Radius of the projectile
+    private static final double DEFAULT_GRAVITY = 0.028;                // ~0.028 is the standard gravity for a snowball
 
     private final UUID sourceProjectileId; // The unique ID of the initial launched projectile
     private final BukkitRunnable explosionTimerTask;
@@ -49,7 +50,8 @@ public class BouncyProjectile implements Listener {
     private int groundExplosionTimerTicks = -1;
     private boolean showTrail = false;
     private boolean showBounceMarks = false;
-    private double gravity = 0.028; // ~0.028 is the standard gravity for a snowball
+    private boolean manualGravity = false;
+    private double gravity = DEFAULT_GRAVITY;
     private boolean grounded = false;
 
     private Projectile currentProjectile;
@@ -92,7 +94,10 @@ public class BouncyProjectile implements Listener {
         gravityTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if (isGrounded()) return;
+                Projectile p = getCurrentProjectile();
+
+                p.setGravity(!isGrounded() && !manualGravity);
+                if (isGrounded() || !manualGravity) return;
 
                 Vector velocity = currentProjectile.getVelocity();
                 velocity.setY(velocity.getY() - gravity);
@@ -212,7 +217,15 @@ public class BouncyProjectile implements Listener {
      * @param gravity The strength of the gravity
      */
     public void setGravity(double gravity) {
-        this.gravity = gravity;
+        // If the gravity is close to the default gravity, it is better to use Minecraft's built in gravity system
+        // for better client-side prediction. With manual gravity the projectile is noticeably laggy.
+        if (Math.abs(gravity - DEFAULT_GRAVITY) < 0.01) {
+            this.gravity = DEFAULT_GRAVITY;
+            this.manualGravity = false;
+        } else {
+            this.gravity = gravity;
+            this.manualGravity = true;
+        }
     }
 
     /**
@@ -297,6 +310,7 @@ public class BouncyProjectile implements Listener {
             // Set grounded
             grounded = true;
             velocity.setY(0);
+            currentProjectile.setGravity(false);
         } else {
             // Apply bounce physics
             bounce(velocity, hitBlockFace);
@@ -304,7 +318,7 @@ public class BouncyProjectile implements Listener {
 
         currentProjectile = world.spawn(hitLocation, Snowball.class);
         currentProjectile.setVelocity(velocity);
-        currentProjectile.setGravity(false); // Gravity is handled manually
+        currentProjectile.setGravity(oldProjectile.hasGravity());
         currentProjectile.setShooter(oldProjectile.getShooter());
         currentProjectile.setFireTicks(oldProjectile.getFireTicks());
     }
