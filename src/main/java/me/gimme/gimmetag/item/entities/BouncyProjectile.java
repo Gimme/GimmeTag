@@ -1,4 +1,4 @@
-package me.gimme.gimmetag.item;
+package me.gimme.gimmetag.item.entities;
 
 import me.gimme.gimmetag.utils.OutlineEffect;
 import org.bukkit.*;

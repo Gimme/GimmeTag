@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.item.BouncyProjectile;
+import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.*;
 import org.bukkit.entity.*;
