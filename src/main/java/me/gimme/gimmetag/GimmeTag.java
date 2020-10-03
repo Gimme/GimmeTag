@@ -116,10 +116,10 @@ public final class GimmeTag extends JavaPlugin {
                 Config.SMOKE_GRENADE.getCooldown().doubleValue(),
                 Config.SMOKE_GRENADE.isConsumable(),
                 Config.SMOKE_GRENADE.getDuration().doubleValue(),
-                Config.SMOKE_GRENADE_SPEED.getValue().doubleValue(),
-                Config.SMOKE_GRENADE_GRAVITY.getValue().doubleValue(),
-                Config.SMOKE_GRENADE_MAX_EXPLOSION_TIMER.getValue().doubleValue(),
-                Config.SMOKE_GRENADE_GROUND_EXPLOSION_TIMER.getValue().doubleValue(),
+                Config.SMOKE_GRENADE.getSpeed().doubleValue(),
+                Config.SMOKE_GRENADE.getGravity().doubleValue(),
+                Config.SMOKE_GRENADE.getMaxExplosionTimer().doubleValue(),
+                Config.SMOKE_GRENADE.getGroundExplosionTimer().doubleValue(),
                 this
         ));
     }
