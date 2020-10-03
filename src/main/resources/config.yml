@@ -147,3 +147,7 @@ default-bouncy-projectile:
   max-explosion-timer: 4.0
   # Time after the bouncing stops before explosion.
   ground-explosion-timer: 0.5
+  # 1 means lossless bounces and 0 means no bounciness.
+  restitution-factor: 0.45
+  # 1 is slippery and 0 is sticky.
+  friction-factor: 0.8

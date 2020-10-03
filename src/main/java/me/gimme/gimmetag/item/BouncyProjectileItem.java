@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item;
 
+import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.Material;
@@ -19,10 +20,29 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     private final double gravity;
     private final int maxExplosionTimerTicks;
     private final int groundExplosionTimerTicks;
+    private final double restitutionFactor;
+    private final double frictionFactor;
+
+    public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
+                                @NotNull Plugin plugin) {
+        this(
+                name,
+                type,
+                config.getCooldown(),
+                config.isConsumable(),
+                config.getSpeed(),
+                config.getGravity(),
+                config.getMaxExplosionTimer(),
+                config.getGroundExplosionTimer(),
+                config.getRestitutionFactor(),
+                config.getFrictionFactor(),
+                plugin
+        );
+    }
 
     public BouncyProjectileItem(@NotNull String name, @NotNull Material type, double cooldown, boolean consumable,
                                 double speed, double gravity, double maxExplosionTimer, double groundExplosionTimer,
-                                @NotNull Plugin plugin) {
+                                double restitutionFactor, double frictionFactor, @NotNull Plugin plugin) {
         super(name, type, cooldown, consumable);
 
         this.plugin = plugin;
@@ -30,6 +50,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.gravity = gravity;
         this.maxExplosionTimerTicks = (int) Math.round(maxExplosionTimer * 20);
         this.groundExplosionTimerTicks = (int) Math.round(groundExplosionTimer * 20);
+        this.restitutionFactor = restitutionFactor;
+        this.frictionFactor = frictionFactor;
 
         mute();
     }
@@ -43,6 +65,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         bouncyProjectile.setOnExplode(this::onExplode);
         bouncyProjectile.setGroundExplosionTimerTicks(groundExplosionTimerTicks);
         bouncyProjectile.setGravity(gravity);
+        bouncyProjectile.setRestitutionFactor(restitutionFactor);
+        bouncyProjectile.setFrictionFactor(frictionFactor);
         bouncyProjectile.setTrail(true);
         bouncyProjectile.setBounceMarks(true);
         bouncyProjectile.setGlowing(true);

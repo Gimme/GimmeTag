@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.GimmeTag;
+import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.BouncyProjectileItem;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -21,15 +22,14 @@ public class SmokeGrenade extends BouncyProjectileItem {
 
     private final int durationTicks;
 
-    public SmokeGrenade(double cooldown, boolean consumable, double duration, double speed, double gravity,
-                        double maxExplosionTimer, double groundExplosionTimer, @NotNull Plugin plugin) {
+    public SmokeGrenade(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
         super(
                 "Smoke Grenade",
                 Material.CLAY_BALL,
-                cooldown, consumable, speed, gravity, maxExplosionTimer, groundExplosionTimer, plugin
+                config, plugin
         );
 
-        this.durationTicks = (int) Math.round(duration * 20);
+        this.durationTicks = (int) Math.round(config.getDuration() * 20);
 
         showDuration(durationTicks);
     }

@@ -9,6 +9,8 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     private static final String GRAVITY_PATH = "gravity";
     private static final String MAX_EXPLOSION_TIMER_PATH = "max-explosion-timer";
     private static final String GROUND_EXPLOSION_TIMER_PATH = "ground-explosion-timer";
+    private static final String RESTITUTION_FACTOR_PATH = "restitution-factor";
+    private static final String FRICTION_FACTOR_PATH = "friction-factor";
 
     @Nullable
     private BouncyProjectileConfig defaultConfig;
@@ -38,5 +40,13 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
 
     public double getGroundExplosionTimer() {
         return getValue().getDouble(GROUND_EXPLOSION_TIMER_PATH, defaultConfig != null ? defaultConfig.getGroundExplosionTimer() : 0);
+    }
+
+    public double getRestitutionFactor() {
+        return getValue().getDouble(RESTITUTION_FACTOR_PATH, defaultConfig != null ? defaultConfig.getRestitutionFactor() : 0);
+    }
+
+    public double getFrictionFactor() {
+        return getValue().getDouble(FRICTION_FACTOR_PATH, defaultConfig != null ? defaultConfig.getFrictionFactor() : 0);
     }
 }
