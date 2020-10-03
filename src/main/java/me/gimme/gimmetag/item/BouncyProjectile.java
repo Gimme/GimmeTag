@@ -150,7 +150,8 @@ public class BouncyProjectile implements Listener {
 
                 p.getWorld().spawnParticle(Particle.END_ROD,
                         p.getLocation() // Align the trail to fit the actual path better
-                                .add(p.getVelocity().multiply(-1).multiply(0.3)),
+                                .add(p.getVelocity().multiply(-1).multiply(0.3))
+                                .add(0, RADIUS, 0),
                         1, 0, 0, 0, 0);
             }
         };
