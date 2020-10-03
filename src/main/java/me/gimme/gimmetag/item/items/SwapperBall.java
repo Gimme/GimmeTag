@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.tag.TagManager;
@@ -26,21 +27,21 @@ public class SwapperBall extends AbilityItem {
     private static final String DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Swapper Ball";
     private static final List<String> LORE = Collections.singletonList("Swap positions with the hit player");
 
-    private boolean allowHunterSwap;
-    private TagManager tagManager;
-    private OnHitListener onHitListener = new OnHitListener();
+    private final boolean allowHunterSwap;
+    private final TagManager tagManager;
+    private final OnHitListener onHitListener = new OnHitListener();
 
-    public SwapperBall(double cooldown, boolean consumable, boolean allowHunterSwap, @NotNull Plugin plugin,
+    public SwapperBall(@NotNull AbilityItemConfig config, boolean allowHunterSwap, @NotNull Plugin plugin,
                        @NotNull TagManager tagManager) {
         super(
                 DISPLAY_NAME,
                 MATERIAL,
-                cooldown,
-                consumable
+                config
         );
 
         this.allowHunterSwap = allowHunterSwap;
         this.tagManager = tagManager;
+
         mute();
 
         plugin.getServer().getPluginManager().registerEvents(onHitListener, plugin);
@@ -90,7 +91,7 @@ public class SwapperBall extends AbilityItem {
 
         private static final long TIME_TO_LIVE = 7 * 1000; // 7 seconds
 
-        private LinkedMap<@NotNull UUID, @NotNull Long> launchedProjectiles = new LinkedMap<>();
+        private final LinkedMap<@NotNull UUID, @NotNull Long> launchedProjectiles = new LinkedMap<>();
 
         /**
          * Registers launched projectiles.
@@ -98,7 +99,7 @@ public class SwapperBall extends AbilityItem {
          * This is necessary to differentiate normal projectiles to special ones, spawning from this item type,
          * so that we don't do the swapping for normal items.
          */
-        private void onLaunch(Projectile projectile) {
+        private void onLaunch(@NotNull Projectile projectile) {
             launchedProjectiles.put(projectile.getUniqueId(), System.currentTimeMillis());
             cleanUp();
         }

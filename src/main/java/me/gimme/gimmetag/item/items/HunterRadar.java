@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmecore.chat.Chat;
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.ContinuousAbilityItem;
 import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.ChatColor;
@@ -16,23 +17,19 @@ import java.util.*;
 
 public class HunterRadar extends ContinuousAbilityItem {
 
-    private static DecimalFormat df = new DecimalFormat("0.00");
     private static final Material TYPE = Material.CLOCK;
     private static final List<String> LORE = Arrays.asList(
             "" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)",
             "Shows distance to nearest runner");
 
-    private TagManager tagManager;
+    private final TagManager tagManager;
 
-    public HunterRadar(double cooldown, boolean consumable, double duration, @NotNull TagManager tagManager) {
+    public HunterRadar(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
         super(
                 "Hunter Radar",
                 TYPE,
-                consumable,
-                duration
+                config
         );
-
-        setCooldown(cooldown);
 
         this.tagManager = tagManager;
     }
@@ -69,7 +66,8 @@ public class HunterRadar extends ContinuousAbilityItem {
         };
     }
 
+    private static final DecimalFormat DF = new DecimalFormat("0.00");
     private static String formatMeters(double blocks) {
-        return ChatColor.YELLOW + df.format(blocks) + " m";
+        return ChatColor.YELLOW + DF.format(blocks) + " m";
     }
 }

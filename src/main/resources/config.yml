@@ -124,6 +124,12 @@ custom-item:
     duration: 7.0
     level: 1
 
+  hunter_compass:
+    cooldown: 0.5
+    # -1: Infinite.
+    # 0: Point to the current runner location as of activation.
+    duration: -1
+
   hunter_radar:
     consumable: false
     cooldown: 0.5

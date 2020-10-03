@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class SmokeGrenade extends BouncyProjectileItem {
+
     private static final Particle PARTICLE = Particle.REDSTONE;
     private static final Object DUST_DATA = new Particle.DustOptions(Color.BLUE, 4.0f);
     private static final double RADIUS = 2;
@@ -30,8 +31,6 @@ public class SmokeGrenade extends BouncyProjectileItem {
         );
 
         this.durationTicks = (int) Math.round(config.getDuration() * 20);
-
-        showDuration(durationTicks);
     }
 
     @Override

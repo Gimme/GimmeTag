@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.ContinuousAbilityItem;
 import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.*;
@@ -20,13 +21,13 @@ public class HunterCompass extends ContinuousAbilityItem {
             "" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)",
             "Points to nearest runner");
 
-    private TagManager tagManager;
+    private final TagManager tagManager;
 
-    public HunterCompass(@NotNull TagManager tagManager) {
+    public HunterCompass(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
         super(
                 "Hunter Compass",
                 TYPE,
-                false
+                config
         );
 
         this.tagManager = tagManager;

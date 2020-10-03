@@ -1,5 +1,7 @@
 package me.gimme.gimmetag.item;
 
+import me.gimme.gimmecore.util.RomanNumerals;
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,28 +19,40 @@ public abstract class AbilityItem extends CustomItem {
 
     private static final String USE_RESPONSE_MESSAGE_FORMAT = "" + ChatColor.RESET + ChatColor.YELLOW;
 
-    private int cooldownTicks;
     private boolean consumable;
+    private int cooldownTicks;
+    private int durationTicks;
+    private int level;
+
     @Nullable
     private String useResponseMessage = null;
     private boolean muted = false;
-    private boolean hideCooldown = false;
+    private boolean showCooldown = false;
     private boolean showDuration = false;
-    private int durationTicks = 0;
+    private boolean showLevel = false;
 
-    public AbilityItem(@NotNull String name, @NotNull Material type, double cooldown, boolean consumable) {
+    public AbilityItem(@NotNull String name, @NotNull Material type, @NotNull AbilityItemConfig config) {
         super(name, type);
 
-        setCooldown(cooldown);
-        this.consumable = consumable;
+        init(config);
     }
 
-    public AbilityItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, double cooldown,
-                       boolean consumable) {
+    public AbilityItem(@NotNull String id, @NotNull String displayName, @NotNull Material type,
+                       @NotNull AbilityItemConfig config) {
         super(id, displayName, type);
 
-        setCooldown(cooldown);
-        this.consumable = consumable;
+        init(config);
+    }
+
+    private void init(@NotNull AbilityItemConfig config) {
+        this.consumable = config.isConsumable();
+        setCooldown(config.getCooldown());
+        setDuration(config.getDuration());
+        this.level = config.getLevel();
+
+        showCooldown(cooldownTicks > 0);
+        showDuration(durationTicks > 0);
+        showLevel(level > 0);
     }
 
     @Override
@@ -47,12 +61,12 @@ public abstract class AbilityItem extends CustomItem {
         ItemStack itemStack = super.createItemStack(amount);
         ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
 
-        if (cooldownTicks > 0 && !hideCooldown) {
+        if (showCooldown) {
             List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
             lore.add(0, ChatColor.GRAY + getCooldownString() + " Cooldown");
             itemMeta.setLore(lore);
         }
-
+        if (showLevel) setLevelInfo(itemMeta, level);
         if (showDuration) setDurationInfo(itemMeta, durationTicks);
 
         itemStack.setItemMeta(itemMeta);
@@ -78,6 +92,34 @@ public abstract class AbilityItem extends CustomItem {
         this.cooldownTicks = (int) Math.round(seconds * 20);
     }
 
+    protected double getCooldown() {
+        return cooldownTicks / 20d;
+    }
+
+    protected int getCooldownTicks() {
+        return cooldownTicks;
+    }
+
+    protected void setDuration(double seconds) {
+        this.durationTicks = (int) Math.round(seconds * 20);
+    }
+
+    protected double getDuration() {
+        return durationTicks / 20d;
+    }
+
+    protected int getDurationTicks() {
+        return durationTicks;
+    }
+
+    protected int getLevel() {
+        return level;
+    }
+
+    protected int getAmplifier() {
+        return getLevel() - 1;
+    }
+
     protected void setUseResponseMessage(@Nullable String message) {
         this.useResponseMessage = message;
     }
@@ -86,20 +128,32 @@ public abstract class AbilityItem extends CustomItem {
         muted = true;
     }
 
-    protected void hideCooldown() {
-        hideCooldown = true;
+    protected void showCooldown(boolean showCooldown) {
+        this.showCooldown = showCooldown;
     }
 
-    protected void showDuration(int durationTicks) {
-        this.showDuration = true;
-        this.durationTicks = durationTicks;
+    protected void showDuration(boolean showDuration) {
+        this.showDuration = showDuration;
+    }
+
+    protected void showLevel(boolean showLevel) {
+        this.showLevel = showLevel;
+    }
+
+    private void setLevelInfo(@NotNull ItemMeta itemMeta, int level) {
+        itemMeta.setDisplayName(itemMeta.getDisplayName() + " " + RomanNumerals.toRoman(level));
     }
 
     private void setDurationInfo(@NotNull ItemMeta itemMeta, int durationTicks) {
-        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY + " (" + formatSeconds(durationTicks) + ")");
+        itemMeta.setDisplayName(itemMeta.getDisplayName() + getFormattedDuration(durationTicks));
     }
 
     private String getCooldownString() {
         return formatSeconds(cooldownTicks);
+    }
+
+
+    public static String getFormattedDuration(int durationTicks) {
+        return "" + ChatColor.RESET + ChatColor.GRAY + " (" + formatSeconds(durationTicks) + ")" + ChatColor.RESET;
     }
 }

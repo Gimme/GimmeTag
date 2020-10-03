@@ -24,9 +24,9 @@ public abstract class CustomItem {
     private static final PersistentDataType<String, String> ID_DATA_TYPE = PersistentDataType.STRING;
     private static final PersistentDataType<String, String> UNIQUE_ID_DATA_TYPE = PersistentDataType.STRING;
 
-    private String id;
-    private String displayName;
-    private Material type;
+    private final String id;
+    private final String displayName;
+    private final Material type;
     private boolean glowing = true;
 
     public CustomItem(@NotNull String name, @NotNull Material type) {
@@ -114,8 +114,8 @@ public abstract class CustomItem {
     }
 
 
-    private static DecimalFormat df = new DecimalFormat("#.##");
+    private static final DecimalFormat DF = new DecimalFormat("#.##");
     protected static String formatSeconds(int ticks) {
-        return df.format(ticks / 20d) + "s";
+        return DF.format(ticks / 20d) + "s";
     }
 }

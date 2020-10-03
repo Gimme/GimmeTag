@@ -79,37 +79,23 @@ public final class GimmeTag extends JavaPlugin {
     private void registerCustomItems() {
         ConfigurationSection speedBoostSection = Config.SPEED_BOOSTS.getValue();
         for (String speedBoostId : speedBoostSection.getKeys(false)) {
-            AbilityItemConfig itemConfig = new AbilityItemConfig(speedBoostSection, speedBoostId);
             itemManager.registerItem(new SpeedBoost(
                     speedBoostId,
-                    itemConfig.getCooldown(),
-                    itemConfig.isConsumable(),
-                    itemConfig.getDuration(),
-                    itemConfig.getLevel()
+                    new AbilityItemConfig(speedBoostSection, speedBoostId)
             ));
         }
-        itemManager.registerItem(new HunterCompass(tagManager));
+
         itemManager.registerItem(new SwapperBall(
-                Config.SWAPPER_BALL.getCooldown(),
-                Config.SWAPPER_BALL.isConsumable(),
+                Config.SWAPPER_BALL,
                 Config.SWAPPER_ALLOW_HUNTER_SWAP.getValue(),
                 this,
                 tagManager
         ));
         itemManager.registerItem(new HunterBow());
         itemManager.registerItem(new InvisPotion(Config.INVIS_POTION_DURATION.getValue().doubleValue()));
-        itemManager.registerItem(new BalloonGrenade(
-                Config.BALLOON_GRENADE.getCooldown(),
-                Config.BALLOON_GRENADE.isConsumable(),
-                Config.BALLOON_GRENADE.getDuration(),
-                Config.BALLOON_GRENADE.getLevel()
-        ));
-        itemManager.registerItem(new HunterRadar(
-                Config.HUNTER_RADAR.getCooldown(),
-                Config.HUNTER_RADAR.isConsumable(),
-                Config.HUNTER_RADAR.getDuration(),
-                tagManager
-        ));
+        itemManager.registerItem(new BalloonGrenade(Config.BALLOON_GRENADE));
+        itemManager.registerItem(new HunterCompass(Config.HUNTER_COMPASS, tagManager));
+        itemManager.registerItem(new HunterRadar(Config.HUNTER_RADAR, tagManager));
         itemManager.registerItem(new SmokeGrenade(Config.SMOKE_GRENADE, this));
     }
 

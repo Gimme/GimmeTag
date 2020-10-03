@@ -17,8 +17,8 @@ import java.util.Map;
 
 public class ItemManager {
 
-    private Map<String, CustomItem> customItemById = new HashMap<>();
-    private Map<String, AbilityItem> abilityItemById = new HashMap<>();
+    private final Map<String, CustomItem> customItemById = new HashMap<>();
+    private final Map<String, AbilityItem> abilityItemById = new HashMap<>();
 
     public ItemManager(@NotNull Plugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new OnUseListener(), plugin);

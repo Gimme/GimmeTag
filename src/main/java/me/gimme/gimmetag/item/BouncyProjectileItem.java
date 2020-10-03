@@ -25,33 +25,15 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
-        this(
-                name,
-                type,
-                config.getCooldown(),
-                config.isConsumable(),
-                config.getSpeed(),
-                config.getGravity(),
-                config.getMaxExplosionTimer(),
-                config.getGroundExplosionTimer(),
-                config.getRestitutionFactor(),
-                config.getFrictionFactor(),
-                plugin
-        );
-    }
-
-    public BouncyProjectileItem(@NotNull String name, @NotNull Material type, double cooldown, boolean consumable,
-                                double speed, double gravity, double maxExplosionTimer, double groundExplosionTimer,
-                                double restitutionFactor, double frictionFactor, @NotNull Plugin plugin) {
-        super(name, type, cooldown, consumable);
+        super(name, type, config);
 
         this.plugin = plugin;
-        this.speed = speed;
-        this.gravity = gravity;
-        this.maxExplosionTimerTicks = (int) Math.round(maxExplosionTimer * 20);
-        this.groundExplosionTimerTicks = (int) Math.round(groundExplosionTimer * 20);
-        this.restitutionFactor = restitutionFactor;
-        this.frictionFactor = frictionFactor;
+        this.speed = config.getSpeed();
+        this.gravity = config.getGravity();
+        this.maxExplosionTimerTicks = (int) Math.round(config.getMaxExplosionTimer() * 20);
+        this.groundExplosionTimerTicks = (int) Math.round(config.getGroundExplosionTimer() * 20);
+        this.restitutionFactor = config.getRestitutionFactor();
+        this.frictionFactor = config.getFrictionFactor();
 
         mute();
     }

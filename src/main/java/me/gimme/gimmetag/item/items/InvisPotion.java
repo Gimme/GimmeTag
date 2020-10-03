@@ -1,8 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.item.CustomItem;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +15,7 @@ public class InvisPotion extends CustomItem {
 
     private static final Color COLOR = Color.fromRGB(0x7f8392); // Invisibility potion color
 
-    private int durationTicks;
+    private final int durationTicks;
 
     public InvisPotion(double duration) {
         super(
@@ -31,7 +30,7 @@ public class InvisPotion extends CustomItem {
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        itemMeta.setDisplayName(itemMeta.getDisplayName() + ChatColor.RESET + ChatColor.GRAY+ " (" + formatSeconds(durationTicks) + ")");
+        itemMeta.setDisplayName(itemMeta.getDisplayName() + AbilityItem.getFormattedDuration(durationTicks));
 
         PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.setColor(COLOR);

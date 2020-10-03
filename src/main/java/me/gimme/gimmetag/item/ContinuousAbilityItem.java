@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.item;
 
 import me.gimme.gimmetag.GimmeTag;
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,34 +13,27 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public abstract class ContinuousAbilityItem extends AbilityItem {
-    private int durationTicks;
+
+    private final Map<UUID, BukkitRunnable> activeItems = new HashMap<>();
+
     private int ticksPerCalculation = 10;
-    private boolean toggleable;
+    private boolean toggleable = false;
 
-    private Map<UUID, BukkitRunnable> activeItems = new HashMap<>();
+    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, @NotNull AbilityItemConfig config) {
+        super(name, type, config);
 
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean consumable) {
-        this(name, type, consumable, -1);
-    }
+        if (isInfinite()) {
+            showDuration(false);
+            showCooldown(false);
+            setToggleable(true);
+        }
 
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, boolean consumable, double duration) {
-        super(name, type, 0.5d, consumable);
-
-        setDuration(duration);
         mute();
-
-        if (0 < duration && duration < 1000) showDuration(durationTicks);
-        else hideCooldown();
-
-        setToggleable(isInfinite());
+        if (getCooldownTicks() <= 0) setCooldown(0.5d);
     }
 
     @NotNull
     protected abstract ContinuousUse createContinuousUse(@NotNull ItemStack itemStack, @NotNull Player user);
-
-    protected void setDuration(double seconds) {
-        this.durationTicks = (int) Math.round(seconds * 20);
-    }
 
     protected void setTicksPerCalculation(int ticks) {
         this.ticksPerCalculation = ticks;
@@ -53,15 +47,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
      * @return if the duration is infinite
      */
     protected boolean isInfinite() {
-        return durationTicks < 0;
-    }
-
-    protected double getDuration() {
-        return durationTicks / 20d;
-    }
-
-    protected int getDurationTicks() {
-        return durationTicks;
+        return getDurationTicks() < 0;
     }
 
     @Override
@@ -80,7 +66,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
         ContinuousUse continuousUse = createContinuousUse(itemStack, user);
 
-        activeItems.put(uuid, new ItemOngoingUseTaskTimer(user, itemStack, ticksPerCalculation, durationTicks) {
+        activeItems.put(uuid, new ItemOngoingUseTaskTimer(user, itemStack, ticksPerCalculation, getDurationTicks()) {
             @Override
             public void onCalculate() {
                 continuousUse.onCalculate();
@@ -122,11 +108,11 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
     }
 
     protected abstract static class ItemOngoingUseTaskTimer extends BukkitRunnable {
-        private Player user;
-        private ItemStack item;
-        private int itemSlot;
-        private int durationTicks;
-        private int ticksPerCalculation;
+        private final Player user;
+        private final ItemStack item;
+        private final int itemSlot;
+        private final int durationTicks;
+        private final int ticksPerCalculation;
 
         private int ticksLeft;
         private int ticksUntilCalculation;

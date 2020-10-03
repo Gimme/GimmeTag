@@ -1,6 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmecore.util.RomanNumerals;
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.AbilityItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,22 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpeedBoost extends AbilityItem {
 
-    private int durationTicks;
-    private int level;
-
-    public SpeedBoost(String id, double cooldown, boolean consumable, double duration, int level) {
+    public SpeedBoost(@NotNull String id, @NotNull AbilityItemConfig config) {
         super(
                 id,
-                "Speed Boost " + RomanNumerals.toRoman(level),
+                "Speed Boost",
                 Material.SUGAR,
-                cooldown,
-                consumable
+                config
         );
-
-        this.durationTicks = (int) Math.round(duration * 20);
-        this.level = level;
-
-        showDuration(durationTicks);
     }
 
     @Override
@@ -36,7 +27,7 @@ public class SpeedBoost extends AbilityItem {
 
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        int amplifier = level - 1;
+        int amplifier = getAmplifier();
 
         PotionEffect currentSpeedEffect = user.getPotionEffect(PotionEffectType.SPEED);
         int currentEffectDuration = 0;
@@ -49,7 +40,7 @@ public class SpeedBoost extends AbilityItem {
             // Extend same-speed boosts
         }
 
-        user.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, durationTicks + currentEffectDuration, amplifier));
+        user.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, getDurationTicks() + currentEffectDuration, amplifier));
 
         return true;
     }

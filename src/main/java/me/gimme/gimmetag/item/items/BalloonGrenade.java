@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
+import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import org.bukkit.Color;
@@ -17,25 +18,19 @@ public class BalloonGrenade extends AbilityItem {
 
     private static final Color COLOR = Color.fromRGB(137, 208, 229);
 
-    private int durationTicks;
-    private int level;
-
-    public BalloonGrenade(double cooldown, boolean consumable, double duration, int level) {
+    public BalloonGrenade(@NotNull AbilityItemConfig config) {
         super(
                 "Balloon Grenade",
                 Material.SPLASH_POTION,
-                cooldown,
-                consumable
+                config
         );
 
-        this.durationTicks = (int) Math.round(duration * 20);
-        this.level = level;
         mute();
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        PotionEffect potionEffect = new PotionEffect(PotionEffectType.LEVITATION, durationTicks, level - 1);
+        PotionEffect potionEffect = new PotionEffect(PotionEffectType.LEVITATION, getDurationTicks(), getAmplifier());
 
         PotionMeta potionMeta = (PotionMeta) itemMeta;
         potionMeta.setColor(COLOR);
