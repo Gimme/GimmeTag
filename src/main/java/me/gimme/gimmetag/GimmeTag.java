@@ -10,7 +10,6 @@ import me.gimme.gimmetag.extension.EventEffects;
 import me.gimme.gimmetag.extension.TeamOutline;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
-import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.item.items.*;
 import me.gimme.gimmetag.tag.TagManager;
@@ -53,7 +52,6 @@ public final class GimmeTag extends JavaPlugin {
     @Override
     public void onDisable() {
         tagManager.onDisable();
-        BouncyProjectile.onDisable();
     }
 
     private void registerCommands() {

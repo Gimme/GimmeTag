@@ -19,8 +19,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -30,8 +28,6 @@ import java.util.function.Consumer;
  * It only disappears when it "explodes", which happens, at the latest, after a set maximum amount of time.
  */
 public class BouncyProjectile implements Listener {
-    private static final Set<BouncyProjectile> activeProjectiles = new HashSet<>();
-
     private static final int TRAIL_FREQUENCY_TICKS = 1;                 // Ticks between each trail update
     private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when the bouncing should stop
     private static final double RADIUS = 0.07;                          // Radius of the projectile
@@ -77,11 +73,15 @@ public class BouncyProjectile implements Listener {
     }
 
     private BouncyProjectile(@NotNull Plugin plugin, @NotNull Projectile projectile, @NotNull Entity source, int maxTicks) {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
         this.sourceProjectileId = projectile.getUniqueId();
         this.currentProjectile = projectile;
 
-        activeProjectiles.add(this);
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        // Remove the entity when the server stops
+        //noinspection deprecation
+        currentProjectile.setPersistent(false);
+
 
         explosionTimerTask = new BukkitRunnable() {
             @Override
@@ -182,7 +182,6 @@ public class BouncyProjectile implements Listener {
         outlineEffect.hide();
 
         HandlerList.unregisterAll(this);
-        activeProjectiles.remove(this);
     }
 
     /**
@@ -374,6 +373,8 @@ public class BouncyProjectile implements Listener {
         currentProjectile.setGravity(oldProjectile.hasGravity());
         currentProjectile.setShooter(oldProjectile.getShooter());
         currentProjectile.setFireTicks(oldProjectile.getFireTicks());
+        //noinspection deprecation
+        currentProjectile.setPersistent(oldProjectile.isPersistent());
     }
 
     /**
@@ -478,15 +479,5 @@ public class BouncyProjectile implements Listener {
 
         // The center of the projectile at the moment of impact
         return lastLocation.clone().add(velocity.clone().multiply(distanceToSurface / projectedVelocity).subtract(projectileDirection.clone().multiply(offset)));
-    }
-
-    /**
-     * Removes any active projectile from the world.
-     * <p>
-     * If this is not done when the plugin gets disabled and the projectile is not moving, it will never disappear
-     * since it has gravity turned off and will never hit anything.
-     */
-    public static void onDisable() {
-        activeProjectiles.forEach(BouncyProjectile::remove);
     }
 }
