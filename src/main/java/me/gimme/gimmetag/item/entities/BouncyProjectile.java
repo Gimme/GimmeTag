@@ -33,11 +33,10 @@ public class BouncyProjectile implements Listener {
     private static final double RADIUS = 0.07;                          // Radius of the projectile
     private static final double DEFAULT_GRAVITY = 0.028;                // ~0.028 is the standard gravity for a snowball
 
-    private final UUID sourceProjectileId; // The unique ID of the initial launched projectile
+    private final UUID uuid;
+    private final BukkitRunnable updateTask;
     private final BukkitRunnable explosionTimerTask;
-    private final BukkitRunnable groundedTask;
     private final BukkitRunnable trailTask;
-    private final BukkitRunnable gravityTask;
     private final OutlineEffect outlineEffect;
 
     private Consumer<Projectile> onExplode = null;
@@ -49,6 +48,7 @@ public class BouncyProjectile implements Listener {
     private boolean showTrail = false;
     private boolean showBounceMarks = false;
     private boolean grounded = false;
+    private int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
 
     private Projectile currentProjectile;
 
@@ -75,13 +75,21 @@ public class BouncyProjectile implements Listener {
     private BouncyProjectile(@NotNull Plugin plugin, @NotNull Projectile projectile, @NotNull Entity source, int maxTicks) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
-        this.sourceProjectileId = projectile.getUniqueId();
+        this.uuid = UUID.randomUUID();
         this.currentProjectile = projectile;
 
         // Remove the entity when the server stops
         //noinspection deprecation
         currentProjectile.setPersistent(false);
 
+
+        updateTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        };
+        updateTask.runTaskTimer(plugin, 0, 1);
 
         explosionTimerTask = new BukkitRunnable() {
             @Override
@@ -90,54 +98,6 @@ public class BouncyProjectile implements Listener {
             }
         };
         explosionTimerTask.runTaskLater(plugin, maxTicks);
-
-        gravityTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                Projectile p = getCurrentProjectile();
-
-                p.setGravity(!isGrounded() && !manualGravity);
-                if (isGrounded() || !manualGravity) return;
-
-                Vector velocity = currentProjectile.getVelocity();
-                velocity.setY(velocity.getY() - gravity);
-                currentProjectile.setVelocity(velocity);
-            }
-        };
-        gravityTask.runTaskTimer(plugin, 0, 1);
-
-        groundedTask = new BukkitRunnable() {
-            int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
-
-            @Override
-            public void run() {
-                if (!isGrounded()) {
-                    groundedTicks = 0;
-                    return;
-                }
-
-                Projectile p = getCurrentProjectile();
-
-                // Check if still on a solid block (could have rolled off)
-                Block block = p.getLocation().getBlock();
-                Material inBlockType = block.getType();
-                Material onBlockType = block.getRelative(gravity >= 0 ? BlockFace.DOWN : BlockFace.UP).getType();
-                if (!inBlockType.isSolid() && !onBlockType.isSolid()) {
-                    grounded = false;
-                    return;
-                }
-
-                // Stop completely if the velocity is very low
-                if (isStill()) p.setVelocity(new Vector(0, 0, 0));
-
-                // Apply surface friction
-                p.setVelocity(p.getVelocity().multiply(getFrictionFactor()));
-
-                // Explode if grounded for too long
-                if (groundExplosionTimerTicks >= 0 && groundedTicks++ >= groundExplosionTimerTicks) explode();
-            }
-        };
-        groundedTask.runTaskTimer(plugin, 0, 1);
 
         trailTask = new BukkitRunnable() {
             @Override
@@ -175,10 +135,9 @@ public class BouncyProjectile implements Listener {
     public void remove() {
         getCurrentProjectile().remove();
 
+        updateTask.cancel();
         explosionTimerTask.cancel();
-        groundedTask.cancel();
         trailTask.cancel();
-        gravityTask.cancel();
         outlineEffect.hide();
 
         HandlerList.unregisterAll(this);
@@ -330,7 +289,64 @@ public class BouncyProjectile implements Listener {
      */
     @Override
     public int hashCode() {
-        return sourceProjectileId.hashCode();
+        return uuid.hashCode();
+    }
+
+
+    /**
+     * Main update method, run every tick.
+     */
+    private void update() {
+        // If the underlying projectile has been removed for some external reason, remove completely.
+        if (getCurrentProjectile().isDead()) remove();
+
+        applyGravity();
+        moveGrounded();
+    }
+
+    /**
+     * Manually applies gravity (if enabled) on the projectile.
+     */
+    private void applyGravity() {
+        Projectile p = getCurrentProjectile();
+
+        p.setGravity(!isGrounded() && !manualGravity);
+        if (isGrounded() || !manualGravity) return;
+
+        Vector velocity = currentProjectile.getVelocity();
+        velocity.setY(velocity.getY() - gravity);
+        currentProjectile.setVelocity(velocity);
+    }
+
+    /**
+     * Handles the logic for the projectile when rolling on the ground.
+     */
+    private void moveGrounded() {
+        if (!isGrounded()) {
+            // Reset grounded timer
+            groundedTicks = 0;
+            return;
+        }
+
+        Projectile p = getCurrentProjectile();
+
+        // Check if still on a solid block (could have rolled off)
+        Block block = p.getLocation().getBlock();
+        Material inBlockType = block.getType();
+        Material onBlockType = block.getRelative(gravity >= 0 ? BlockFace.DOWN : BlockFace.UP).getType();
+        if (!inBlockType.isSolid() && !onBlockType.isSolid()) {
+            grounded = false;
+            return;
+        }
+
+        // Stop completely if the velocity is very low
+        if (isStill()) p.setVelocity(new Vector(0, 0, 0));
+
+        // Apply surface friction
+        p.setVelocity(p.getVelocity().multiply(getFrictionFactor()));
+
+        // Explode if grounded for too long
+        if (groundExplosionTimerTicks >= 0 && groundedTicks++ >= groundExplosionTimerTicks) explode();
     }
 
     /**
