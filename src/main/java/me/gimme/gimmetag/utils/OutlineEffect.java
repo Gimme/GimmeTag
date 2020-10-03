@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class OutlineEffect {
     private PacketListener packetListener;
+    private boolean isShown = false;
 
     public OutlineEffect(@NotNull Plugin plugin, @NotNull ShowOutlineCondition condition) {
         this.packetListener = new PacketAdapter(plugin, PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.NAMED_ENTITY_SPAWN) {
@@ -53,18 +54,34 @@ public class OutlineEffect {
 
     /**
      * Show this outline effect.
+     *
+     * @return if anything changed from this method call
      */
-    public void show() {
+    public boolean show() {
+        if (isShown) return false;
+        isShown = true;
         ProtocolLibrary.getProtocolManager().addPacketListener(packetListener);
+        return true;
     }
 
     /**
      * Hide this outline effect.
+     *
+     * @return if anything changed from this method call
      */
-    public void hide() {
+    public boolean hide() {
+        if (!isShown) return false;
+        isShown = false;
         ProtocolLibrary.getProtocolManager().removePacketListener(packetListener);
+        return true;
     }
 
+    /**
+     * @return if this outline effect is currently shown
+     */
+    public boolean isShown() {
+        return this.isShown;
+    }
 
     /**
      * Refreshes the outline status on all players on the server.
