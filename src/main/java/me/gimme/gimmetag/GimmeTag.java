@@ -108,9 +108,9 @@ public final class GimmeTag extends JavaPlugin {
     }
 
 
-    private static GimmeTag instance;
-
+    private static GimmeTag instance = null;
     public static GimmeTag getPlugin() {
+        if (instance == null) throw new IllegalStateException("Plugin has not been initialized yet");
         return instance;
     }
 }
