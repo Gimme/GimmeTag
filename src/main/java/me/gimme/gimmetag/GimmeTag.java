@@ -10,6 +10,7 @@ import me.gimme.gimmetag.extension.EventEffects;
 import me.gimme.gimmetag.extension.TeamOutline;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
+import me.gimme.gimmetag.item.BouncyProjectile;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.item.items.*;
 import me.gimme.gimmetag.tag.TagManager;
@@ -52,6 +53,7 @@ public final class GimmeTag extends JavaPlugin {
     @Override
     public void onDisable() {
         tagManager.onDisable();
+        BouncyProjectile.onDisable();
     }
 
     private void registerCommands() {
@@ -114,9 +116,10 @@ public final class GimmeTag extends JavaPlugin {
                 Config.SMOKE_GRENADE.getCooldown().doubleValue(),
                 Config.SMOKE_GRENADE.isConsumable(),
                 Config.SMOKE_GRENADE.getDuration().doubleValue(),
+                Config.SMOKE_GRENADE_SPEED.getValue().doubleValue(),
+                Config.SMOKE_GRENADE_GRAVITY.getValue().doubleValue(),
                 Config.SMOKE_GRENADE_MAX_EXPLOSION_TIMER.getValue().doubleValue(),
-                Config.SMOKE_GRENADE_STILL_EXPLOSION_TIMER.getValue().doubleValue(),
-                Config.SMOKE_GRENADE_VELOCITY.getValue().doubleValue(),
+                Config.SMOKE_GRENADE_GROUND_EXPLOSION_TIMER.getValue().doubleValue(),
                 this
         ));
     }

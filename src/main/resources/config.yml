@@ -136,9 +136,11 @@ custom-item:
     cooldown: 20.0
     # How long the smoke shroud lasts.
     duration: 10.0
+    # Initial speed of the projectile, where 1.0 is the Minecraft projectile standard.
+    speed: 0.7
+    # The y-velocity decrease per tick, where 0.028 is the Minecraft projectile standard.
+    gravity: 0.056
     # Max travel time before explosion.
     max-explosion-timer: 4.0
-    # Time after coming to a stop on the ground before explosion.
-    still-explosion-timer: 0.5
-    # Initial velocity of the projectile, where 1.0 is the Minecraft projectile standard.
-    velocity: 0.5
+    # Time after the bouncing stops before explosion.
+    ground-explosion-timer: 1.0

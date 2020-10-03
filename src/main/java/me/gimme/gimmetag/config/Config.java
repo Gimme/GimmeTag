@@ -66,6 +66,7 @@ public abstract class Config {
 
     public static final AbilityItemConfig SMOKE_GRENADE = new AbilityItemConfig(CUSTOM_ITEM, "smoke_grenade");
     public static final AbstractConfig<Number> SMOKE_GRENADE_MAX_EXPLOSION_TIMER = new ValueConfig<>(SMOKE_GRENADE, "max-explosion-timer", Number.class);
-    public static final AbstractConfig<Number> SMOKE_GRENADE_STILL_EXPLOSION_TIMER = new ValueConfig<>(SMOKE_GRENADE, "still-explosion-timer", Number.class);
-    public static final AbstractConfig<Number> SMOKE_GRENADE_VELOCITY = new ValueConfig<>(SMOKE_GRENADE, "velocity", Number.class);
+    public static final AbstractConfig<Number> SMOKE_GRENADE_GROUND_EXPLOSION_TIMER = new ValueConfig<>(SMOKE_GRENADE, "ground-explosion-timer", Number.class);
+    public static final AbstractConfig<Number> SMOKE_GRENADE_SPEED = new ValueConfig<>(SMOKE_GRENADE, "speed", Number.class);
+    public static final AbstractConfig<Number> SMOKE_GRENADE_GRAVITY = new ValueConfig<>(SMOKE_GRENADE, "gravity", Number.class);
 }
