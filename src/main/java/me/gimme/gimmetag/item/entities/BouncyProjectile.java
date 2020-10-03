@@ -33,25 +33,25 @@ public class BouncyProjectile implements Listener {
     private static final Set<BouncyProjectile> activeProjectiles = new HashSet<>();
 
     private static final int TRAIL_FREQUENCY_TICKS = 1;                 // Ticks between each trail update
-    private static final double BOUNCE_FRICTION_MULTIPLIER = 0.45;      // Applied every bounce
-    private static final double SURFACE_FRICTION_MULTIPLIER = 0.8;      // Applied every tick when grounded
-    private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when it should stop bouncing
+    private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when the bouncing should stop
     private static final double RADIUS = 0.07;                          // Radius of the projectile
     private static final double DEFAULT_GRAVITY = 0.028;                // ~0.028 is the standard gravity for a snowball
 
     private final UUID sourceProjectileId; // The unique ID of the initial launched projectile
     private final BukkitRunnable explosionTimerTask;
-    private final BukkitRunnable groundFrictionTask;
+    private final BukkitRunnable groundedTask;
     private final BukkitRunnable trailTask;
     private final BukkitRunnable gravityTask;
     private final OutlineEffect outlineEffect;
 
     private Consumer<Projectile> onExplode = null;
     private int groundExplosionTimerTicks = -1;
-    private boolean showTrail = false;
-    private boolean showBounceMarks = false;
     private boolean manualGravity = false;
     private double gravity = DEFAULT_GRAVITY;
+    private double restitutionFactor = 0.45;
+    private double frictionFactor = 0.8;
+    private boolean showTrail = false;
+    private boolean showBounceMarks = false;
     private boolean grounded = false;
 
     private Projectile currentProjectile;
@@ -106,7 +106,7 @@ public class BouncyProjectile implements Listener {
         };
         gravityTask.runTaskTimer(plugin, 0, 1);
 
-        groundFrictionTask = new BukkitRunnable() {
+        groundedTask = new BukkitRunnable() {
             int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
 
             @Override
@@ -131,20 +131,19 @@ public class BouncyProjectile implements Listener {
                 if (isStill()) p.setVelocity(new Vector(0, 0, 0));
 
                 // Apply surface friction
-                p.setVelocity(p.getVelocity().multiply(SURFACE_FRICTION_MULTIPLIER));
+                p.setVelocity(p.getVelocity().multiply(getFrictionFactor()));
 
                 // Explode if grounded for too long
-                if (groundExplosionTimerTicks >= 0 && groundedTicks++ >= groundExplosionTimerTicks)
-                    BouncyProjectile.this.explode();
+                if (groundExplosionTimerTicks >= 0 && groundedTicks++ >= groundExplosionTimerTicks) explode();
             }
         };
-        groundFrictionTask.runTaskTimer(plugin, 0, 1);
+        groundedTask.runTaskTimer(plugin, 0, 1);
 
         trailTask = new BukkitRunnable() {
             @Override
             public void run() {
                 if (!showTrail) return;
-                if (isStill()) return;
+                if (isGrounded() && isStill()) return;
 
                 Projectile p = getCurrentProjectile();
 
@@ -177,21 +176,13 @@ public class BouncyProjectile implements Listener {
         getCurrentProjectile().remove();
 
         explosionTimerTask.cancel();
-        groundFrictionTask.cancel();
+        groundedTask.cancel();
         trailTask.cancel();
         gravityTask.cancel();
         outlineEffect.hide();
 
         HandlerList.unregisterAll(this);
         activeProjectiles.remove(this);
-    }
-
-    /**
-     * @return a hash code value for this {@link BouncyProjectile}
-     */
-    @Override
-    public int hashCode() {
-        return sourceProjectileId.hashCode();
     }
 
     /**
@@ -230,6 +221,24 @@ public class BouncyProjectile implements Listener {
     }
 
     /**
+     * Sets the restitution factor, where 1 means lossless bounces and 0 means no bounciness.
+     *
+     * @param restitutionFactor The restitution factor
+     */
+    public void setRestitutionFactor(double restitutionFactor) {
+        this.restitutionFactor = restitutionFactor;
+    }
+
+    /**
+     * Sets the friction factor, where 1 is slippery and 0 is sticky.
+     *
+     * @param frictionFactor The friction factor
+     */
+    public void setFrictionFactor(double frictionFactor) {
+        this.frictionFactor = frictionFactor;
+    }
+
+    /**
      * Sets if the projectile should leave behind a trail effect.
      *
      * @param showTrail If the projectile should leave behind a trail effect
@@ -261,6 +270,41 @@ public class BouncyProjectile implements Listener {
     }
 
     /**
+     * @return the strength of gravity affecting this projectile
+     */
+    public double getGravity() {
+        return gravity;
+    }
+
+    /**
+     * @return the restitution factor, where 1 means lossless bounces and 0 means no bounciness.
+     */
+    public double getRestitutionFactor() {
+        return restitutionFactor;
+    }
+
+    /**
+     * @return the friction factor, where 1 is slippery and 0 is sticky.
+     */
+    public double getFrictionFactor() {
+        return frictionFactor;
+    }
+
+    /**
+     * @return if the projectile leaves behind a trail effect
+     */
+    public boolean showTrail() {
+        return showTrail;
+    }
+
+    /**
+     * @return if each bounce is marked in the world for a short duration
+     */
+    public boolean showBounceMarks() {
+        return showBounceMarks;
+    }
+
+    /**
      * @return if the projectile is currently rolling on the ground
      */
     public boolean isGrounded() {
@@ -280,6 +324,14 @@ public class BouncyProjectile implements Listener {
     @NotNull
     public Projectile getCurrentProjectile() {
         return currentProjectile;
+    }
+
+    /**
+     * @return a hash code value for this {@link BouncyProjectile}
+     */
+    @Override
+    public int hashCode() {
+        return sourceProjectileId.hashCode();
     }
 
     /**
@@ -322,6 +374,40 @@ public class BouncyProjectile implements Listener {
         currentProjectile.setGravity(oldProjectile.hasGravity());
         currentProjectile.setShooter(oldProjectile.getShooter());
         currentProjectile.setFireTicks(oldProjectile.getFireTicks());
+    }
+
+    /**
+     * Applies bounce physics on the given velocity vector according to the block face that was hit.
+     * <p>
+     * If no block face was hit, the bounce simply goes the opposite direction.
+     *
+     * @param velocity     The velocity to apply the bounce physics on
+     * @param hitBlockFace The block face that was hit, or null if no block face was hit
+     */
+    private void bounce(@NotNull Vector velocity, @Nullable BlockFace hitBlockFace) {
+        if (hitBlockFace != null && hitBlockFace.getDirection().lengthSquared() != 0) {
+            if (hitBlockFace.getModX() != 0) {
+                velocity.setX(Math.abs(velocity.getX()) * hitBlockFace.getModX());
+                velocity.setX(velocity.getX() * getRestitutionFactor());
+            } else {
+                velocity.setX(velocity.getX() * getFrictionFactor());
+            }
+            if (hitBlockFace.getModY() != 0) {
+                velocity.setY(Math.abs(velocity.getY()) * hitBlockFace.getModY());
+                velocity.setY(velocity.getY() * getRestitutionFactor());
+            } else {
+                velocity.setY(velocity.getY() * getFrictionFactor());
+            }
+            if (hitBlockFace.getModZ() != 0) {
+                velocity.setZ(Math.abs(velocity.getZ()) * hitBlockFace.getModZ());
+                velocity.setZ(velocity.getZ() * getRestitutionFactor());
+            } else {
+                velocity.setZ(velocity.getZ() * getFrictionFactor());
+            }
+        } else {
+            velocity.multiply(-1);
+            velocity.multiply(getRestitutionFactor());
+        }
     }
 
 
@@ -392,40 +478,6 @@ public class BouncyProjectile implements Listener {
 
         // The center of the projectile at the moment of impact
         return lastLocation.clone().add(velocity.clone().multiply(distanceToSurface / projectedVelocity).subtract(projectileDirection.clone().multiply(offset)));
-    }
-
-    /**
-     * Applies bounce physics on the given velocity vector according to the block face that was hit.
-     * <p>
-     * If no block face was hit, the bounce simply goes the opposite direction.
-     *
-     * @param velocity     The velocity to apply the bounce physics on
-     * @param hitBlockFace The block face that was hit, or null if no block face was hit
-     */
-    private static void bounce(@NotNull Vector velocity, @Nullable BlockFace hitBlockFace) {
-        if (hitBlockFace != null && hitBlockFace.getDirection().lengthSquared() != 0) {
-            if (hitBlockFace.getModX() != 0) {
-                velocity.setX(Math.abs(velocity.getX()) * hitBlockFace.getModX());
-                velocity.setX(velocity.getX() * BOUNCE_FRICTION_MULTIPLIER);
-            } else {
-                velocity.setX(velocity.getX() * SURFACE_FRICTION_MULTIPLIER);
-            }
-            if (hitBlockFace.getModY() != 0) {
-                velocity.setY(Math.abs(velocity.getY()) * hitBlockFace.getModY());
-                velocity.setY(velocity.getY() * BOUNCE_FRICTION_MULTIPLIER);
-            } else {
-                velocity.setY(velocity.getY() * SURFACE_FRICTION_MULTIPLIER);
-            }
-            if (hitBlockFace.getModZ() != 0) {
-                velocity.setZ(Math.abs(velocity.getZ()) * hitBlockFace.getModZ());
-                velocity.setZ(velocity.getZ() * BOUNCE_FRICTION_MULTIPLIER);
-            } else {
-                velocity.setZ(velocity.getZ() * SURFACE_FRICTION_MULTIPLIER);
-            }
-        } else {
-            velocity.multiply(-1);
-            velocity.multiply(BOUNCE_FRICTION_MULTIPLIER);
-        }
     }
 
     /**
