@@ -12,6 +12,12 @@ public abstract class Ticks {
     private static final DecimalFormat DF_FORCE_DECIMALS = new DecimalFormat("0.00"); // Examples: 0.01, 1.00, 1.50
 
     /**
+     * Private constructor to prevent instantiation.
+     */
+    private Ticks() {
+    }
+
+    /**
      * @param seconds The time in seconds to convert to ticks
      * @return the amount of ticks that most closely represents the specified time in seconds
      */

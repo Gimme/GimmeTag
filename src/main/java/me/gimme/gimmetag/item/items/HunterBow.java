@@ -15,7 +15,7 @@ public class HunterBow extends CustomItem {
                 Material.BOW
         );
 
-        setGlowing(false);
+        disableGlow();
     }
 
     @Override

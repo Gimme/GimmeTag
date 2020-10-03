@@ -27,7 +27,7 @@ public class InvisPotion extends CustomItem {
 
         this.durationTicks = Ticks.secondsToTicks(duration);
 
-        setGlowing(false);
+        disableGlow();
     }
 
     @Override

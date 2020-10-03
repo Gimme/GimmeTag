@@ -34,7 +34,7 @@ public class HunterCompass extends ContinuousAbilityItem {
         this.tagManager = tagManager;
         this.glowOnlyWhenActive = getDuration() != 0;
 
-        if (glowOnlyWhenActive) setGlowing(false);
+        if (glowOnlyWhenActive) disableGlow();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class HunterCompass extends ContinuousAbilityItem {
         setTarget(itemStack, null);
 
         return new ContinuousUse() {
-            private Entity closestTarget = null;
+            private Entity closestTarget;
 
             @Override
             public void onCalculate() {
