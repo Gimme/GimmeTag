@@ -22,6 +22,7 @@ public class HunterCompass extends ContinuousAbilityItem {
             "Points to nearest runner");
 
     private final TagManager tagManager;
+    private final boolean glowOnlyWhenActive;
 
     public HunterCompass(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
         super(
@@ -31,6 +32,9 @@ public class HunterCompass extends ContinuousAbilityItem {
         );
 
         this.tagManager = tagManager;
+        this.glowOnlyWhenActive = getDuration() != 0;
+
+        if (glowOnlyWhenActive) setGlowing(false);
     }
 
     @Override
@@ -40,8 +44,11 @@ public class HunterCompass extends ContinuousAbilityItem {
 
     @Override
     protected @NotNull ContinuousUse createContinuousUse(@NotNull ItemStack itemStack, @NotNull Player user) {
+        if (glowOnlyWhenActive) setGlowing(itemStack, true);
+        setTarget(itemStack, null);
+
         return new ContinuousUse() {
-            Entity closestTarget = null;
+            private Entity closestTarget = null;
 
             @Override
             public void onCalculate() {
@@ -50,25 +57,27 @@ public class HunterCompass extends ContinuousAbilityItem {
 
             @Override
             public void onTick() {
-                setTarget(itemStack, closestTarget != null ? closestTarget.getLocation() : null);
+                if (closestTarget != null) setTarget(itemStack, closestTarget.getLocation());
             }
 
             @Override
             public void onFinish() {
-                setTarget(itemStack, null);
+                if (glowOnlyWhenActive) setGlowing(itemStack, false);
             }
         };
     }
 
     private static void setTarget(@NotNull ItemStack item, @Nullable Location location) {
         ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
-        if (!(meta instanceof CompassMeta))
-            return; // Can happen if the item has been dropped on the ground: CraftMetaItem instead of CraftMetaCompass
 
+        // Necessary check because if the item was dropped, it no longer has a CompassMeta
+        if (!(meta instanceof CompassMeta)) return;
         CompassMeta compassMeta = (CompassMeta) meta;
-        if (location == null) // Lodestone location should be set to null but for some reason it does not work
-            compassMeta.setLodestone(new Location(Bukkit.getWorlds().get(0), 0, 0, 0));
+
+        // For some reason setting the Lodestone location to null does not work, so we make it point to (0, 0, 0) instead
+        if (location == null) compassMeta.setLodestone(new Location(Bukkit.getWorlds().get(0), 0, 0, 0));
         else compassMeta.setLodestone(location);
+
         item.setItemMeta(compassMeta);
     }
 }

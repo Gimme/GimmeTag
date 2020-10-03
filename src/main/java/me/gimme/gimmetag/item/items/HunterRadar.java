@@ -18,9 +18,7 @@ import java.util.*;
 public class HunterRadar extends ContinuousAbilityItem {
 
     private static final Material TYPE = Material.CLOCK;
-    private static final List<String> LORE = Arrays.asList(
-            "" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)",
-            "Shows distance to nearest runner");
+    private static final List<String> LORE = Collections.singletonList("Shows distance to nearest runner");
 
     private final TagManager tagManager;
 
@@ -67,6 +65,7 @@ public class HunterRadar extends ContinuousAbilityItem {
     }
 
     private static final DecimalFormat DF = new DecimalFormat("0.00");
+
     private static String formatMeters(double blocks) {
         return ChatColor.YELLOW + DF.format(blocks) + " m";
     }

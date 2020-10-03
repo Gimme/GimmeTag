@@ -56,10 +56,7 @@ public abstract class CustomItem {
 
         itemMeta.setDisplayName(displayName);
 
-        if (glowing) {
-            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
+        setGlowing(itemStack, glowing);
 
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
         dataContainer.set(ID_KEY, ID_DATA_TYPE, id);
@@ -114,7 +111,22 @@ public abstract class CustomItem {
     }
 
 
+    protected static void setGlowing(@NotNull ItemStack itemStack, boolean glowing) {
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
+
+        if (glowing) {
+            itemMeta.addEnchant(Enchantment.LUCK, 1, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        } else {
+            itemMeta.removeEnchant(Enchantment.LUCK);
+            itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
+        itemStack.setItemMeta(itemMeta);
+    }
+
     private static final DecimalFormat DF = new DecimalFormat("#.##");
+
     protected static String formatSeconds(int ticks) {
         return DF.format(ticks / 20d) + "s";
     }

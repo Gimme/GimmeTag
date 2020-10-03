@@ -24,8 +24,9 @@ public class InvisPotion extends CustomItem {
                 Material.POTION
         );
 
-        setGlowing(false);
         this.durationTicks = (int) Math.round(duration * 20);
+
+        setGlowing(false);
     }
 
     @Override
