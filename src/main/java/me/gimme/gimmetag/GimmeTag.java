@@ -84,15 +84,15 @@ public final class GimmeTag extends JavaPlugin {
             AbilityItemConfig itemConfig = new AbilityItemConfig(speedBoostSection, speedBoostId);
             itemManager.registerItem(new SpeedBoost(
                     speedBoostId,
-                    itemConfig.getCooldown().doubleValue(),
+                    itemConfig.getCooldown(),
                     itemConfig.isConsumable(),
-                    itemConfig.getDuration().doubleValue(),
+                    itemConfig.getDuration(),
                     itemConfig.getLevel()
             ));
         }
         itemManager.registerItem(new HunterCompass(tagManager));
         itemManager.registerItem(new SwapperBall(
-                Config.SWAPPER_BALL.getCooldown().doubleValue(),
+                Config.SWAPPER_BALL.getCooldown(),
                 Config.SWAPPER_BALL.isConsumable(),
                 Config.SWAPPER_ALLOW_HUNTER_SWAP.getValue(),
                 this,
@@ -101,25 +101,25 @@ public final class GimmeTag extends JavaPlugin {
         itemManager.registerItem(new HunterBow());
         itemManager.registerItem(new InvisPotion(Config.INVIS_POTION_DURATION.getValue().doubleValue()));
         itemManager.registerItem(new BalloonGrenade(
-                Config.BALLOON_GRENADE.getCooldown().doubleValue(),
+                Config.BALLOON_GRENADE.getCooldown(),
                 Config.BALLOON_GRENADE.isConsumable(),
-                Config.BALLOON_GRENADE.getDuration().doubleValue(),
+                Config.BALLOON_GRENADE.getDuration(),
                 Config.BALLOON_GRENADE.getLevel()
         ));
         itemManager.registerItem(new HunterRadar(
-                Config.HUNTER_RADAR.getCooldown().doubleValue(),
+                Config.HUNTER_RADAR.getCooldown(),
                 Config.HUNTER_RADAR.isConsumable(),
-                Config.HUNTER_RADAR.getDuration().doubleValue(),
+                Config.HUNTER_RADAR.getDuration(),
                 tagManager
         ));
         itemManager.registerItem(new SmokeGrenade(
-                Config.SMOKE_GRENADE.getCooldown().doubleValue(),
+                Config.SMOKE_GRENADE.getCooldown(),
                 Config.SMOKE_GRENADE.isConsumable(),
-                Config.SMOKE_GRENADE.getDuration().doubleValue(),
-                Config.SMOKE_GRENADE.getSpeed().doubleValue(),
-                Config.SMOKE_GRENADE.getGravity().doubleValue(),
-                Config.SMOKE_GRENADE.getMaxExplosionTimer().doubleValue(),
-                Config.SMOKE_GRENADE.getGroundExplosionTimer().doubleValue(),
+                Config.SMOKE_GRENADE.getDuration(),
+                Config.SMOKE_GRENADE.getSpeed(),
+                Config.SMOKE_GRENADE.getGravity(),
+                Config.SMOKE_GRENADE.getMaxExplosionTimer(),
+                Config.SMOKE_GRENADE.getGroundExplosionTimer(),
                 this
         ));
     }

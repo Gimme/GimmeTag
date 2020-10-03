@@ -23,7 +23,7 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
         super(path, ConfigurationSection.class);
     }
 
-    public Number getCooldown() {
+    public double getCooldown() {
         return getValue().getDouble(COOLDOWN_PATH);
     }
 
@@ -31,7 +31,7 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
         return getValue().getBoolean(CONSUMABLE_PATH);
     }
 
-    public Number getDuration() {
+    public double getDuration() {
         return getValue().getDouble(DURATION_PATH);
     }
 

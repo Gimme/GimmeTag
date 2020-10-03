@@ -21,19 +21,19 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
         super(path);
     }
 
-    public Number getSpeed() {
+    public double getSpeed() {
         return getValue().getDouble(SPEED_PATH);
     }
 
-    public Number getGravity() {
+    public double getGravity() {
         return getValue().getDouble(GRAVITY_PATH);
     }
 
-    public Number getMaxExplosionTimer() {
+    public double getMaxExplosionTimer() {
         return getValue().getDouble(MAX_EXPLOSION_TIMER_PATH);
     }
 
-    public Number getGroundExplosionTimer() {
+    public double getGroundExplosionTimer() {
         return getValue().getDouble(GROUND_EXPLOSION_TIMER_PATH);
     }
 }
