@@ -28,6 +28,7 @@ import java.util.function.Consumer;
  * It only disappears when it "explodes", which happens, at the latest, after a set maximum amount of time.
  */
 public class BouncyProjectile implements Listener {
+    private static final Particle TRAIL_PARTICLE = Particle.END_ROD;
     private static final int TRAIL_FREQUENCY_TICKS = 1;                 // Ticks between each trail update
     private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when the bouncing should stop
     private static final double RADIUS = 0.07;                          // Radius of the projectile
@@ -107,7 +108,7 @@ public class BouncyProjectile implements Listener {
 
                 Projectile p = getCurrentProjectile();
 
-                p.getWorld().spawnParticle(Particle.END_ROD,
+                p.getWorld().spawnParticle(TRAIL_PARTICLE,
                         p.getLocation() // Align the trail to fit the actual path better
                                 .add(p.getVelocity().multiply(-1).multiply(0.3))
                                 .add(0, RADIUS, 0),

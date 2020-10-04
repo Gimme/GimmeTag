@@ -12,13 +12,27 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+/**
+ * Represents a custom item that can be used to create item stacks with continuous abilities tied to them.
+ * <p>
+ * A continuous ability is an ability that, when used, stays active for a certain duration. The duration can be anywhere
+ * between 0 and infinity. With a duration of 0, it works the same as a normal ability item.
+ */
 public abstract class ContinuousAbilityItem extends AbilityItem {
 
     private final Map<UUID, BukkitRunnable> activeItems = new HashMap<>();
 
     private int ticksPerCalculation = 10;
-    private boolean toggleable = false;
+    private boolean toggleable;
 
+    /**
+     * Creates a new continuous ability item with the specified name, item type and configuration.
+     *
+     * @param name   a unique name and the display name of this item. The name can contain ChatColors and spaces, which
+     *               will be stripped from the name and only be used for the display name.
+     * @param type   the item type of the generated item stacks
+     * @param config a config containing values to be applied to this ability item's variables
+     */
     public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, @NotNull AbilityItemConfig config) {
         super(name, type, config);
 
@@ -48,6 +62,13 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
      */
     protected boolean isInfinite() {
         return getDurationTicks() < 0;
+    }
+
+    /**
+     * @return if the duration is more than 0
+     */
+    protected boolean hasDuration() {
+        return getDurationTicks() != 0;
     }
 
     @Override

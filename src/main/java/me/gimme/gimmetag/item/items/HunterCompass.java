@@ -32,7 +32,7 @@ public class HunterCompass extends ContinuousAbilityItem {
         );
 
         this.tagManager = tagManager;
-        this.glowOnlyWhenActive = getDuration() != 0;
+        this.glowOnlyWhenActive = hasDuration();
 
         if (glowOnlyWhenActive) disableGlow();
     }

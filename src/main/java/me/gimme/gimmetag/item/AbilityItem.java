@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a custom item that can be used to create item stacks with abilities tied to them, used by right clicking.
+ * Represents a custom item that can be used to create item stacks with abilities tied to them.
+ * <p>
+ * The ability of an item stack is used by right clicking with it.
  */
 public abstract class AbilityItem extends CustomItem {
 

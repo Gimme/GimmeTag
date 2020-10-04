@@ -59,7 +59,7 @@ public class HunterRadar extends ContinuousAbilityItem {
 
             @Override
             public void onFinish() {
-                if (getDurationTicks() != 0) Chat.hideActionBar(user);
+                if (hasDuration()) Chat.hideActionBar(user);
             }
         };
     }
