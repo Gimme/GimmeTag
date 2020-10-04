@@ -105,15 +105,7 @@ public abstract class CustomItem {
     protected abstract void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta);
 
     /**
-     * @return the unique name of this custom item
-     */
-    @NotNull
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Stops the created item stacks from glowing as if they are enchanted.
+     * Stops the glow (enchant) effect from being applied to the created item stacks.
      * <p>
      * The glow effect is enabled by default.
      */
@@ -121,55 +113,8 @@ public abstract class CustomItem {
         this.glowing = false;
     }
 
-
     /**
-     * Returns the given item stack's unique identifier, or null if it was not created from a custom item.
-     * <p>
-     * This identifier is unique for each item stack even if created from the same custom item.
-     *
-     * @param itemStack the item stack to get the unique identifier of
-     * @return the given item stack's unique identifier, or null if it was not created from a custom item
-     */
-    @Nullable
-    public static UUID getUniqueId(@NotNull ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) return null;
-
-        String uuidString = itemMeta.getPersistentDataContainer().get(UNIQUE_ID_KEY, UNIQUE_ID_DATA_TYPE);
-        if (uuidString == null) return null;
-
-        return UUID.fromString(uuidString);
-    }
-
-    /**
-     * Returns the unique identifier of the custom item that the given item stack was created from, or null if not from
-     * a custom item.
-     * <p>
-     * Note that this results in the same identifier for every item stack that was created from the same custom item.
-     *
-     * @param itemStack the item stack to get the custom item identifier of
-     * @return the unique identifier of the custom item that the given item stack was created from, else null
-     */
-    @Nullable
-    public static String getCustomItemId(@NotNull ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) return null;
-
-        return itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
-    }
-
-    /**
-     * Returns if the given item stack was created from a custom item.
-     *
-     * @param itemStack the item stack to check if created from a custom item
-     * @return if the given item stack was created from a custom item
-     */
-    public static boolean isCustomItem(@NotNull ItemStack itemStack) {
-        return getCustomItemId(itemStack) != null;
-    }
-
-    /**
-     * Sets the given item stack to be glowing, as if it was enchanted, or not.
+     * Sets the given item stack to be glowing (as if it was enchanted) or not.
      *
      * @param itemStack the item stack to modify
      * @param glowing   if the item stack should be glowing
@@ -189,12 +134,59 @@ public abstract class CustomItem {
     }
 
     /**
-     * Converts the specified ticks into seconds and returns it in a string with a trailing "s".
+     * Returns the unique name of this custom item.
+     *
+     * @return the unique name of this custom item
+     */
+    @NotNull
+    String getId() {
+        return id;
+    }
+
+    /**
+     * Returns the given item stack's unique identifier, or null if it was not created from a custom item.
+     * <p>
+     * This identifier is unique for each item stack even if created from the same custom item.
+     *
+     * @param itemStack the item stack to get the unique identifier of
+     * @return the given item stack's unique identifier, or null if it was not created from a custom item
+     */
+    @Nullable
+    static UUID getUniqueId(@NotNull ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) return null;
+
+        String uuidString = itemMeta.getPersistentDataContainer().get(UNIQUE_ID_KEY, UNIQUE_ID_DATA_TYPE);
+        if (uuidString == null) return null;
+
+        return UUID.fromString(uuidString);
+    }
+
+    /**
+     * Returns the unique identifier of the custom item that the given item stack was created from, or null if not from
+     * a custom item.
+     * <p>
+     * Note that this results in the same identifier for every item stack that was created from the same custom item.
+     *
+     * @param itemStack the item stack to get the custom item identifier of
+     * @return the unique identifier of the custom item that the given item stack was created from, else null
+     */
+    @Nullable
+    static String getCustomItemId(@NotNull ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) return null;
+
+        return itemMeta.getPersistentDataContainer().get(ID_KEY, ID_DATA_TYPE);
+    }
+
+    /**
+     * Converts the specified ticks into seconds and returns it in a string formatted according to the standard way to
+     * display time.
      *
      * @param ticks the time in ticks to be converted into seconds
-     * @return the time in seconds with a trailing "s"
+     * @return a formatted string showing the specified time
      */
-    protected static String formatSeconds(int ticks) {
+    static String formatSeconds(int ticks) {
         return Ticks.ticksToSecondsString(ticks) + "s";
     }
 }
