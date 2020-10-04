@@ -80,4 +80,10 @@ public class HunterCompass extends ContinuousAbilityItem {
 
         item.setItemMeta(compassMeta);
     }
+
+    private static void setGlowing(@NotNull ItemStack itemStack, boolean glowing) {
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
+        setGlowing(itemMeta, glowing);
+        itemStack.setItemMeta(itemMeta);
+    }
 }

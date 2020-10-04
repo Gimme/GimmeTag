@@ -79,7 +79,7 @@ public abstract class CustomItem {
 
         itemMeta.setDisplayName(displayName);
 
-        setGlowing(itemStack, glowing);
+        setGlowing(itemMeta, glowing);
 
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
         dataContainer.set(ID_KEY, ID_DATA_TYPE, id);
@@ -114,14 +114,12 @@ public abstract class CustomItem {
     }
 
     /**
-     * Sets the given item stack to be glowing (as if it was enchanted) or not.
+     * Sets the given item meta to be glowing (as if the item was enchanted) or not.
      *
-     * @param itemStack the item stack to modify
-     * @param glowing   if the item stack should be glowing
+     * @param itemMeta the item meta to modify
+     * @param glowing  if the item meta should be glowing
      */
-    protected static void setGlowing(@NotNull ItemStack itemStack, boolean glowing) {
-        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
-
+    protected static void setGlowing(@NotNull ItemMeta itemMeta, boolean glowing) {
         if (glowing) {
             itemMeta.addEnchant(Enchantment.LUCK, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -129,8 +127,6 @@ public abstract class CustomItem {
             itemMeta.removeEnchant(Enchantment.LUCK);
             itemMeta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
-
-        itemStack.setItemMeta(itemMeta);
     }
 
     /**
