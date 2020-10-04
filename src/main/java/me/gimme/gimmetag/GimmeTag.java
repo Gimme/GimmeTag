@@ -62,6 +62,7 @@ public final class GimmeTag extends JavaPlugin {
         registerCommand(new RunnerCommand(tagManager));
         registerCommand(new SuicideCommand());
         registerCommand(new NoteCommand());
+        registerCommand(new TestCommand());
     }
 
     private void registerEvents() {
@@ -108,7 +109,7 @@ public final class GimmeTag extends JavaPlugin {
     }
 
 
-    private static GimmeTag instance = null;
+    private static GimmeTag instance;
     public static GimmeTag getPlugin() {
         if (instance == null) throw new IllegalStateException("Plugin has not been initialized yet");
         return instance;
