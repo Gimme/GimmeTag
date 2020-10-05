@@ -40,9 +40,9 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             showDuration(false);
             showCooldown(false);
             setToggleable(true);
+            setUseSound(SoundEffect.ACTIVATE);
         }
 
-        mute();
         if (getCooldownTicks() <= 0) setCooldown(0.5d);
     }
 
@@ -105,7 +105,6 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             }
         }.start());
 
-        SoundEffect.ACTIVATE.play(user);
         return true;
     }
 
