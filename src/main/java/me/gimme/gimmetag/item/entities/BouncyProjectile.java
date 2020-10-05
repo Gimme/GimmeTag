@@ -385,13 +385,14 @@ public class BouncyProjectile implements Listener {
             bounce(velocity, hitBlockFace);
         }
 
-        currentProjectile = world.spawn(hitLocation, Snowball.class);
-        currentProjectile.setVelocity(velocity);
-        currentProjectile.setGravity(oldProjectile.hasGravity());
-        currentProjectile.setShooter(oldProjectile.getShooter());
-        currentProjectile.setFireTicks(oldProjectile.getFireTicks());
-        //noinspection deprecation
-        currentProjectile.setPersistent(oldProjectile.isPersistent());
+        currentProjectile = world.spawn(hitLocation, Snowball.class, e -> {
+            e.setVelocity(velocity);
+            e.setGravity(oldProjectile.hasGravity());
+            e.setShooter(oldProjectile.getShooter());
+            e.setFireTicks(oldProjectile.getFireTicks());
+            //noinspection deprecation
+            e.setPersistent(oldProjectile.isPersistent());
+        });
     }
 
     /**

@@ -142,6 +142,14 @@ custom-item:
     cooldown: 20.0
     # How long the smoke shroud lasts.
     duration: 10.0
+    # The radius of the smoke area.
+    radius: 5.0
+    # Thickness of the smoke cloud.
+    thickness: 1.0
+    # Default color of the smoke.
+    color: 0x008080
+    # If the smoke should be the color of the user's team.
+    use-team-color: true
 
 # Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
 default-bouncy-projectile:
@@ -157,3 +165,9 @@ default-bouncy-projectile:
   restitution-factor: 0.45
   # 1 is slippery and 0 is sticky.
   friction-factor: 0.8
+  # If the projectile should be followed by a trail.
+  trail: true
+  # If the bounces should leave behind visible marks for a short duration.
+  bounce-marks: true
+  # If the projectile should have an outline that can be seen through walls (only seen by the thrower).
+  glowing: true

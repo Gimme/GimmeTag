@@ -11,9 +11,12 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     private static final String GROUND_EXPLOSION_TIMER_PATH = "ground-explosion-timer";
     private static final String RESTITUTION_FACTOR_PATH = "restitution-factor";
     private static final String FRICTION_FACTOR_PATH = "friction-factor";
+    private static final String GLOWING_PATH = "glowing";
+    private static final String TRAIL_PATH = "trail";
+    private static final String BOUNCE_MARKS_PATH = "bounce-marks";
 
     @Nullable
-    private BouncyProjectileConfig defaultConfig;
+    private final BouncyProjectileConfig defaultConfig;
 
     BouncyProjectileConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path,
                            @Nullable BouncyProjectileConfig defaultConfig) {
@@ -48,5 +51,17 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
 
     public double getFrictionFactor() {
         return getValue().getDouble(FRICTION_FACTOR_PATH, defaultConfig != null ? defaultConfig.getFrictionFactor() : 0);
+    }
+
+    public boolean getTrail() {
+        return getValue().getBoolean(TRAIL_PATH, defaultConfig != null && defaultConfig.getTrail());
+    }
+
+    public boolean getBounceMarks() {
+        return getValue().getBoolean(BOUNCE_MARKS_PATH, defaultConfig != null && defaultConfig.getBounceMarks());
+    }
+
+    public boolean getGlowing() {
+        return getValue().getBoolean(GLOWING_PATH, defaultConfig != null && defaultConfig.getGlowing());
     }
 }

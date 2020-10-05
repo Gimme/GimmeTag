@@ -54,18 +54,17 @@ public abstract class Config {
 
     public static final AbilityItemConfig SWAPPER_BALL = new AbilityItemConfig(CUSTOM_ITEM, "swapper_ball");
     public static final AbstractConfig<Boolean> SWAPPER_ALLOW_HUNTER_SWAP = new ValueConfig<>(SWAPPER_BALL, "allow-hunter-swap", Boolean.class);
-
     public static final AbstractConfig<ConfigurationSection> SPEED_BOOSTS = new ValueConfig<>(CUSTOM_ITEM, "speed-boosts", ConfigurationSection.class);
-
     private static final AbstractConfig<ConfigurationSection> INVIS_POTION = new ValueConfig<>(CUSTOM_ITEM, "invis_potion", ConfigurationSection.class);
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration", Number.class);
-
     public static final AbilityItemConfig BALLOON_GRENADE = new AbilityItemConfig(CUSTOM_ITEM, "balloon_grenade");
-
     public static final AbilityItemConfig HUNTER_COMPASS = new AbilityItemConfig(CUSTOM_ITEM, "hunter_compass");
-
     public static final AbilityItemConfig HUNTER_RADAR = new AbilityItemConfig(CUSTOM_ITEM, "hunter_radar");
 
-    public static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig("default-bouncy-projectile", null);
+    private static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig("default-bouncy-projectile", null);
     public static final BouncyProjectileConfig SMOKE_GRENADE = new BouncyProjectileConfig(CUSTOM_ITEM, "smoke_grenade", DEFAULT_BOUNCY_PROJECTILE);
+    public static final AbstractConfig<Number> SMOKE_GRENADE_RADIUS = new ValueConfig<>(SMOKE_GRENADE, "radius", Number.class);
+    public static final AbstractConfig<Number> SMOKE_GRENADE_THICKNESS = new ValueConfig<>(SMOKE_GRENADE, "thickness", Number.class);
+    public static final AbstractConfig<Integer> SMOKE_GRENADE_COLOR = new ValueConfig<>(SMOKE_GRENADE, "color", Integer.class);
+    public static final AbstractConfig<Boolean> SMOKE_GRENADE_USE_TEAM_COLOR = new ValueConfig<>(SMOKE_GRENADE, "use-team-color", Boolean.class);
 }

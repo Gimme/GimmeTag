@@ -23,6 +23,9 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     private final int groundExplosionTimerTicks;
     private final double restitutionFactor;
     private final double frictionFactor;
+    private final boolean trail;
+    private final boolean bounceMarks;
+    private final boolean glowing;
 
     public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
@@ -35,6 +38,9 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.groundExplosionTimerTicks = Ticks.secondsToTicks(config.getGroundExplosionTimer());
         this.restitutionFactor = config.getRestitutionFactor();
         this.frictionFactor = config.getFrictionFactor();
+        this.trail = config.getTrail();
+        this.bounceMarks = config.getBounceMarks();
+        this.glowing = config.getGlowing();
 
         mute();
     }
@@ -50,9 +56,9 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         bouncyProjectile.setGravity(gravity);
         bouncyProjectile.setRestitutionFactor(restitutionFactor);
         bouncyProjectile.setFrictionFactor(frictionFactor);
-        bouncyProjectile.setTrail(true);
-        bouncyProjectile.setBounceMarks(true);
-        bouncyProjectile.setGlowing(true);
+        bouncyProjectile.setTrail(trail);
+        bouncyProjectile.setBounceMarks(bounceMarks);
+        bouncyProjectile.setGlowing(glowing);
 
         SoundEffect.THROW.play(user);
         return true;
