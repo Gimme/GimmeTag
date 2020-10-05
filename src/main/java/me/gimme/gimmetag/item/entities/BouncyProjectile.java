@@ -4,15 +4,13 @@ import me.gimme.gimmetag.utils.OutlineEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -28,6 +26,8 @@ import java.util.function.Consumer;
  * It only disappears when it "explodes", which happens, at the latest, after a set maximum amount of time.
  */
 public class BouncyProjectile implements Listener {
+
+    private static final Class<? extends ThrowableProjectile> PROJECTILE_CLASS = Snowball.class;
     private static final Particle TRAIL_PARTICLE = Particle.END_ROD;
     private static final int TRAIL_FREQUENCY_TICKS = 1;                 // Ticks between each trail update
     private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when the bouncing should stop
@@ -35,6 +35,8 @@ public class BouncyProjectile implements Listener {
     private static final double DEFAULT_GRAVITY = 0.028;                // ~0.028 is the standard gravity for a snowball
 
     private final UUID uuid;
+    @Nullable
+    private final ItemStack displayItem;
     private final BukkitRunnable updateTask;
     private final BukkitRunnable explosionTimerTask;
     private final BukkitRunnable trailTask;
@@ -57,26 +59,30 @@ public class BouncyProjectile implements Listener {
      * Launches a bouncy projectile from the given source player with the specified initial speed. After the specified
      * amount of max ticks, the projectile disappears from the world.
      *
-     * @param plugin          The plugin to schedule tasks from
-     * @param source          The player to launch the projectile
-     * @param speed           The initial speed of the launched projectile
-     * @param maxTicks        Max amount of ticks for the projectile to live
-     * @param projectileClass The type of projectile to launch
+     * @param plugin      The plugin to schedule tasks from
+     * @param source      The player to launch the projectile
+     * @param speed       The initial speed of the launched projectile
+     * @param maxTicks    Max amount of ticks for the projectile to live
+     * @param displayItem The display ItemStack for the thrown projectile, or null for the default
      * @return the launched bouncy projectile
      */
     public static BouncyProjectile launch(@NotNull Plugin plugin, @NotNull Player source, double speed, int maxTicks,
-                                          Class<? extends Projectile> projectileClass) {
-        Projectile projectile = source.launchProjectile(projectileClass);
+                                          @Nullable ItemStack displayItem) {
+        ThrowableProjectile projectile = source.launchProjectile(PROJECTILE_CLASS);
+        if (displayItem != null) projectile.setItem(displayItem);
         projectile.setShooter(source);
         projectile.setVelocity(projectile.getVelocity().multiply(speed));
 
-        return new BouncyProjectile(plugin, projectile, source, maxTicks);
+        return new BouncyProjectile(plugin, projectile, source, maxTicks, displayItem);
     }
 
-    private BouncyProjectile(@NotNull Plugin plugin, @NotNull Projectile projectile, @NotNull Entity source, int maxTicks) {
+    private BouncyProjectile(@NotNull Plugin plugin, @NotNull Projectile projectile, @NotNull Entity source, int maxTicks,
+                             @Nullable ItemStack displayItem) {
+
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         this.uuid = UUID.randomUUID();
+        this.displayItem = displayItem;
         this.currentProjectile = projectile;
 
         // Remove the entity when the server stops
@@ -385,7 +391,8 @@ public class BouncyProjectile implements Listener {
             bounce(velocity, hitBlockFace);
         }
 
-        currentProjectile = world.spawn(hitLocation, Snowball.class, e -> {
+        currentProjectile = world.spawn(hitLocation, PROJECTILE_CLASS, e -> {
+            if (displayItem != null) e.setItem(displayItem);
             e.setVelocity(velocity);
             e.setGravity(oldProjectile.hasGravity());
             e.setShooter(oldProjectile.getShooter());
@@ -436,10 +443,10 @@ public class BouncyProjectile implements Listener {
      * The projectile's location at the moment of the hit is always slightly in front since the real hit would be
      * between ticks.
      * <p>
-     * The hit location can be made more accurate by simulating the extension of the travel path as if the
-     * projectile continued to fly in the same direction. This can only be done easily if the block is full
-     * (i.e., not slabs, fence, etc.), so we first check if the projectile's location is already "inside" the block
-     * that was hit, in which case the hit location cannot be improved.
+     * The hit location can be made more accurate by simulating the extension of the travel path as if the projectile
+     * continued to fly in the same direction. This can only be done easily if the block is full (i.e., not slabs,
+     * fence, etc.), so we first check if the projectile's location is already "inside" the block that was hit, in which
+     * case the hit location cannot be improved.
      *
      * @param hitLocation  The last known location of the projectile before the hit, to be improved
      * @param velocity     The velocity of the projectile before the hit
@@ -463,10 +470,11 @@ public class BouncyProjectile implements Listener {
     }
 
     /**
-     * Returns the most accurate hit location based on the given last location and velocity of a projectile
-     * that hit the given block face.
+     * Returns the most accurate hit location based on the given last location and velocity of a projectile that hit the
+     * given block face.
      * <p>
-     * The resulting location is the center of the projectile at the moment of impact (one radius' distance from the surface).
+     * The resulting location is the center of the projectile at the moment of impact (one radius' distance from the
+     * surface).
      *
      * @param lastLocation The last known location of the projectile before the hit
      * @param velocity     The velocity of the projectile before the hit

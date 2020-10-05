@@ -7,14 +7,11 @@ import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BouncyProjectileItem extends AbilityItem {
-
-    private static final Class<? extends Projectile> PROJECTILE_CLASS = Snowball.class;
 
     private final Plugin plugin;
     private final double speed;
@@ -26,6 +23,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     private final boolean trail;
     private final boolean bounceMarks;
     private final boolean glowing;
+
+    private ItemStack displayItem;
 
     public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
@@ -49,7 +48,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        BouncyProjectile bouncyProjectile = BouncyProjectile.launch(plugin, user, speed, maxExplosionTimerTicks, PROJECTILE_CLASS);
+        BouncyProjectile bouncyProjectile = BouncyProjectile.launch(plugin, user, speed, maxExplosionTimerTicks, displayItem);
 
         bouncyProjectile.setOnExplode(this::onExplode);
         bouncyProjectile.setGroundExplosionTimerTicks(groundExplosionTimerTicks);
@@ -62,5 +61,9 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
         SoundEffect.THROW.play(user);
         return true;
+    }
+
+    protected void setDisplayItem(@NotNull ItemStack displayItem) {
+        this.displayItem = displayItem.clone();
     }
 }
