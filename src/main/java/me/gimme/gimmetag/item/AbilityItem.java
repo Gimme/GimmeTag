@@ -2,6 +2,7 @@ package me.gimme.gimmetag.item;
 
 import me.gimme.gimmecore.util.RomanNumerals;
 import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.sfx.SFX;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.ChatColor;
@@ -32,7 +33,8 @@ public abstract class AbilityItem extends CustomItem {
 
     @Nullable
     private String useResponseMessage;
-    private boolean muted;
+    @Nullable
+    private SFX useSound;
     private boolean showCooldown;
     private boolean showDuration;
     private boolean showLevel;
@@ -77,6 +79,7 @@ public abstract class AbilityItem extends CustomItem {
         this.durationTicks = Ticks.secondsToTicks(config.getDuration());
         this.level = config.getLevel();
 
+        this.useSound = SoundEffect.USE_EFFECT;
         showCooldown(cooldownTicks > 0);
         showDuration(durationTicks > 0);
         showLevel(level > 0);
@@ -117,7 +120,7 @@ public abstract class AbilityItem extends CustomItem {
         if (cooldownTicks > 0) user.setCooldown(itemStack.getType(), cooldownTicks);
         if (useResponseMessage != null && !useResponseMessage.isEmpty())
             user.sendMessage(USE_RESPONSE_MESSAGE_FORMAT + useResponseMessage);
-        if (!muted) SoundEffect.USE_EFFECT.play(user);
+        if (useSound != null) useSound.play(user);
 
         return true;
     }
@@ -176,10 +179,20 @@ public abstract class AbilityItem extends CustomItem {
     }
 
     /**
+     * Sets the sound that is played at the player's location after using this item's ability. The sound can be null to
+     * not play any sound.
+     *
+     * @param useSound the sound to play at the player's location after each use, or null for no sound
+     */
+    protected void setUseSound(@Nullable SFX useSound) {
+        this.useSound = useSound;
+    }
+
+    /**
      * Mutes the default sound effect that is played after using this item's ability.
      */
     protected void mute() {
-        muted = true;
+        setUseSound(null);
     }
 
     /**
