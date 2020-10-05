@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
  * Sound effect that can be played locally for players or at specific locations in the world.
  */
 public abstract class SFX implements GlobalSFX {
+
+    public static final float DEFAULT_VOLUME = 1f;
+
     /**
      * Plays this sound effect locally for the specified player at the player's location.
      *

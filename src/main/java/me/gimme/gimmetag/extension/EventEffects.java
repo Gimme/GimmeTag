@@ -56,7 +56,7 @@ public class EventEffects implements Listener {
             if (pLocation.distanceSquared(location) > offset * offset) {
                 location = pLocation.add(location.subtract(pLocation).toVector().normalize().multiply(offset));
             }
-            SoundEffect.THUNDER.playLocal(p, location);
+            SoundEffect.GLOBAL_THUNDER.playLocal(p, location);
         }
     }
 
