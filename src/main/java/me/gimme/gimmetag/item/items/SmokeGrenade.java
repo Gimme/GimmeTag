@@ -29,7 +29,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
     private static final SFX EXPLOSION_SOUND = new SoundSFX(Sound.ENTITY_GENERIC_EXTINGUISH_FIRE);
 
     private static final Particle PARTICLE = Particle.REDSTONE;
-    private static final int BASE_PARTICLE_COUNT = 50;
+    private static final int BASE_PARTICLE_COUNT = 20;
     private static final int INTERVAL_TICKS = 1;
 
     private static final double EYE_HEIGHT = 0.5; // Of player characters for checking if to blind them
