@@ -7,20 +7,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-class SoundSFX extends SFX {
+public class SoundSFX extends SFX {
     private Sound sound;
     private float volume;
     private float pitch;
 
-    SoundSFX(@NotNull Sound sound) {
+    public SoundSFX(@NotNull Sound sound) {
         this(sound, 1f);
     }
 
-    SoundSFX(@NotNull Sound sound, float volume) {
+    public SoundSFX(@NotNull Sound sound, float volume) {
         this(sound, volume, 1f);
     }
 
-    SoundSFX(@NotNull Sound sound, float volume, float pitch) {
+    public SoundSFX(@NotNull Sound sound, float volume, float pitch) {
         this.sound = sound;
         this.volume = volume;
         this.pitch = pitch;

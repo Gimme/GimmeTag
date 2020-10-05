@@ -2,6 +2,7 @@ package me.gimme.gimmetag.item;
 
 import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
+import me.gimme.gimmetag.sfx.GlobalSFX;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class BouncyProjectileItem extends AbilityItem {
 
@@ -24,7 +26,10 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     private final boolean bounceMarks;
     private final boolean glowing;
 
+    @Nullable
     private ItemStack displayItem;
+    @Nullable
+    private GlobalSFX explosionSound;
 
     public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
@@ -50,7 +55,10 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         BouncyProjectile bouncyProjectile = BouncyProjectile.launch(plugin, user, speed, maxExplosionTimerTicks, displayItem);
 
-        bouncyProjectile.setOnExplode(this::onExplode);
+        bouncyProjectile.setOnExplode((projectile) -> {
+            if (explosionSound != null) explosionSound.play(projectile.getLocation());
+            onExplode(projectile);
+        });
         bouncyProjectile.setGroundExplosionTimerTicks(groundExplosionTimerTicks);
         bouncyProjectile.setGravity(gravity);
         bouncyProjectile.setRestitutionFactor(restitutionFactor);
@@ -65,5 +73,9 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     protected void setDisplayItem(@NotNull ItemStack displayItem) {
         this.displayItem = displayItem.clone();
+    }
+
+    protected void setExplosionSound(@NotNull GlobalSFX explosionSound) {
+        this.explosionSound = explosionSound;
     }
 }

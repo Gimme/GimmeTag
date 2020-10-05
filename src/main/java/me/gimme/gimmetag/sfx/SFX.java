@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Sound effect that can be played locally for players or at specific locations in the world.
  */
-public abstract class SFX {
+public abstract class SFX implements GlobalSFX {
     /**
      * Plays this sound effect locally for the specified player at the player's location.
      *
@@ -26,7 +26,9 @@ public abstract class SFX {
     public abstract void playLocal(@NotNull Player player, @NotNull Location location);
 
     /**
-     * Plays this sound effect globally at the specified player's location.
+     * Plays this sound effect at the specified player's location.
+     * <p>
+     * Can be heard by anyone within range.
      *
      * @param player the player whose location to play the sound effect at
      */
@@ -35,7 +37,9 @@ public abstract class SFX {
     }
 
     /**
-     * Plays this sound effect globally at the specified location.
+     * Plays this sound effect at the specified location.
+     * <p>
+     * Can be heard by anyone within range.
      *
      * @param location the location to play the sound effect at
      */
