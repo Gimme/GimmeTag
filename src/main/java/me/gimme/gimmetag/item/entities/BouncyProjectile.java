@@ -383,9 +383,9 @@ public class BouncyProjectile implements Listener {
 
         // Bounce sound
         double magnitude = velocity.length();
-        float volume = (float) magnitude * 2;
+        float volume = (float) Math.min(1.0f, magnitude + 0.1f);
         float pitch = (float) (1 / (magnitude + 0.5));
-        world.playSound(hitLocation, Sound.BLOCK_ANVIL_FALL, volume, pitch);
+        world.playSound(hitLocation, Sound.BLOCK_ANVIL_FALL, SoundCategory.NEUTRAL, volume, pitch);
 
         if (groundBounce && Math.abs(velocity.getY()) <= Y_VELOCITY_CONSIDERED_GROUNDED) {
             // Set grounded

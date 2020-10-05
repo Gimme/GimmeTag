@@ -7,12 +7,22 @@ import org.bukkit.SoundCategory;
 
 public abstract class SoundEffect {
 
+    // GENERIC SOUNDS
+
     public static final SFX TELEPORT = new SoundSFX(Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, SFX.DEFAULT_VOLUME, 1.4f);
+    public static final SFX GLOBAL_THUNDER = new SoundSFX(Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1000000f, 1.4f);
+
+
+    // ITEM SOUNDS
+
+    public static final SFX USE_EFFECT = new SoundSFX(Sound.ENTITY_ZOMBIE_INFECT, SoundCategory.NEUTRAL, SFX.DEFAULT_VOLUME, 1.4f);
+    public static final SFX THROW = new SoundSFX(Sound.ENTITY_WITCH_THROW, SoundCategory.NEUTRAL, 0.8f, 1f);
     public static final SFX ACTIVATE = new NoteSFX(Instrument.BIT, Note.natural(1, Note.Tone.C));
     public static final SFX DEACTIVATE = new NoteSFX(Instrument.BIT, Note.natural(0, Note.Tone.C));
-    public static final SFX USE_EFFECT = new SoundSFX(Sound.ENTITY_ZOMBIE_INFECT, SFX.DEFAULT_VOLUME, 1.4f);
-    public static final SFX THROW = new SoundSFX(Sound.ENTITY_WITCH_THROW, SoundCategory.NEUTRAL, 0.8f, 1f);
-    public static final SFX GLOBAL_THUNDER = new SoundSFX(Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1000000f, 1.4f);
+    public static final SFX SMOKE_EXPLOSION_SOUND = new SoundSFX(Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, SFX.DEFAULT_VOLUME, 0.5f);
+
+
+    // GAME EVENTS
 
     public static final SFX COUNTDOWN = new NoteSFX(Instrument.BASS_GUITAR, Note.natural(0, Note.Tone.C));
     public static final SFX COUNTDOWN_FINISH = new NoteSFX(Instrument.GUITAR, Note.natural(1, Note.Tone.C));

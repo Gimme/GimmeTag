@@ -19,7 +19,11 @@ public class SoundSFX extends SFX {
     }
 
     public SoundSFX(@NotNull Sound sound, @NotNull SoundCategory soundCategory) {
-        this(sound, soundCategory, DEFAULT_VOLUME, 1f);
+        this(sound, soundCategory, DEFAULT_VOLUME);
+    }
+
+    public SoundSFX(@NotNull Sound sound, @NotNull SoundCategory soundCategory, float volume) {
+        this(sound, soundCategory, volume, 1f);
     }
 
     public SoundSFX(@NotNull Sound sound, float volume) {

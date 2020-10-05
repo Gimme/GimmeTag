@@ -2,8 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.BouncyProjectileItem;
-import me.gimme.gimmetag.sfx.SFX;
-import me.gimme.gimmetag.sfx.SoundSFX;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.utils.ChatColorConversion;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -25,8 +24,6 @@ import java.util.*;
  * vision and blinds people inside it.
  */
 public class SmokeGrenade extends BouncyProjectileItem {
-
-    private static final SFX EXPLOSION_SOUND = new SoundSFX(Sound.ENTITY_GENERIC_EXTINGUISH_FIRE);
 
     private static final Particle PARTICLE = Particle.REDSTONE;
     private static final int BASE_PARTICLE_COUNT = 20;
@@ -63,7 +60,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
         this.rgb = rgb;
         this.useTeamColor = useTeamColor;
 
-        setExplosionSound(EXPLOSION_SOUND);
+        setExplosionSound(SoundEffect.SMOKE_EXPLOSION_SOUND);
     }
 
     @Override
