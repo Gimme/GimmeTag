@@ -381,6 +381,12 @@ public class BouncyProjectile implements Listener {
         if (showBounceMarks) world.spawnParticle(Particle.DRAGON_BREATH, hitLocation,
                 20, 0.02, 0.02, 0.02, 0);
 
+        // Bounce sound
+        double magnitude = velocity.length();
+        float volume = (float) magnitude * 2;
+        float pitch = (float) (1 / (magnitude + 0.5));
+        world.playSound(hitLocation, Sound.BLOCK_ANVIL_FALL, volume, pitch);
+
         if (groundBounce && Math.abs(velocity.getY()) <= Y_VELOCITY_CONSIDERED_GROUNDED) {
             // Set grounded
             grounded = true;
