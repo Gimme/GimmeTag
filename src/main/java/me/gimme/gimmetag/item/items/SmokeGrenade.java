@@ -59,7 +59,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
         this.rgb = rgb;
         this.useTeamColor = useTeamColor;
 
-        setExplosionSound(SoundEffects.SMOKE_EXPLOSION_SOUND);
+        setExplosionSound(SoundEffects.SMOKE_EXPLOSION);
     }
 
     @Override

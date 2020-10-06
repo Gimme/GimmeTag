@@ -382,9 +382,9 @@ public class BouncyProjectile implements Listener {
                 20, 0.02, 0.02, 0.02, 0);
 
         // Bounce sound
-        double magnitude = velocity.length();
-        float volume = (float) Math.min(1.0f, magnitude + 0.1f);
-        float pitch = (float) (1 / (magnitude + 0.5));
+        double bounceMagnitude = hitBlockFace != null ? Math.abs(velocity.dot(hitBlockFace.getDirection())) : velocity.length();
+        float volume = (float) bounceMagnitude;
+        float pitch = (float) (1.8f / (bounceMagnitude + 1f));
         world.playSound(hitLocation, Sound.BLOCK_ANVIL_FALL, SoundCategory.NEUTRAL, volume, pitch);
 
         if (groundBounce && Math.abs(velocity.getY()) <= Y_VELOCITY_CONSIDERED_GROUNDED) {
