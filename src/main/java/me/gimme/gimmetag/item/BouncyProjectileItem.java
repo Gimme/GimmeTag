@@ -2,8 +2,8 @@ package me.gimme.gimmetag.item;
 
 import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
-import me.gimme.gimmetag.sfx.GlobalSFX;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.PlayableSound;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     @Nullable
     private ItemStack displayItem;
     @Nullable
-    private GlobalSFX explosionSound;
+    private PlayableSound explosionSound;
 
     public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
@@ -67,7 +67,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         bouncyProjectile.setBounceMarks(bounceMarks);
         bouncyProjectile.setGlowing(glowing);
 
-        SoundEffect.THROW.play(user);
+        SoundEffects.THROW.play(user);
         return true;
     }
 
@@ -75,7 +75,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.displayItem = displayItem.clone();
     }
 
-    protected void setExplosionSound(@NotNull GlobalSFX explosionSound) {
+    protected void setExplosionSound(@NotNull PlayableSound explosionSound) {
         this.explosionSound = explosionSound;
     }
 }

@@ -3,13 +3,16 @@ package me.gimme.gimmetag.sfx;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-public interface GlobalSFX {
+/**
+ * Represents a sound that can be played at a given location in the world.
+ */
+public interface PlayableSound {
     /**
-     * Plays this sound effect at the specified location.
+     * Plays this sound at the specified location.
      * <p>
      * Can be heard by anyone within range.
      *
-     * @param location the location to play the sound effect at
+     * @param location the location to play the sound at
      */
     void play(@NotNull Location location);
 }

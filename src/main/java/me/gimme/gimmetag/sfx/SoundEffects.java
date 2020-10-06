@@ -1,0 +1,44 @@
+package me.gimme.gimmetag.sfx;
+
+import org.bukkit.Instrument;
+import org.bukkit.Note;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+
+public abstract class SoundEffects {
+
+    // GENERIC SOUNDS
+
+    public static final SoundEffect TELEPORT = new StandardSoundEffect(Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, SoundEffect.DEFAULT_VOLUME, 1.4f);
+    public static final SoundEffect GLOBAL_THUNDER = new StandardSoundEffect(Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1000000f, 1.4f);
+
+
+    // ITEM SOUNDS
+
+    public static final SoundEffect USE_EFFECT = new StandardSoundEffect(Sound.ENTITY_ZOMBIE_INFECT, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 1.4f);
+    public static final SoundEffect THROW = new StandardSoundEffect(Sound.ENTITY_WITCH_THROW, SoundCategory.NEUTRAL, 0.8f, 1f);
+    public static final SoundEffect ACTIVATE = new NoteSoundEffect(Instrument.BIT, Note.natural(1, Note.Tone.C));
+    public static final SoundEffect DEACTIVATE = new NoteSoundEffect(Instrument.BIT, Note.natural(0, Note.Tone.C));
+    public static final SoundEffect SMOKE_EXPLOSION_SOUND = new StandardSoundEffect(Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 0.5f);
+
+
+    // GAME EVENTS
+
+    public static final SoundEffect COUNTDOWN = new NoteSoundEffect(Instrument.BASS_GUITAR, Note.natural(0, Note.Tone.C));
+    public static final SoundEffect COUNTDOWN_FINISH = new NoteSoundEffect(Instrument.GUITAR, Note.natural(1, Note.Tone.C));
+
+    public static final SoundEffect TAG = new NoteSoundEffect(Instrument.CHIME, Note.natural(1, Note.Tone.C));
+    public static final SoundEffect TAGGED = new NoteSoundEffect(Instrument.CHIME, Note.natural(0, Note.Tone.C));
+    public static final SoundEffect TAG_BROADCAST = new CombinedSoundEffect(TAG, TAGGED, GLOBAL_THUNDER);
+
+    public static final SoundEffect HUNTER_GAME_START = new StandardSoundEffect(Sound.BLOCK_END_PORTAL_SPAWN, 0.5f);
+    public static final SoundEffect RUNNER_GAME_START = new StandardSoundEffect(Sound.BLOCK_BEACON_POWER_SELECT);
+    public static final SoundEffect GAME_OVER = new CombinedSoundEffect(
+            new StandardSoundEffect(Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST_FAR),
+            new CombinedSoundEffect(10, new StandardSoundEffect(Sound.ENTITY_FIREWORK_ROCKET_TWINKLE_FAR))
+    );
+    public static final SoundEffect GAME_OVER_WIN = new CombinedSoundEffect(
+            GAME_OVER,
+            new StandardSoundEffect(Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.5f)
+    );
+}

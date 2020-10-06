@@ -8,11 +8,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-class NoteSFX extends SFX {
+class NoteSoundEffect extends SoundEffect {
     private Instrument instrument;
     private Note note;
 
-    NoteSFX(@NotNull Instrument instrument, @NotNull Note note) {
+    NoteSoundEffect(@NotNull Instrument instrument, @NotNull Note note) {
         this.instrument = instrument;
         this.note = note;
     }

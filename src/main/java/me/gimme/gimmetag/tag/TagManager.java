@@ -3,7 +3,7 @@ package me.gimme.gimmetag.tag;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.events.*;
 import me.gimme.gimmetag.item.ItemManager;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -206,7 +206,7 @@ public class TagManager implements Listener {
                             .map(uuid -> server.getPlayer(uuid))
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                SoundEffect.COUNTDOWN.playLocal(p);
+                                SoundEffects.COUNTDOWN.playLocal(p);
                                 if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", getSeconds() + "", 0, 25, 10);
                             });
                 }
@@ -218,7 +218,7 @@ public class TagManager implements Listener {
                         .map(uuid -> server.getPlayer(uuid))
                         .filter(Objects::nonNull)
                         .forEach(p -> {
-                            SoundEffect.COUNTDOWN_FINISH.playLocal(p);
+                            SoundEffects.COUNTDOWN_FINISH.playLocal(p);
                             if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", "They're coming!", 0, 25, 10);
                         });
             }

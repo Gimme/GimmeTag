@@ -2,8 +2,8 @@ package me.gimme.gimmetag.item;
 
 import me.gimme.gimmecore.util.RomanNumerals;
 import me.gimme.gimmetag.config.AbilityItemConfig;
-import me.gimme.gimmetag.sfx.SFX;
 import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,7 +33,7 @@ public abstract class AbilityItem extends CustomItem {
     @Nullable
     private String useResponseMessage;
     @Nullable
-    private SFX useSound;
+    private SoundEffect useSound;
     private boolean showCooldown;
     private boolean showDuration;
     private boolean showLevel;
@@ -78,7 +78,7 @@ public abstract class AbilityItem extends CustomItem {
         this.durationTicks = Ticks.secondsToTicks(config.getDuration());
         this.level = config.getLevel();
 
-        this.useSound = SoundEffect.USE_EFFECT;
+        this.useSound = SoundEffects.USE_EFFECT;
         showCooldown(cooldownTicks > 0);
         showDuration(durationTicks > 0);
         showLevel(level > 0);
@@ -193,7 +193,7 @@ public abstract class AbilityItem extends CustomItem {
      *
      * @param useSound the sound to play at the player's location after each use, or null for no sound
      */
-    protected void setUseSound(@Nullable SFX useSound) {
+    protected void setUseSound(@Nullable SoundEffect useSound) {
         this.useSound = useSound;
     }
 

@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.tag.TagManager;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.bukkit.*;
@@ -39,7 +39,7 @@ public class SwapperBall extends AbilityItem {
         this.tagManager = tagManager;
 
         setInfo(INFO);
-        setUseSound(SoundEffect.THROW);
+        setUseSound(SoundEffects.THROW);
 
         plugin.getServer().getPluginManager().registerEvents(onHitListener, plugin);
     }
@@ -79,7 +79,7 @@ public class SwapperBall extends AbilityItem {
 
 
     private static void playSound(@NotNull Player player) {
-        SoundEffect.TELEPORT.play(player);
+        SoundEffects.TELEPORT.play(player);
     }
 
 

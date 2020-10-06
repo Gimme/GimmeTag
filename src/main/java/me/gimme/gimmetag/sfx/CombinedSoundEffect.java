@@ -6,15 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-class SFXCombination extends SFX {
-    private SFX[] soundEffects;
+class CombinedSoundEffect extends SoundEffect {
+    private SoundEffect[] soundEffects;
     private int delayTicks;
 
-    SFXCombination(SFX... soundEffects) {
+    CombinedSoundEffect(SoundEffect... soundEffects) {
         this(0, soundEffects);
     }
 
-    SFXCombination(int delayTicks, SFX... soundEffects) {
+    CombinedSoundEffect(int delayTicks, SoundEffect... soundEffects) {
         this.delayTicks = delayTicks;
         this.soundEffects = soundEffects;
     }
@@ -24,7 +24,7 @@ class SFXCombination extends SFX {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (SFX soundEffect : soundEffects) {
+                for (SoundEffect soundEffect : soundEffects) {
                     soundEffect.playLocal(player, location);
                 }
             }
@@ -36,7 +36,7 @@ class SFXCombination extends SFX {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (SFX soundEffect : soundEffects) {
+                for (SoundEffect soundEffect : soundEffects) {
                     soundEffect.play(location);
                 }
             }

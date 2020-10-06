@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.BouncyProjectileItem;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.ChatColorConversion;
 import org.bukkit.*;
 import org.bukkit.entity.*;
@@ -59,7 +59,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
         this.rgb = rgb;
         this.useTeamColor = useTeamColor;
 
-        setExplosionSound(SoundEffect.SMOKE_EXPLOSION_SOUND);
+        setExplosionSound(SoundEffects.SMOKE_EXPLOSION_SOUND);
     }
 
     @Override

@@ -8,33 +8,33 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class SoundSFX extends SFX {
+public class StandardSoundEffect extends SoundEffect {
     private final Sound sound;
     private final SoundCategory soundCategory;
     private final float volume;
     private final float pitch;
 
-    public SoundSFX(@NotNull Sound sound) {
+    public StandardSoundEffect(@NotNull Sound sound) {
         this(sound, SoundCategory.MASTER);
     }
 
-    public SoundSFX(@NotNull Sound sound, @NotNull SoundCategory soundCategory) {
+    public StandardSoundEffect(@NotNull Sound sound, @NotNull SoundCategory soundCategory) {
         this(sound, soundCategory, DEFAULT_VOLUME);
     }
 
-    public SoundSFX(@NotNull Sound sound, @NotNull SoundCategory soundCategory, float volume) {
+    public StandardSoundEffect(@NotNull Sound sound, @NotNull SoundCategory soundCategory, float volume) {
         this(sound, soundCategory, volume, 1f);
     }
 
-    public SoundSFX(@NotNull Sound sound, float volume) {
+    public StandardSoundEffect(@NotNull Sound sound, float volume) {
         this(sound, volume, 1f);
     }
 
-    public SoundSFX(@NotNull Sound sound, float volume, float pitch) {
+    public StandardSoundEffect(@NotNull Sound sound, float volume, float pitch) {
         this(sound, SoundCategory.MASTER, volume, pitch);
     }
 
-    public SoundSFX(@NotNull Sound sound, @NotNull SoundCategory soundCategory, float volume, float pitch) {
+    public StandardSoundEffect(@NotNull Sound sound, @NotNull SoundCategory soundCategory, float volume, float pitch) {
         this.sound = sound;
         this.soundCategory = soundCategory;
         this.volume = volume;

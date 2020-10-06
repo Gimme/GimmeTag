@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item;
 
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.config.AbilityItemConfig;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -46,7 +46,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             showDuration(false);
             showCooldown(false);
             setToggleable(true);
-            setUseSound(SoundEffect.ACTIVATE);
+            setUseSound(SoundEffects.ACTIVATE);
         }
 
         if (getCooldownTicks() <= 0) setCooldown(0.5d);
@@ -67,7 +67,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             currentTask.cancel();
 
             if (toggleable) {
-                SoundEffect.DEACTIVATE.play(user);
+                SoundEffects.DEACTIVATE.play(user);
                 return true;
             }
         }

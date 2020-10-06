@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.item.AbilityItem;
-import me.gimme.gimmetag.sfx.SoundEffect;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,7 +23,7 @@ public class BalloonGrenade extends AbilityItem {
     public BalloonGrenade(@NotNull AbilityItemConfig config) {
         super(NAME, MATERIAL, config);
 
-        setUseSound(SoundEffect.THROW);
+        setUseSound(SoundEffects.THROW);
     }
 
     @Override
