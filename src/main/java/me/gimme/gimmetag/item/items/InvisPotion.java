@@ -14,16 +14,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class InvisPotion extends CustomItem {
 
+    private static final String ID = "invis_potion";
+    private static final String DISPLAY_NAME = "Potion of Invisibility";
+    private static final Material MATERIAL = Material.POTION;
     private static final Color COLOR = Color.fromRGB(0x7f8392); // Invisibility potion color
 
     private final int durationTicks;
 
     public InvisPotion(double duration) {
-        super(
-                "invis_potion",
-                "Potion of Invisibility",
-                Material.POTION
-        );
+        super(ID, DISPLAY_NAME, MATERIAL);
 
         this.durationTicks = Ticks.secondsToTicks(duration);
 

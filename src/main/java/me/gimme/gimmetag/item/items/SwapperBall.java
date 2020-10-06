@@ -21,11 +21,11 @@ import java.util.*;
 
 public class SwapperBall extends AbilityItem {
 
+    private static final String NAME = ChatColor.LIGHT_PURPLE + "Swapper Ball";
     private static final Material MATERIAL = Material.SNOWBALL;
+    private static final List<String> INFO = Collections.singletonList("Swap positions with the hit player");
     private static final EntityType PROJECTILE_TYPE = EntityType.SNOWBALL; // Has to match the material above
     private static final Class<? extends Projectile> PROJECTILE_CLASS = Snowball.class;
-    private static final String DISPLAY_NAME = ChatColor.LIGHT_PURPLE + "Swapper Ball";
-    private static final List<String> LORE = Collections.singletonList("Swap positions with the hit player");
 
     private final boolean allowHunterSwap;
     private final TagManager tagManager;
@@ -33,23 +33,19 @@ public class SwapperBall extends AbilityItem {
 
     public SwapperBall(@NotNull AbilityItemConfig config, boolean allowHunterSwap, @NotNull Plugin plugin,
                        @NotNull TagManager tagManager) {
-        super(
-                DISPLAY_NAME,
-                MATERIAL,
-                config
-        );
+        super(NAME, MATERIAL, config);
 
         this.allowHunterSwap = allowHunterSwap;
         this.tagManager = tagManager;
 
-        mute();
+        setInfo(INFO);
+        setUseSound(SoundEffect.THROW);
 
         plugin.getServer().getPluginManager().registerEvents(onHitListener, plugin);
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        itemMeta.setLore(LORE);
     }
 
     @Override
@@ -57,7 +53,7 @@ public class SwapperBall extends AbilityItem {
         Projectile projectile = user.launchProjectile(PROJECTILE_CLASS);
         projectile.setShooter(user);
         onHitListener.onLaunch(projectile);
-        SoundEffect.THROW.play(user);
+
         return true;
     }
 
@@ -74,8 +70,8 @@ public class SwapperBall extends AbilityItem {
         shooterLocation.setDirection(hitLocation.toVector().subtract(shooterLocation.toVector()));
         hitLocation.setDirection(shooterLocation.toVector().subtract(hitLocation.toVector()));
 
-        if (shooter.getType().equals(EntityType.PLAYER)) playSound((Player) shooter);
-        if (hit.getType().equals(EntityType.PLAYER)) playSound((Player) hit);
+        if (shooter.getType() == EntityType.PLAYER) playSound((Player) shooter);
+        if (hit.getType() == EntityType.PLAYER) playSound((Player) hit);
 
         shooter.teleport(hitLocation);
         hit.teleport(shooterLocation);
@@ -96,8 +92,8 @@ public class SwapperBall extends AbilityItem {
         /**
          * Registers launched projectiles.
          * <p>
-         * This is necessary to differentiate normal projectiles to special ones, spawning from this item type,
-         * so that we don't do the swapping for normal items.
+         * This is necessary to differentiate normal projectiles to special ones, spawning from this item type, so that
+         * we don't do the swapping for normal items.
          */
         private void onLaunch(@NotNull Projectile projectile) {
             launchedProjectiles.put(projectile.getUniqueId(), System.currentTimeMillis());
@@ -127,9 +123,9 @@ public class SwapperBall extends AbilityItem {
             Projectile projectile = event.getEntity();
             Entity hitEntity = event.getHitEntity();
 
-            if (!projectile.getType().equals(PROJECTILE_TYPE)) return; // Not the right type of projectile
+            if (projectile.getType() != PROJECTILE_TYPE) return; // Not the right type of projectile
             if (hitEntity == null) return; // Didn't hit
-            if (!hitEntity.getType().equals(EntityType.PLAYER)) return; // Didn't hit a player
+            if (hitEntity.getType() != EntityType.PLAYER) return; // Didn't hit a player
             if (!launchedProjectiles.containsKey(projectile.getUniqueId())) return; // Normal item
 
             LivingEntity shooter = (LivingEntity) projectile.getShooter();
@@ -150,8 +146,8 @@ public class SwapperBall extends AbilityItem {
             Entity damager = event.getDamager();
             Entity hitEntity = event.getEntity();
 
-            if (!hitEntity.getType().equals(EntityType.PLAYER)) return; // Didn't hit a player
-            if (!damager.getType().equals(PROJECTILE_TYPE)) return; // Not the right type of entity
+            if (hitEntity.getType() != EntityType.PLAYER) return; // Didn't hit a player
+            if (damager.getType() != PROJECTILE_TYPE) return; // Not the right type of entity
 
             Projectile projectile = (Projectile) damager;
             if (!launchedProjectiles.containsKey(projectile.getUniqueId())) return; // Normal item

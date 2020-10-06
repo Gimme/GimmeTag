@@ -14,8 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents a custom item that can be used to create item stacks to be used in game.
@@ -30,6 +29,7 @@ public abstract class CustomItem {
     private final String id;
     private final String displayName;
     private final Material type;
+    private List<String> info = new ArrayList<>();
     private boolean glowing = true;
 
     /**
@@ -74,8 +74,9 @@ public abstract class CustomItem {
     public ItemStack createItemStack(int amount) {
         ItemStack itemStack = new ItemStack(type, amount);
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        Objects.requireNonNull(itemMeta);
+        updateLore(itemStack);
+
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
 
         itemMeta.setDisplayName(displayName);
 
@@ -105,12 +106,81 @@ public abstract class CustomItem {
     protected abstract void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta);
 
     /**
+     * Updates the lore of the given item stack with the specified header, the item info and the specified footer.
+     * <p>
+     * The lore is formatted with the specified header first, followed by the item info and lastly the footer.
+     *
+     * @param itemStack the item stack to modify the lore of
+     * @param header    the header to be placed at the top of the lore
+     * @param footer    the footer to be placed at the bottom of the lore
+     */
+    protected void updateLore(@NotNull ItemStack itemStack, @NotNull List<String> header, @NotNull List<String> footer) {
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
+
+        List<String> lore = new ArrayList<>();
+        lore.addAll(header);
+        lore.addAll(info);
+        lore.addAll(footer);
+
+        itemMeta.setLore(lore);
+        itemStack.setItemMeta(itemMeta);
+    }
+
+    /**
+     * Updates the lore of the given item stack with the item's info.
+     *
+     * @param itemStack the item stack to modify the lore of
+     */
+    protected void updateLore(@NotNull ItemStack itemStack) {
+        updateLore(itemStack, new ArrayList<>(), new ArrayList<>());
+    }
+
+    /**
+     * Sets this item's info explaining what it does.
+     *
+     * @param info the info text with each element in the list representing a new line
+     */
+    protected void setInfo(@NotNull List<String> info) {
+        this.info = info;
+    }
+
+    /**
+     * Sets this item's info explaining what it does.
+     *
+     * @param info the info text with each element representing a new line
+     */
+    protected void setInfo(@NotNull String... info) {
+        setInfo(Arrays.asList(info));
+    }
+
+    /**
+     * Returns this item's info explaining what it does.
+     * <p>
+     * The info gets displayed in the item's lore.
+     *
+     * @return this item's info
+     */
+    @NotNull
+    protected List<String> getInfo() {
+        return info;
+    }
+
+    /**
      * Stops the glow (enchant) effect from being applied to the created item stacks.
      * <p>
      * The glow effect is enabled by default.
      */
     protected void disableGlow() {
-        this.glowing = false;
+        setGlowing(false);
+    }
+
+    /**
+     * Sets if the created item stacks should glow like enchanted items.
+     * <p>
+     * The glow effect is enabled by default.
+     */
+    protected void setGlowing(boolean glowing) {
+        this.glowing = glowing;
     }
 
     /**

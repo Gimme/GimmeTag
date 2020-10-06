@@ -16,35 +16,26 @@ import java.util.*;
 
 public class HunterCompass extends ContinuousAbilityItem {
 
-    private static final Material TYPE = Material.COMPASS;
-    private static final List<String> LORE = Arrays.asList(
-            "" + ChatColor.ITALIC + ChatColor.YELLOW + "(Right click to activate)",
-            "Points to nearest runner");
+    private static final String NAME = ChatColor.DARK_RED + "Hunter Compass";
+    private static final Material MATERIAL = Material.COMPASS;
+    private static final String INFO = "Points to nearest runner";
 
     private final TagManager tagManager;
-    private final boolean glowOnlyWhenActive;
 
     public HunterCompass(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
-        super(
-                "Hunter Compass",
-                TYPE,
-                config
-        );
+        super(NAME, MATERIAL, config);
 
         this.tagManager = tagManager;
-        this.glowOnlyWhenActive = hasDuration();
 
-        if (glowOnlyWhenActive) disableGlow();
+        setInfo(INFO);
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        itemMeta.setLore(LORE);
     }
 
     @Override
     protected @NotNull ContinuousUse createContinuousUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        if (glowOnlyWhenActive) setGlowing(itemStack, true);
         setTarget(itemStack, null);
 
         return new ContinuousUse() {
@@ -62,7 +53,6 @@ public class HunterCompass extends ContinuousAbilityItem {
 
             @Override
             public void onFinish() {
-                if (glowOnlyWhenActive) setGlowing(itemStack, false);
             }
         };
     }
@@ -79,11 +69,5 @@ public class HunterCompass extends ContinuousAbilityItem {
         else compassMeta.setLodestone(location);
 
         item.setItemMeta(compassMeta);
-    }
-
-    private static void setGlowing(@NotNull ItemStack itemStack, boolean glowing) {
-        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
-        setGlowing(itemMeta, glowing);
-        itemStack.setItemMeta(itemMeta);
     }
 }

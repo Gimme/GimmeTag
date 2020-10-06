@@ -13,7 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -91,16 +90,26 @@ public abstract class AbilityItem extends CustomItem {
         ItemStack itemStack = super.createItemStack(amount);
         ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
 
-        if (showCooldown) {
-            List<String> lore = itemMeta.getLore() != null ? itemMeta.getLore() : new ArrayList<>();
-            lore.add(0, ChatColor.GRAY + formatSeconds(cooldownTicks) + " Cooldown");
-            itemMeta.setLore(lore);
-        }
         if (showLevel) setLevelInfo(itemMeta, level);
         if (showDuration) setDurationInfo(itemMeta, durationTicks);
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    /**
+     * Updates the lore of the given item stack with the specified header, the item info and the specified footer.
+     * <p>
+     * This item's cooldown is displayed at the top.
+     *
+     * @param itemStack the item stack to modify the lore of
+     * @param header    the header to be placed at the top of the lore
+     * @param footer    the footer to be placed at the bottom of the lore
+     */
+    @Override
+    protected void updateLore(@NotNull ItemStack itemStack, @NotNull List<String> header, @NotNull List<String> footer) {
+        if (showCooldown) header.add(0, ChatColor.GRAY + formatSeconds(cooldownTicks) + " Cooldown");
+        super.updateLore(itemStack, header, footer);
     }
 
     /**

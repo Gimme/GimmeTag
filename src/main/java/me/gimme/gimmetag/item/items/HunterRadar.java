@@ -13,34 +13,31 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-import java.util.*;
 
 public class HunterRadar extends ContinuousAbilityItem {
 
-    private static final Material TYPE = Material.CLOCK;
-    private static final List<String> LORE = Collections.singletonList("Shows distance to nearest runner");
+    private static final String NAME = ChatColor.DARK_RED + "Hunter Radar";
+    private static final Material MATERIAL = Material.CLOCK;
+    private static final String INFO = "Shows distance to nearest runner";
 
     private final TagManager tagManager;
 
     public HunterRadar(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
-        super(
-                "Hunter Radar",
-                TYPE,
-                config
-        );
+        super(NAME, MATERIAL, config);
 
         this.tagManager = tagManager;
+
+        setInfo(INFO);
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        itemMeta.setLore(LORE);
     }
 
     @Override
     protected @NotNull ContinuousUse createContinuousUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         return new ContinuousUse() {
-            Entity closestTarget = null;
+            private Entity closestTarget;
 
             @Override
             public void onCalculate() {

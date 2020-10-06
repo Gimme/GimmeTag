@@ -12,13 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class SpeedBoost extends AbilityItem {
 
+    private static final String DISPLAY_NAME = "Speed Boost";
+    private static final Material MATERIAL = Material.SUGAR;
+
     public SpeedBoost(@NotNull String id, @NotNull AbilityItemConfig config) {
-        super(
-                id,
-                "Speed Boost",
-                Material.SUGAR,
-                config
-        );
+        super(id, DISPLAY_NAME, MATERIAL, config);
     }
 
     @Override

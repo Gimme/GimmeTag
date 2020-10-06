@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class HunterBow extends CustomItem {
 
+    private static final String NAME = "Hunter Bow";
+    private static final Material MATERIAL = Material.BOW;
+
     public HunterBow() {
-        super(
-                "Hunter Bow",
-                Material.BOW
-        );
+        super(NAME, MATERIAL);
 
         disableGlow();
     }

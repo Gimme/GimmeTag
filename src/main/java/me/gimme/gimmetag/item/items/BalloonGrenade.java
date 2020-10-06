@@ -16,16 +16,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class BalloonGrenade extends AbilityItem {
 
+    private static final String NAME = "Balloon Grenade";
+    private static final Material MATERIAL = Material.SPLASH_POTION;
     private static final Color COLOR = Color.fromRGB(137, 208, 229);
 
     public BalloonGrenade(@NotNull AbilityItemConfig config) {
-        super(
-                "Balloon Grenade",
-                Material.SPLASH_POTION,
-                config
-        );
+        super(NAME, MATERIAL, config);
 
-        mute();
+        setUseSound(SoundEffect.THROW);
     }
 
     @Override
@@ -43,7 +41,6 @@ public class BalloonGrenade extends AbilityItem {
         thrownPotion.setShooter(user);
         thrownPotion.setItem(itemStack);
 
-        SoundEffect.THROW.play(user);
         return true;
     }
 }

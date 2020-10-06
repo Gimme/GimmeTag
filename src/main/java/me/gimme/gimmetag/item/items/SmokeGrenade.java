@@ -25,6 +25,9 @@ import java.util.*;
  */
 public class SmokeGrenade extends BouncyProjectileItem {
 
+    private static final String NAME = "Smoke Grenade";
+    private static final Material MATERIAL = Material.CLAY_BALL;
+
     private static final Particle PARTICLE = Particle.REDSTONE;
     private static final int BASE_PARTICLE_COUNT = 20;
     private static final int INTERVAL_TICKS = 1;
@@ -47,11 +50,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
     private final boolean useTeamColor;
 
     public SmokeGrenade(@NotNull BouncyProjectileConfig config, double radius, double thickness, int rgb, boolean useTeamColor, @NotNull Plugin plugin) {
-        super(
-                "Smoke Grenade",
-                Material.CLAY_BALL,
-                config, plugin
-        );
+        super(NAME, MATERIAL, config, plugin);
 
         this.plugin = plugin;
         this.radius = radius;
