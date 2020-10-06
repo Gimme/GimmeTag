@@ -283,6 +283,10 @@ public class BouncyProjectile implements Listener {
         return getCurrentProjectile().getVelocity().lengthSquared() < 0.0001;
     }
 
+    private boolean isSticky() {
+        return getFrictionFactor() == 0 && getRestitutionFactor() == 0;
+    }
+
     /**
      * @return the current Projectile object that lives in the world until the next bounce
      */
@@ -341,7 +345,7 @@ public class BouncyProjectile implements Listener {
         Block block = p.getLocation().getBlock();
         Material inBlockType = block.getType();
         Material onBlockType = block.getRelative(gravity >= 0 ? BlockFace.DOWN : BlockFace.UP).getType();
-        if (!inBlockType.isSolid() && !onBlockType.isSolid()) {
+        if (!inBlockType.isSolid() && !onBlockType.isSolid() && !isSticky()) {
             grounded = false;
             return;
         }
@@ -387,11 +391,14 @@ public class BouncyProjectile implements Listener {
         float pitch = (float) (1.8f / (bounceMagnitude + 1f));
         world.playSound(hitLocation, Sound.BLOCK_ANVIL_FALL, SoundCategory.NEUTRAL, volume, pitch);
 
-        if (groundBounce && Math.abs(velocity.getY()) <= Y_VELOCITY_CONSIDERED_GROUNDED) {
+        if ((groundBounce && Math.abs(velocity.getY()) <= Y_VELOCITY_CONSIDERED_GROUNDED) || isSticky()) {
             // Set grounded
             grounded = true;
             velocity.setY(0);
-            currentProjectile.setGravity(false);
+            oldProjectile.setGravity(false);
+
+            // If sticky, stop completely
+            if (isSticky()) velocity.multiply(0);
         } else {
             // Apply bounce physics
             bounce(velocity, hitBlockFace);
