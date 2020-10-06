@@ -17,20 +17,20 @@ import java.util.Map;
 
 public class ItemManager {
 
-    private final Map<String, CustomItem> customItemById = new HashMap<>();
-    private final Map<String, AbilityItem> abilityItemById = new HashMap<>();
+    private final Map<String, CustomItem> customItemsById = new HashMap<>();
+    private final Map<String, AbilityItem> abilityItemsById = new HashMap<>();
 
     public ItemManager(@NotNull Plugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new OnUseListener(), plugin);
     }
 
     public void registerItem(@NotNull CustomItem customItem) {
-        customItemById.put(customItem.getId(), customItem);
+        customItemsById.put(customItem.getId(), customItem);
     }
 
     public void registerItem(@NotNull AbilityItem abilityItem) {
         registerItem((CustomItem) abilityItem);
-        abilityItemById.put(abilityItem.getId(), abilityItem);
+        abilityItemsById.put(abilityItem.getId(), abilityItem);
     }
 
     @Nullable
@@ -40,10 +40,14 @@ public class ItemManager {
 
     @Nullable
     public ItemStack createItemStack(@NotNull String customItemId, int amount) {
-        CustomItem customItem = customItemById.get(customItemId);
+        CustomItem customItem = customItemsById.get(customItemId);
         if (customItem == null) return null;
 
         return customItem.createItemStack(amount);
+    }
+
+    public Map<String, CustomItem> getCustomItems() {
+        return customItemsById;
     }
 
 
@@ -60,7 +64,7 @@ public class ItemManager {
             if (itemId == null) return;
 
             // Check if ability item
-            AbilityItem abilityItem = abilityItemById.get(itemId);
+            AbilityItem abilityItem = abilityItemsById.get(itemId);
             if (abilityItem == null) return;
 
             // Deny the use of the regular item behind the ability

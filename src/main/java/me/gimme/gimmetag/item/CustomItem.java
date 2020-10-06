@@ -205,7 +205,7 @@ public abstract class CustomItem {
      * @return the unique name of this custom item
      */
     @NotNull
-    String getId() {
+    public String getId() {
         return id;
     }
 

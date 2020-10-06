@@ -1,6 +1,7 @@
 package me.gimme.gimmetag;
 
 import me.gimme.gimmecore.command.CommandManager;
+import me.gimme.gimmetag.command.ArgPlaceholder;
 import me.gimme.gimmetag.command.commands.*;
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.config.Config;
@@ -10,10 +11,12 @@ import me.gimme.gimmetag.extension.EventEffects;
 import me.gimme.gimmetag.extension.TeamOutline;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
+import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.item.items.*;
 import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -55,12 +58,16 @@ public final class GimmeTag extends JavaPlugin {
     }
 
     private void registerCommands() {
+        commandManager.registerPlaceholder(ArgPlaceholder.ONLINE_PLAYERS, () -> getServer().getOnlinePlayers(), Player::getName);
+        commandManager.registerPlaceholder(ArgPlaceholder.ITEM_IDS, () -> itemManager.getCustomItems().values(), CustomItem::getId);
+
         commandManager.registerBasicHelpCommand(TAG_COMMAND);
         registerCommand(new StartCommand(tagManager));
         registerCommand(new StopCommand(tagManager));
         registerCommand(new HunterCommand(tagManager));
         registerCommand(new RunnerCommand(tagManager));
         registerCommand(new SuicideCommand());
+        registerCommand(new GiveCommand(getServer(), itemManager));
         registerCommand(new NoteCommand());
         registerCommand(new TestCommand());
     }
