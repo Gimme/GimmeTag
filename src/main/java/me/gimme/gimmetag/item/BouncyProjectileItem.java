@@ -46,7 +46,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.bounceMarks = config.getBounceMarks();
         this.glowing = config.getGlowing();
 
-        mute();
+        setUseSound(SoundEffects.THROW);
     }
 
     protected abstract void onExplode(@NotNull Projectile projectile);
@@ -67,7 +67,6 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         bouncyProjectile.setBounceMarks(bounceMarks);
         bouncyProjectile.setGlowing(glowing);
 
-        SoundEffects.THROW.play(user);
         return true;
     }
 
