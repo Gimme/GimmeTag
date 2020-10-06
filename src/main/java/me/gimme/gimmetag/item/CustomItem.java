@@ -86,6 +86,7 @@ public abstract class CustomItem {
         dataContainer.set(ID_KEY, ID_DATA_TYPE, id);
         dataContainer.set(UNIQUE_ID_KEY, UNIQUE_ID_DATA_TYPE, UUID.randomUUID().toString());
 
+        itemStack.setItemMeta(itemMeta);
         onCreate(itemStack, itemMeta);
         itemStack.setItemMeta(itemMeta);
 

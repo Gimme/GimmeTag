@@ -112,6 +112,7 @@ public final class GimmeTag extends JavaPlugin {
                 Config.SMOKE_GRENADE_USE_TEAM_COLOR.getValue(),
                 this
         ));
+        itemManager.registerItem(new ImpulseGrenade(Config.IMPULSE_GRENADE, this));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {

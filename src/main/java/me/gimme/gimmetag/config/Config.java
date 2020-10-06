@@ -67,4 +67,5 @@ public abstract class Config {
     public static final AbstractConfig<Number> SMOKE_GRENADE_THICKNESS = new ValueConfig<>(SMOKE_GRENADE, "thickness", Number.class);
     public static final AbstractConfig<Integer> SMOKE_GRENADE_COLOR = new ValueConfig<>(SMOKE_GRENADE, "color", Integer.class);
     public static final AbstractConfig<Boolean> SMOKE_GRENADE_USE_TEAM_COLOR = new ValueConfig<>(SMOKE_GRENADE, "use-team-color", Boolean.class);
+    public static final BouncyProjectileConfig IMPULSE_GRENADE = new BouncyProjectileConfig(CUSTOM_ITEM, "impulse_grenade", DEFAULT_BOUNCY_PROJECTILE);
 }

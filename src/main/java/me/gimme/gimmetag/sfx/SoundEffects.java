@@ -24,6 +24,10 @@ public abstract class SoundEffects {
             new StandardSoundEffect(Sound.ENTITY_CREEPER_HURT, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 0.7f),
             new CombinedSoundEffect(5, new StandardSoundEffect(Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 0.5f))
     );
+    public static final SoundEffect IMPULSE_EXPLOSION = new CombinedSoundEffect(
+            new StandardSoundEffect(Sound.BLOCK_CONDUIT_ACTIVATE, SoundCategory.NEUTRAL),
+            new StandardSoundEffect(Sound.BLOCK_CONDUIT_DEACTIVATE, SoundCategory.NEUTRAL)
+    );
 
 
     // GAME EVENTS

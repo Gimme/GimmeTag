@@ -151,6 +151,13 @@ custom-item:
     # If the smoke should be the color of the user's team.
     use-team-color: true
 
+  impulse_grenade:
+    consumable: false
+    cooldown: 20
+    speed: 0.8
+    restitution-factor: 0.0
+    friction-factor: 0.0
+
 # Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
 default-bouncy-projectile:
   # Initial speed of the projectile, where 1.0 is the standard.
