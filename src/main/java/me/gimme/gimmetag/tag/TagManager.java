@@ -517,13 +517,14 @@ public class TagManager implements Listener {
      */
     private void deathTag(@NotNull Player player) {
         int tagDeathDistance = Config.TAG_DEATH_DISTANCE.getValue();
-        if (tagDeathDistance <= 0) return;
-        int tagDeathDistanceSquared = tagDeathDistance * tagDeathDistance;
+        if (tagDeathDistance == 0) return;
 
         Player closestHunter = getClosestHunter(player, true);
         if (closestHunter == null) return;
 
-        if (!isWithinRange(player, closestHunter, tagDeathDistanceSquared, true)) return;
+        // If tagDeathDistance is negative, infinite range is used
+        if (tagDeathDistance > 0 && !isWithinRange(player, closestHunter, tagDeathDistance * tagDeathDistance, true))
+            return;
 
         tag(player, closestHunter);
     }
@@ -584,8 +585,8 @@ public class TagManager implements Listener {
     }
 
     /**
-     * Sets joining players to runners if there is an active round.
-     * Restores inventories of returning players in the same round.
+     * Sets joining players to runners if there is an active round. Restores inventories of returning players in the
+     * same round.
      */
     @EventHandler(priority = EventPriority.MONITOR)
     private void onPlayerJoin(PlayerJoinEvent event) {
@@ -665,7 +666,8 @@ public class TagManager implements Listener {
     }
 
     /**
-     * Returns all online hunters with or without sleeping. If there is no ongoing round, this will return an empty list.
+     * Returns all online hunters with or without sleeping. If there is no ongoing round, this will return an empty
+     * list.
      *
      * @param includeSleeping if sleeping hunters should be included
      * @return all online hunters
