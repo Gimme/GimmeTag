@@ -422,6 +422,8 @@ public class TagManager implements Listener {
         player.setGameMode(GameMode.valueOf(Config.GAME_MODE.getValue()));
         // Clear inventory and then add items depending on role
         inventorySupplier.setInventory(player, role);
+        // Heal
+        player.setHealth(20);
         // Fill food level
         player.setFoodLevel(20);
         // Clear XP
