@@ -65,15 +65,17 @@ public class ImpulseGrenade extends BouncyProjectileItem {
         double step = Math.PI / particlesPerCircle;
         Particle.DustOptions dustOptions = new Particle.DustOptions(Color.AQUA, 2f);
 
+        double halfStep = step / 2;
+
         Location loc = center.clone();
-        for (double i = 0; i < Math.PI; i += step) {
-            for (double j = 0; j <= 2 * Math.PI; j += step) {
+        for (double i = 0; i < Math.PI + halfStep; i += step) {
+            for (double j = 0; j < 2 * Math.PI - halfStep; j += step) {
                 double x = radius * Math.sin(i) * Math.cos(j);
                 double y = radius * Math.cos(i);
                 double z = radius * Math.sin(i) * Math.sin(j);
 
                 loc.add(x, y, z);
-                world.spawnParticle(Particle.REDSTONE, loc, 1, dustOptions);
+                world.spawnParticle(Particle.REDSTONE, loc, 1, 0, 0, 0, 0, dustOptions, true);
                 loc.subtract(x, y, z);
             }
         }
