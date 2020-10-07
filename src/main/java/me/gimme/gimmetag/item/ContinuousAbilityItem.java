@@ -3,7 +3,6 @@ package me.gimme.gimmetag.item;
 import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.sfx.SoundEffects;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,9 +20,6 @@ import java.util.*;
  * between 0 and infinity. With a duration of 0, it works the same as a normal ability item.
  */
 public abstract class ContinuousAbilityItem extends AbilityItem {
-
-    private static final String ACTIVE_INFO = "" + ChatColor.ITALIC + ChatColor.RED + "(Right click to deactivate)";
-    private static final String INACTIVE_INFO = "" + ChatColor.ITALIC + ChatColor.GREEN + "(Right click to activate)";
 
     private final Map<UUID, BukkitRunnable> activeItems = new HashMap<>();
 
@@ -63,17 +59,16 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         UUID uuid = getUniqueId(itemStack);
 
         BukkitRunnable currentTask = activeItems.get(uuid);
-        if (currentTask != null) {
+        if (toggleable && currentTask != null) {
             currentTask.cancel();
 
-            if (toggleable) {
-                SoundEffects.DEACTIVATE.play(user);
-                return true;
-            }
+            if (glowWhenActive) setGlowing(itemStack, false);
+
+            SoundEffects.DEACTIVATE.play(user);
+            return true;
         }
 
         if (glowWhenActive) setGlowing(itemStack, true);
-        updateLore(itemStack);
 
         ContinuousUse continuousUse = createContinuousUse(itemStack, user);
 
@@ -90,34 +85,15 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
             @Override
             public void onFinish() {
+                activeItems.remove(uuid);
+
                 if (glowWhenActive) setGlowing(itemStack, false);
-                updateLore(itemStack);
 
                 continuousUse.onFinish();
-
-                activeItems.remove(uuid);
             }
         }.start());
 
         return true;
-    }
-
-    /**
-     * Updates the lore of the given item stack with the specified header, the item info and the specified footer.
-     * <p>
-     * Info about the current toggled state of the ability is added to the header.
-     *
-     * @param itemStack the item stack to modify the lore of
-     * @param header    the header to be placed at the top of the lore
-     * @param footer    the footer to be placed at the bottom of the lore
-     */
-    @Override
-    protected void updateLore(@NotNull ItemStack itemStack, @NotNull List<String> header, @NotNull List<String> footer) {
-        if (isToggleable()) {
-            if (isActive(itemStack)) header.add(ACTIVE_INFO);
-            else header.add(INACTIVE_INFO);
-        }
-        super.updateLore(itemStack, header, footer);
     }
 
     protected void setTicksPerCalculation(int ticks) {
