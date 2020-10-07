@@ -2,6 +2,8 @@ package me.gimme.gimmetag.command.commands;
 
 import me.gimme.gimmetag.command.ArgPlaceholder;
 import me.gimme.gimmetag.command.BaseCommand;
+import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
@@ -50,6 +52,7 @@ public class GiveCommand extends BaseCommand {
 
         ItemStack itemStack = itemManager.createItemStack(itemId, amount);
         if (itemStack == null) return errorMessage("Could not find item: " + itemId);
+        if (Config.SOULBOUND_ITEMS.getValue()) CustomItem.soulbind(itemStack, player);
 
         player.getInventory().addItem(itemStack);
 

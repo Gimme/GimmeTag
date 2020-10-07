@@ -99,6 +99,9 @@ runner:
 
 # ---------- CUSTOM ITEM SETTINGS ----------
 
+# If custom items should be unusable by other people than the first owner. Useful to prevent players from trading abilities.
+soulbound-items: true
+
 custom-item:
   swapper_ball:
     consumable: false

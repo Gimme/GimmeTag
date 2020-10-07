@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.tag;
 
 import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -76,13 +77,17 @@ public class InventorySupplier {
 
     private void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items) {
         items.forEach((itemId, amount) -> {
-            // First, check if valid custom item
+
+            // Check if valid custom item
             ItemStack item = itemManager.createItemStack(itemId, amount);
+            if (Config.SOULBOUND_ITEMS.getValue() && item != null) CustomItem.soulbind(item, inventory.getHolder());
+
+            // Check if valid normal item
             if (item == null) {
-                // Then, check if valid normal item
                 Material material = Material.matchMaterial(itemId);
                 if (material != null) item = new ItemStack(material, amount);
             }
+
             // Add to inventory if valid item
             if (item != null) inventory.addItem(item);
         });

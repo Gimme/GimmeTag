@@ -50,6 +50,8 @@ public abstract class Config {
     public static final AbstractConfig<Map<String, Integer>> RUNNER_ITEMS = new MapConfig<>(RUNNER, "items");
 
 
+    public static final AbstractConfig<Boolean> SOULBOUND_ITEMS = new ValueConfig<>("soulbound-items", Boolean.class);
+
     private static final AbstractConfig<ConfigurationSection> CUSTOM_ITEM = new ValueConfig<>("custom-item", ConfigurationSection.class);
 
     public static final AbilityItemConfig SWAPPER_BALL = new AbilityItemConfig(CUSTOM_ITEM, "swapper_ball");

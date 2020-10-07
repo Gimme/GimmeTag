@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,10 +22,12 @@ import java.util.*;
  */
 public abstract class CustomItem {
 
-    private static final NamespacedKey ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "CustomItemId");
-    private static final NamespacedKey UNIQUE_ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "UniqueId");
+    private static final NamespacedKey ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "custom_item_id");
+    private static final NamespacedKey UNIQUE_ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "unique_id");
+    private static final NamespacedKey SOULBOUND_KEY = new NamespacedKey(GimmeTag.getPlugin(), "soulbound");
     private static final PersistentDataType<String, String> ID_DATA_TYPE = PersistentDataType.STRING;
     private static final PersistentDataType<String, String> UNIQUE_ID_DATA_TYPE = PersistentDataType.STRING;
+    private static final PersistentDataType<String, String> SOULBOUND_DATA_TYPE = PersistentDataType.STRING;
 
     private final String id;
     private final String displayName;
@@ -201,6 +204,58 @@ public abstract class CustomItem {
     }
 
     /**
+     * Soulbinds the given item stack to the specified owner entity, or null owner for the first entity to pick it up to
+     * become the owner.
+     * <p>
+     * Soulbound items disappear if picked up by anyone other than the owner.
+     *
+     * @param itemStack the item stack to become soulbound to the owner
+     * @param owner     the entity to become the owner of the soulbound item, or null for the first entity to pick it
+     *                  up
+     */
+    public static void soulbind(@NotNull ItemStack itemStack, @Nullable Entity owner) {
+        ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
+        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+
+        String uuidString = owner != null ? owner.getUniqueId().toString() : "";
+        dataContainer.set(SOULBOUND_KEY, SOULBOUND_DATA_TYPE, uuidString);
+
+        itemStack.setItemMeta(itemMeta);
+    }
+
+    /**
+     * Returns if the given item stack has the soulbound tag.
+     * <p>
+     * This returns true even if it doesn't have an owner yet.
+     *
+     * @param itemStack the item stack to check if soulbound
+     * @return if the given item stack has the soulbound tag
+     */
+    public static boolean isSoulbound(@NotNull ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        return itemMeta != null && itemMeta.getPersistentDataContainer().has(SOULBOUND_KEY, SOULBOUND_DATA_TYPE);
+    }
+
+    /**
+     * Returns the UUID of the entity that is the soulbound owner of the given item stack, or null if not soulbound or
+     * doesn't have an owner.
+     * <p>
+     * This method cannot be used to check if the item has the soulbound tag or not, as both tag-less and owner-less
+     * items return null. Use {@link CustomItem#isSoulbound(ItemStack)} for that instead.
+     *
+     * @param itemStack the item stack to get the soulbound owner of
+     * @return the UUID of the soulbound owner of the given item stack, or null if not soulbound or no owner
+     */
+    @Nullable
+    public static UUID getSoulboundOwner(@NotNull ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) return null;
+        String uuidString = itemMeta.getPersistentDataContainer().get(SOULBOUND_KEY, SOULBOUND_DATA_TYPE);
+        if (uuidString == null || uuidString.isEmpty()) return null;
+        return UUID.fromString(uuidString);
+    }
+
+    /**
      * Returns the unique name of this custom item.
      *
      * @return the unique name of this custom item
@@ -236,7 +291,8 @@ public abstract class CustomItem {
      * Note that this results in the same identifier for every item stack that was created from the same custom item.
      *
      * @param itemStack the item stack to get the custom item identifier of
-     * @return the unique identifier of the custom item that the given item stack was created from, else null
+     * @return the unique identifier of the custom item that the given item stack was created from, or null if not a
+     * custom item
      */
     @Nullable
     static String getCustomItemId(@NotNull ItemStack itemStack) {

@@ -5,10 +5,7 @@ import me.gimme.gimmetag.command.ArgPlaceholder;
 import me.gimme.gimmetag.command.commands.*;
 import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.config.Config;
-import me.gimme.gimmetag.extension.ResultsDisplay;
-import me.gimme.gimmetag.extension.SleepProgressbar;
-import me.gimme.gimmetag.extension.EventEffects;
-import me.gimme.gimmetag.extension.TeamOutline;
+import me.gimme.gimmetag.extension.*;
 import me.gimme.gimmetag.gamerule.DisableHunger;
 import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
 import me.gimme.gimmetag.item.CustomItem;
@@ -82,6 +79,7 @@ public final class GimmeTag extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin(PROTOCOL_LIB_NAME) != null)
             registerEvents(new TeamOutline(this, tagManager));
         else getLogger().warning(PROTOCOL_LIB_NAME + " is needed to show team outlines.");
+        registerEvents(new SoulboundItems());
     }
 
     private void registerCustomItems() {
