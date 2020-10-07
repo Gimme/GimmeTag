@@ -43,19 +43,15 @@ public class SmokeGrenade extends BouncyProjectileItem {
             Collections.singletonList(new PotionEffect(PotionEffectType.BLINDNESS, 22, 0));
 
     private final Plugin plugin;
-    private final double radius;
     private final double particleRadius;
-    private final double thickness;
     private final int rgb;
     private final boolean useTeamColor;
 
-    public SmokeGrenade(@NotNull BouncyProjectileConfig config, double radius, double thickness, int rgb, boolean useTeamColor, @NotNull Plugin plugin) {
+    public SmokeGrenade(@NotNull BouncyProjectileConfig config, int rgb, boolean useTeamColor, @NotNull Plugin plugin) {
         super(NAME, MATERIAL, config, plugin);
 
         this.plugin = plugin;
-        this.radius = radius;
-        this.particleRadius = radius * PARTICLE_TO_EFFECT_RADIUS_RATIO;
-        this.thickness = thickness;
+        this.particleRadius = getRadius() * PARTICLE_TO_EFFECT_RADIUS_RATIO;
         this.rgb = rgb;
         this.useTeamColor = useTeamColor;
 
@@ -75,7 +71,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
         if (useTeamColor && (shooter instanceof Player)) color = getTeamColor((Player) shooter);
         if (color == null) color = Color.fromRGB(rgb);
 
-        double offset = radius * PARTICLE_CLUSTERS_OFFSET_RATIO;
+        double offset = getRadius() * PARTICLE_CLUSTERS_OFFSET_RATIO;
 
         startSmoke(location.clone().add(offset, 0, offset), color);
         startSmoke(location.clone().add(offset, 0, -offset), color);
@@ -86,6 +82,8 @@ public class SmokeGrenade extends BouncyProjectileItem {
     }
 
     private void startSmoke(@NotNull Location location, @NotNull Color color) {
+        double thickness = getPower();
+
         spawnParticle(location, thickness * 10, particleRadius, color);
 
         for (int i = 0; i <= getDurationTicks(); i += INTERVAL_TICKS) {
@@ -111,6 +109,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
                     return;
                 }
 
+                double radius = getRadius();
                 Collection<Entity> nearbyLivingEntities = world.getNearbyEntities(
                         location.clone().add(0, -EYE_HEIGHT, 0), radius, radius * HEIGHT_TO_WIDTH_RATIO, radius,
                         e -> e.getType().isAlive()

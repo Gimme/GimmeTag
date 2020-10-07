@@ -20,13 +20,13 @@ public abstract class SoundEffects {
     public static final SoundEffect ACTIVATE = new NoteSoundEffect(Instrument.BIT, Note.natural(1, Note.Tone.C));
     public static final SoundEffect DEACTIVATE = new NoteSoundEffect(Instrument.BIT, Note.natural(0, Note.Tone.C));
     public static final SoundEffect SMOKE_EXPLOSION = new CombinedSoundEffect(
-            new StandardSoundEffect(Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.NEUTRAL, 0.5f, 1.0f),
-            new StandardSoundEffect(Sound.ENTITY_CREEPER_HURT, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 0.7f),
+            new StandardSoundEffect(Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, SoundCategory.NEUTRAL, 0.5f),
+            new CombinedSoundEffect(1, new StandardSoundEffect(Sound.ENTITY_CREEPER_HURT, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 0.7f)),
             new CombinedSoundEffect(5, new StandardSoundEffect(Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 0.5f))
     );
     public static final SoundEffect IMPULSE_EXPLOSION = new CombinedSoundEffect(
-            new StandardSoundEffect(Sound.BLOCK_CONDUIT_ACTIVATE, SoundCategory.NEUTRAL),
-            new StandardSoundEffect(Sound.BLOCK_CONDUIT_DEACTIVATE, SoundCategory.NEUTRAL)
+            new StandardSoundEffect(Sound.BLOCK_CONDUIT_ACTIVATE, SoundCategory.NEUTRAL, 3f),
+            new StandardSoundEffect(Sound.BLOCK_CONDUIT_DEACTIVATE, SoundCategory.NEUTRAL, 3f)
     );
 
 

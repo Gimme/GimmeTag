@@ -78,6 +78,7 @@ hunter:
     hunter_speed_boost: 1
     hunter_bow: 1
     arrow: 1
+    impulse_grenade: 1
 
 runner:
   teammate-outline: true
@@ -91,7 +92,7 @@ runner:
     invis_potion: 1
     runner_speed_boost: 3
     balloon_grenade: 1
-    smoke_grenade: 3
+    smoke_grenade: 1
 
 
 
@@ -138,14 +139,14 @@ custom-item:
     duration: -1
 
   smoke_grenade:
-    consumable: true
-    cooldown: 20.0
+    consumable: false
+    cooldown: 30.0
     # How long the smoke shroud lasts.
     duration: 10.0
     # The radius of the smoke area.
     radius: 5.0
     # Thickness of the smoke cloud.
-    thickness: 1.0
+    power: 1.0
     # Default color of the smoke.
     color: 0xFFFFFF
     # If the smoke should be the color of the user's team.
@@ -157,6 +158,9 @@ custom-item:
     speed: 0.8
     restitution-factor: 0.0
     friction-factor: 0.0
+    radius: 6.0
+    # The power of the impulse.
+    power: 3.0
 
 # Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
 default-bouncy-projectile:
@@ -178,3 +182,7 @@ default-bouncy-projectile:
   bounce-marks: true
   # If the projectile should have an outline that can be seen through walls (only seen by the thrower).
   glowing: true
+  # The radius of the explosion effect.
+  radius: 5.0
+  # The power of the explosion effect. The meaning varies but generally refers to the main effect's potency.
+  power: 1.0

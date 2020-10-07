@@ -106,8 +106,6 @@ public final class GimmeTag extends JavaPlugin {
         itemManager.registerItem(new HunterRadar(Config.HUNTER_RADAR, tagManager));
         itemManager.registerItem(new SmokeGrenade(
                 Config.SMOKE_GRENADE,
-                Config.SMOKE_GRENADE_RADIUS.getValue().doubleValue(),
-                Config.SMOKE_GRENADE_THICKNESS.getValue().doubleValue(),
                 Config.SMOKE_GRENADE_COLOR.getValue(),
                 Config.SMOKE_GRENADE_USE_TEAM_COLOR.getValue(),
                 this

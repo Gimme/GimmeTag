@@ -25,6 +25,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     private final boolean trail;
     private final boolean bounceMarks;
     private final boolean glowing;
+    private final double radius;
+    private final double power;
 
     @Nullable
     private ItemStack displayItem;
@@ -45,6 +47,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.trail = config.getTrail();
         this.bounceMarks = config.getBounceMarks();
         this.glowing = config.getGlowing();
+        this.radius = config.getRadius();
+        this.power = config.getPower();
 
         setUseSound(SoundEffects.THROW);
     }
@@ -76,5 +80,13 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     protected void setExplosionSound(@NotNull PlayableSound explosionSound) {
         this.explosionSound = explosionSound;
+    }
+
+    protected double getRadius() {
+        return radius;
+    }
+
+    protected double getPower() {
+        return power;
     }
 }

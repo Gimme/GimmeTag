@@ -14,6 +14,8 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     private static final String GLOWING_PATH = "glowing";
     private static final String TRAIL_PATH = "trail";
     private static final String BOUNCE_MARKS_PATH = "bounce-marks";
+    private static final String RADIUS_PATH = "radius";
+    private static final String POWER_PATH = "power";
 
     @Nullable
     private final BouncyProjectileConfig defaultConfig;
@@ -63,5 +65,13 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
 
     public boolean getGlowing() {
         return getValue().getBoolean(GLOWING_PATH, defaultConfig != null && defaultConfig.getGlowing());
+    }
+
+    public double getRadius() {
+        return getValue().getDouble(RADIUS_PATH, defaultConfig != null ? defaultConfig.getRadius() : 0);
+    }
+
+    public double getPower() {
+        return getValue().getDouble(POWER_PATH, defaultConfig != null ? defaultConfig.getPower() : 0);
     }
 }
