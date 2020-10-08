@@ -5,7 +5,6 @@ import me.gimme.gimmetag.item.BouncyProjectileItem;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,8 +20,6 @@ public class ImpulseGrenade extends BouncyProjectileItem {
     private static final String NAME = "Impulse Grenade";
     private static final Material MATERIAL = Material.HEART_OF_THE_SEA;
 
-    private static final double CENTER_OF_GRAVITY_HEIGHT = 1;
-
     public ImpulseGrenade(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
         super(NAME, MATERIAL, config, plugin);
 
@@ -35,26 +32,19 @@ public class ImpulseGrenade extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onExplode(@NotNull Projectile projectile) {
+    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<Entity> livingEntities) {
         World world = projectile.getWorld();
         Location location = projectile.getLocation();
-        Location offsetLocation = location.clone().add(0, -CENTER_OF_GRAVITY_HEIGHT, 0);
         double radius = getRadius();
 
         world.spawnParticle(Particle.END_ROD, location, 1000, 0, 0, 0, 8);
         playSphereEffect(location, radius);
 
-        Collection<Entity> nearbyLivingEntities = world.getNearbyEntities(
-                offsetLocation, radius, radius, radius,
-                e -> e.getType().isAlive() && e.getLocation().distanceSquared(offsetLocation) <= radius * radius
-        );
 
-        for (Entity entity : nearbyLivingEntities) {
-            LivingEntity livingEntity = (LivingEntity) entity;
+        for (Entity entity : livingEntities) {
+            Vector direction = entity.getLocation().subtract(location).add(0, entity.getHeight() / 2, 0).toVector().normalize();
 
-            Vector direction = livingEntity.getLocation().subtract(offsetLocation).toVector().normalize();
-
-            livingEntity.setVelocity(direction.multiply(getPower()));
+            entity.setVelocity(direction.multiply(getPower()));
         }
     }
 

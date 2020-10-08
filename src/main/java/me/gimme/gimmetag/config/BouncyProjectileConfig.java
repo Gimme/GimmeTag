@@ -17,6 +17,7 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     private static final String RADIUS_PATH = "radius";
     private static final String POWER_PATH = "power";
     private static final String DIRECT_HIT_DAMAGE_PATH = "direct-hit-damage";
+    private static final String FRIENDLY_FIRE_PATH = "friendly-fire";
 
     @Nullable
     private final BouncyProjectileConfig defaultConfig;
@@ -78,5 +79,9 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
 
     public double getDirectHitDamage() {
         return getValue().getDouble(DIRECT_HIT_DAMAGE_PATH, defaultConfig != null ? defaultConfig.getDirectHitDamage() : 0);
+    }
+
+    public boolean getFriendlyFire() {
+        return getValue().getBoolean(FRIENDLY_FIRE_PATH, defaultConfig != null && defaultConfig.getFriendlyFire());
     }
 }

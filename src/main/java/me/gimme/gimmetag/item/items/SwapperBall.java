@@ -40,7 +40,7 @@ public class SwapperBall extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onExplode(@NotNull Projectile projectile) {
+    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<Entity> livingEntities) {
     }
 
     @Override

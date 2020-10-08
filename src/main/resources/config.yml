@@ -202,3 +202,5 @@ default-bouncy-projectile:
   power: 1.0
   # Damage dealt on direct hits to entities. Anything above 0 carries a knockback.
   direct-hit-damage: 0.0
+  # If the explosion effect should affect players from the same team.
+  friendly-fire: false
