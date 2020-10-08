@@ -565,28 +565,6 @@ public class TagManager implements Listener {
     }
 
     /**
-     * Disables arrow damage between all players.
-     */
-    @EventHandler
-    private void onPlayerDamageByArrow(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) return;
-        if (!activeRound) return;
-
-        Entity damagerEntity = event.getDamager();
-        Entity damagedEntity = event.getEntity();
-        if (!damagedEntity.getType().equals(EntityType.PLAYER)) return;
-        if (!(damagerEntity.getType().equals(EntityType.ARROW) || damagerEntity.getType().equals(EntityType.SPECTRAL_ARROW)))
-            return;
-
-        Projectile damagerProjectile = (Projectile) damagerEntity;
-        ProjectileSource damagerSource = damagerProjectile.getShooter();
-        if (!(damagerSource instanceof Player)) return;
-
-        // No damage
-        event.setDamage(0);
-    }
-
-    /**
      * Sets joining players to runners if there is an active round. Restores inventories of returning players in the
      * same round.
      */

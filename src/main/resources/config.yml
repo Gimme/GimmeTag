@@ -3,6 +3,9 @@
 # If the food level should not go down during a round.
 disable-hunger: true
 
+# If arrows should not deal damage during a round (will still have a knockback effect).
+disable-arrow-damage: true
+
 # If players should be able to push each other (damage is still disabled).
 enable-pvp: false
 

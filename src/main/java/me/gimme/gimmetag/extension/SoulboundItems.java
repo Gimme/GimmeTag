@@ -24,6 +24,8 @@ public class SoulboundItems implements Listener {
      */
     @EventHandler
     private void onEntityPickupItem(EntityPickupItemEvent event) {
+        if (event.isCancelled()) return;
+
         Item item = event.getItem();
         ItemStack itemStack = item.getItemStack();
         Entity entity = event.getEntity();
@@ -40,6 +42,8 @@ public class SoulboundItems implements Listener {
      */
     @EventHandler
     private void onInventoryClick(InventoryClickEvent event) {
+        if (event.isCancelled()) return;
+
         ItemStack itemStack = event.getCurrentItem();
         Entity entity = event.getWhoClicked();
 
