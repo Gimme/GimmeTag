@@ -56,16 +56,18 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        UUID uuid = getUniqueId(itemStack);
+        UUID uuid = user.getUniqueId();
 
         BukkitRunnable currentTask = activeItems.get(uuid);
-        if (toggleable && currentTask != null) {
+        if (currentTask != null) {
             currentTask.cancel();
 
-            if (glowWhenActive) setGlowing(itemStack, false);
+            if (toggleable) {
+                if (glowWhenActive) setGlowing(itemStack, false);
 
-            SoundEffects.DEACTIVATE.play(user);
-            return true;
+                SoundEffects.DEACTIVATE.play(user);
+                return true;
+            }
         }
 
         if (glowWhenActive) setGlowing(itemStack, true);
@@ -126,16 +128,6 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         return getDurationTicks() != 0;
     }
 
-    /**
-     * Returns if the given item's ability is active or not.
-     *
-     * @param itemStack the item stack with the ability to check the activation state of
-     * @return if the given item's ability is active
-     */
-    private boolean isActive(@NotNull ItemStack itemStack) {
-        return activeItems.containsKey(getUniqueId(itemStack));
-    }
-
 
     /**
      * Sets the glow state of the given item stack.
@@ -149,15 +141,6 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         ItemMeta itemMeta = Objects.requireNonNull(itemStack.getItemMeta());
         setGlowing(itemMeta, glowing);
         itemStack.setItemMeta(itemMeta);
-    }
-
-    protected static boolean isItemInHand(@NotNull Player player, @NotNull ItemStack itemStack) {
-        UUID uuid = getUniqueId(itemStack);
-        if (uuid == null) return false;
-
-        PlayerInventory inventory = player.getInventory();
-
-        return uuid.equals(getUniqueId(inventory.getItemInMainHand())) || uuid.equals(getUniqueId(inventory.getItemInOffHand()));
     }
 
 

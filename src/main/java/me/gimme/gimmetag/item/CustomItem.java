@@ -23,10 +23,8 @@ import java.util.*;
 public abstract class CustomItem {
 
     private static final NamespacedKey ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "custom_item_id");
-    private static final NamespacedKey UNIQUE_ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "unique_id");
     private static final NamespacedKey SOULBOUND_KEY = new NamespacedKey(GimmeTag.getPlugin(), "soulbound");
     private static final PersistentDataType<String, String> ID_DATA_TYPE = PersistentDataType.STRING;
-    private static final PersistentDataType<String, String> UNIQUE_ID_DATA_TYPE = PersistentDataType.STRING;
     private static final PersistentDataType<String, String> SOULBOUND_DATA_TYPE = PersistentDataType.STRING;
 
     private final String id;
@@ -87,7 +85,6 @@ public abstract class CustomItem {
 
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
         dataContainer.set(ID_KEY, ID_DATA_TYPE, id);
-        dataContainer.set(UNIQUE_ID_KEY, UNIQUE_ID_DATA_TYPE, UUID.randomUUID().toString());
 
         itemStack.setItemMeta(itemMeta);
         onCreate(itemStack, itemMeta);
@@ -263,25 +260,6 @@ public abstract class CustomItem {
     @NotNull
     public String getId() {
         return id;
-    }
-
-    /**
-     * Returns the given item stack's unique identifier, or null if it was not created from a custom item.
-     * <p>
-     * This identifier is unique for each item stack even if created from the same custom item.
-     *
-     * @param itemStack the item stack to get the unique identifier of
-     * @return the given item stack's unique identifier, or null if it was not created from a custom item
-     */
-    @Nullable
-    static UUID getUniqueId(@NotNull ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) return null;
-
-        String uuidString = itemMeta.getPersistentDataContainer().get(UNIQUE_ID_KEY, UNIQUE_ID_DATA_TYPE);
-        if (uuidString == null) return null;
-
-        return UUID.fromString(uuidString);
     }
 
     /**
