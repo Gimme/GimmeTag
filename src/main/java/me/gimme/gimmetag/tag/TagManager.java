@@ -486,7 +486,7 @@ public class TagManager implements Listener {
      * @param player the player to check
      * @return if the specified player is a hunter and is sleeping (by recently being tagged)
      */
-    private boolean isSleeping(@NotNull Player player) {
+    public boolean isSleeping(@NotNull Player player) {
         return sleepingPlayers.containsKey(player.getUniqueId());
     }
 
