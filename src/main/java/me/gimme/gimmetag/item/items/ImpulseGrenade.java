@@ -58,6 +58,10 @@ public class ImpulseGrenade extends BouncyProjectileItem {
         }
     }
 
+    @Override
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+    }
+
 
     private static void playSphereEffect(@NotNull Location center, double radius) {
         World world = Objects.requireNonNull(center.getWorld());

@@ -6,6 +6,7 @@ import me.gimme.gimmetag.sfx.PlayableSound;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
@@ -58,6 +59,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     protected abstract void onExplode(@NotNull Projectile projectile);
 
+    protected abstract void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity);
+
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         BouncyProjectile bouncyProjectile = BouncyProjectile.launch(plugin, user, speed, maxExplosionTimerTicks, displayItem);
@@ -66,6 +69,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
             if (explosionSound != null) explosionSound.play(projectile.getLocation());
             onExplode(projectile);
         });
+        bouncyProjectile.setOnHitEntity(this::onHitEntity);
         bouncyProjectile.setGroundExplosionTimerTicks(groundExplosionTimerTicks);
         bouncyProjectile.setGravity(gravity);
         bouncyProjectile.setRestitutionFactor(restitutionFactor);

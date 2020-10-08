@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -42,7 +43,10 @@ public class BouncyProjectile implements Listener {
     private final BukkitRunnable trailTask;
     private final OutlineEffect outlineEffect;
 
-    private Consumer<Projectile> onExplode = null;
+    @Nullable
+    private Consumer<@NotNull Projectile> onExplode;
+    @Nullable
+    private BiConsumer<@NotNull Projectile, @NotNull Entity> onHitEntity;
     private int groundExplosionTimerTicks = -1;
     private boolean manualGravity = false;
     private double gravity = DEFAULT_GRAVITY;
@@ -50,6 +54,8 @@ public class BouncyProjectile implements Listener {
     private double frictionFactor = 0.8;
     private boolean showTrail = false;
     private boolean showBounceMarks = false;
+    private boolean consumeOnEntityHit;
+
     private boolean grounded = false;
     private int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
 
@@ -155,8 +161,17 @@ public class BouncyProjectile implements Listener {
      *
      * @param onExplode the consumer to set
      */
-    public void setOnExplode(Consumer<Projectile> onExplode) {
+    public void setOnExplode(@Nullable Consumer<@NotNull Projectile> onExplode) {
         this.onExplode = onExplode;
+    }
+
+    /**
+     * Sets a consumer to define what happens when the projectile hits an entity.
+     *
+     * @param onHitEntity the consumer to set
+     */
+    public void setOnHitEntity(@Nullable BiConsumer<@NotNull Projectile, @NotNull Entity> onHitEntity) {
+        this.onHitEntity = onHitEntity;
     }
 
     /**
@@ -219,6 +234,17 @@ public class BouncyProjectile implements Listener {
      */
     public void setBounceMarks(boolean showBounceMarks) {
         this.showBounceMarks = showBounceMarks;
+    }
+
+    /**
+     * Sets if the projectile should disappear when it hits an entity.
+     * <p>
+     * This is useful together with {@link this#setOnHitEntity(BiConsumer)} for items with single target effects.
+     *
+     * @param consumeOnEntityHit if the projectile should disappear when it hits an entity
+     */
+    public void setConsumeOnEntityHit(boolean consumeOnEntityHit) {
+        this.consumeOnEntityHit = consumeOnEntityHit;
     }
 
     /**
@@ -373,10 +399,8 @@ public class BouncyProjectile implements Listener {
         Vector velocity = oldProjectile.getVelocity().clone();
         Block hitBlock = event.getHitBlock();
         BlockFace hitBlockFace = event.getHitBlockFace();
+        Entity hitEntity = event.getHitEntity();
         World world = oldProjectile.getWorld();
-
-        // Check if the bounce was on the ground (or the roof if gravity is inverted)
-        boolean groundBounce = hitBlockFace != null && ((gravity > 0 && hitBlockFace.getModY() > 0) || (gravity < 0 && hitBlockFace.getModY() < 0));
 
         Location hitLocation = oldProjectile.getLocation().clone();
         improveHitLocation(hitLocation, velocity, hitBlock, hitBlockFace);
@@ -391,6 +415,20 @@ public class BouncyProjectile implements Listener {
         float pitch = (float) (1.8f / (bounceMagnitude + 1f));
         world.playSound(hitLocation, Sound.BLOCK_ANVIL_FALL, SoundCategory.NEUTRAL, volume, pitch);
 
+        // On hit entity
+        if (hitEntity != null) {
+            if (onHitEntity != null) onHitEntity.accept(oldProjectile, hitEntity);
+            if (consumeOnEntityHit) {
+                remove();
+                return;
+            }
+        }
+
+
+        // Check if the bounce was on the ground (or the roof if gravity is inverted)
+        boolean groundBounce = hitBlockFace != null && ((gravity > 0 && hitBlockFace.getModY() > 0) || (gravity < 0 && hitBlockFace.getModY() < 0));
+
+        // Bounce logic
         if ((groundBounce && Math.abs(velocity.getY()) <= Y_VELOCITY_CONSIDERED_GROUNDED) || isSticky()) {
             // Set grounded
             grounded = true;
@@ -404,6 +442,7 @@ public class BouncyProjectile implements Listener {
             bounce(velocity, hitBlockFace);
         }
 
+        // Spawn new projectile with the post-bounce velocity
         currentProjectile = world.spawn(hitLocation, PROJECTILE_CLASS, e -> {
             if (displayItem != null) e.setItem(displayItem);
             e.setVelocity(velocity);

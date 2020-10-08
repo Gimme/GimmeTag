@@ -82,6 +82,10 @@ public class SmokeGrenade extends BouncyProjectileItem {
         startAreaEffect(location);
     }
 
+    @Override
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+    }
+
     private void startSmoke(@NotNull Location location, @NotNull Color color) {
         double thickness = getPower();
 
