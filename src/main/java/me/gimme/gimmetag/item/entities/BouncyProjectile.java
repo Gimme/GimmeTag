@@ -32,15 +32,12 @@ import java.util.function.Consumer;
 public class BouncyProjectile implements Listener {
 
     private static final Class<? extends ThrowableProjectile> PROJECTILE_CLASS = Snowball.class;
-    private static final Particle TRAIL_PARTICLE = Particle.END_ROD;
     private static final int TRAIL_FREQUENCY_TICKS = 1;                 // Ticks between each trail update
     private static final double Y_VELOCITY_CONSIDERED_GROUNDED = 0.15;  // The y-velocity when the bouncing should stop
     private static final double RADIUS = 0.07;                          // Radius of the projectile
     private static final double DEFAULT_GRAVITY = 0.028;                // ~0.028 is the standard gravity for a snowball
 
     private final UUID uuid;
-    @Nullable
-    private final ItemStack displayItem;
     private final BukkitRunnable updateTask;
     private final BukkitRunnable explosionTimerTask;
     private final BukkitRunnable trailTask;
@@ -59,6 +56,9 @@ public class BouncyProjectile implements Listener {
     private boolean showBounceMarks = false;
     private double damageOnDirectHit;
     private boolean consumeOnDirectHit;
+    @Nullable
+    private final ItemStack displayItem;
+    private Particle trailParticle = Particle.END_ROD;
 
     private boolean grounded = false;
     private int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
@@ -125,7 +125,7 @@ public class BouncyProjectile implements Listener {
 
                 Projectile p = getCurrentProjectile();
 
-                p.getWorld().spawnParticle(TRAIL_PARTICLE,
+                p.getWorld().spawnParticle(trailParticle,
                         p.getLocation() // Align the trail to fit the actual path better
                                 .add(p.getVelocity().multiply(-1).multiply(0.3))
                                 .add(0, RADIUS, 0),
@@ -272,6 +272,15 @@ public class BouncyProjectile implements Listener {
         } else {
             if (outlineEffect.hide()) OutlineEffect.refresh(getCurrentProjectile());
         }
+    }
+
+    /**
+     * Sets the particle to use for the trail of the projectile.
+     *
+     * @param trailParticle the particle to use for the trail
+     */
+    public void setTrailParticle(@NotNull Particle trailParticle) {
+        this.trailParticle = trailParticle;
     }
 
     /**

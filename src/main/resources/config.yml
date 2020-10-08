@@ -143,9 +143,9 @@ custom-item:
   swapper_ball:
     consumable: false
     cooldown: 20.0
-    speed: 0.8
-    max-explosion-timer: 7.0
-    ground-explosion-timer: 3.0
+    speed: 1.0
+    max-explosion-timer: 15.0
+    ground-explosion-timer: 2.0
     restitution-factor: 0.6
     friction-factor: 0.9
     allow-hunter-swap: true
@@ -155,6 +155,7 @@ custom-item:
     cooldown: 30.0
     # How long the smoke shroud lasts.
     duration: 10.0
+    speed: 0.45
     # The radius of the smoke area.
     radius: 5.0
     # Thickness of the smoke cloud.
@@ -178,7 +179,7 @@ custom-item:
 # Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
 default-bouncy-projectile:
   # Initial speed of the projectile, where 1.0 is the standard.
-  speed: 0.45
+  speed: 0.8
   # The y-velocity decrease per tick, where 0.028 is the standard (works best for client-side prediction, reducing lag).
   gravity: 0.028
   # Max travel time before explosion.

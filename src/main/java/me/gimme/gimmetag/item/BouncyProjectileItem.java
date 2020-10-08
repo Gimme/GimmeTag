@@ -6,6 +6,7 @@ import me.gimme.gimmetag.sfx.PlayableSound;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -36,6 +37,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     @Nullable
     private ItemStack displayItem;
+    @Nullable
+    private Particle trailParticle;
     @Nullable
     private PlayableSound explosionSound;
 
@@ -82,6 +85,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         bouncyProjectile.setGlowing(glowing);
         bouncyProjectile.setDamageOnDirectHit(damageOnDirectHit);
         bouncyProjectile.setConsumeOnDirectHit(consumeOnEntityHit);
+        if (trailParticle != null) bouncyProjectile.setTrailParticle(trailParticle);
 
         return true;
     }
@@ -105,6 +109,10 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     protected void setConsumeOnEntityHit(boolean consumeOnEntityHit) {
         this.consumeOnEntityHit = consumeOnEntityHit;
+    }
+
+    public void setTrailParticle(@NotNull Particle trailParticle) {
+        this.trailParticle = trailParticle;
     }
 
     protected double getRadius() {

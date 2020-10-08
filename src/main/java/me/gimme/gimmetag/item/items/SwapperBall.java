@@ -32,6 +32,7 @@ public class SwapperBall extends BouncyProjectileItem {
         setInfo(INFO);
         setConsumeOnEntityHit(true);
         setDisplayItem(MATERIAL, true);
+        setTrailParticle(Particle.DRAGON_BREATH);
     }
 
     @Override
