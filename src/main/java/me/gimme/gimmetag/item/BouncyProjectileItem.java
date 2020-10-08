@@ -9,9 +9,12 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public abstract class BouncyProjectileItem extends AbilityItem {
 
@@ -74,8 +77,17 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         return true;
     }
 
-    protected void setDisplayItem(@NotNull ItemStack displayItem) {
-        this.displayItem = displayItem.clone();
+    protected void setDisplayItem(@NotNull Material material, boolean enchanted) {
+        ItemStack itemStack = new ItemStack(material);
+
+        if (enchanted) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            CustomItem.setGlowing(Objects.requireNonNull(itemMeta), true);
+            itemStack.setItemMeta(itemMeta);
+        }
+
+        this.displayItem = itemStack;
+
     }
 
     protected void setExplosionSound(@NotNull PlayableSound explosionSound) {

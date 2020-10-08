@@ -26,12 +26,12 @@ public class ImpulseGrenade extends BouncyProjectileItem {
     public ImpulseGrenade(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
         super(NAME, MATERIAL, config, plugin);
 
+        setDisplayItem(MATERIAL, true);
         setExplosionSound(SoundEffects.IMPULSE_EXPLOSION);
     }
 
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
-        setDisplayItem(itemStack);
     }
 
     @Override
