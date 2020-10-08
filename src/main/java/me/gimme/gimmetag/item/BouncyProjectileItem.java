@@ -31,6 +31,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     private final boolean glowing;
     private final double radius;
     private final double power;
+    private final double damageOnDirectHit;
+    private boolean consumeOnEntityHit;
 
     @Nullable
     private ItemStack displayItem;
@@ -53,6 +55,7 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.glowing = config.getGlowing();
         this.radius = config.getRadius();
         this.power = config.getPower();
+        this.damageOnDirectHit = config.getDirectHitDamage();
 
         setUseSound(SoundEffects.THROW);
     }
@@ -77,6 +80,8 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         bouncyProjectile.setTrail(trail);
         bouncyProjectile.setBounceMarks(bounceMarks);
         bouncyProjectile.setGlowing(glowing);
+        bouncyProjectile.setDamageOnDirectHit(damageOnDirectHit);
+        bouncyProjectile.setConsumeOnDirectHit(consumeOnEntityHit);
 
         return true;
     }
@@ -96,6 +101,10 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     protected void setExplosionSound(@NotNull PlayableSound explosionSound) {
         this.explosionSound = explosionSound;
+    }
+
+    protected void setConsumeOnEntityHit(boolean consumeOnEntityHit) {
+        this.consumeOnEntityHit = consumeOnEntityHit;
     }
 
     protected double getRadius() {

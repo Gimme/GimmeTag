@@ -106,11 +106,6 @@ runner:
 soulbound-items: true
 
 custom-item:
-  swapper_ball:
-    consumable: false
-    cooldown: 20.0
-    allow-hunter-swap: true
-
   speed-boosts:
     hunter_speed_boost:
       consumable: false
@@ -145,6 +140,16 @@ custom-item:
     # 0: Show current distance as of activation.
     duration: -1
 
+  swapper_ball:
+    consumable: false
+    cooldown: 20.0
+    speed: 0.8
+    max-explosion-timer: 7.0
+    ground-explosion-timer: 3.0
+    restitution-factor: 0.6
+    friction-factor: 0.9
+    allow-hunter-swap: true
+
   smoke_grenade:
     consumable: false
     cooldown: 30.0
@@ -154,6 +159,7 @@ custom-item:
     radius: 5.0
     # Thickness of the smoke cloud.
     power: 1.0
+    direct-hit-damage: 0.001
     # Default color of the smoke.
     color: 0xFFFFFF
     # If the smoke should be the color of the user's team.
@@ -193,3 +199,5 @@ default-bouncy-projectile:
   radius: 5.0
   # The power of the explosion effect. The meaning varies but generally refers to the main effect's potency.
   power: 1.0
+  # Damage dealt on direct hits to entities. Anything above 0 carries a knockback.
+  direct-hit-damage: 0.0

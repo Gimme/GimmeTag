@@ -16,6 +16,7 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     private static final String BOUNCE_MARKS_PATH = "bounce-marks";
     private static final String RADIUS_PATH = "radius";
     private static final String POWER_PATH = "power";
+    private static final String DIRECT_HIT_DAMAGE_PATH = "direct-hit-damage";
 
     @Nullable
     private final BouncyProjectileConfig defaultConfig;
@@ -73,5 +74,9 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
 
     public double getPower() {
         return getValue().getDouble(POWER_PATH, defaultConfig != null ? defaultConfig.getPower() : 0);
+    }
+
+    public double getDirectHitDamage() {
+        return getValue().getDouble(DIRECT_HIT_DAMAGE_PATH, defaultConfig != null ? defaultConfig.getDirectHitDamage() : 0);
     }
 }

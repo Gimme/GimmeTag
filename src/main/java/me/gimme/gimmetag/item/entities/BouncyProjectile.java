@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -17,6 +18,8 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -54,11 +57,13 @@ public class BouncyProjectile implements Listener {
     private double frictionFactor = 0.8;
     private boolean showTrail = false;
     private boolean showBounceMarks = false;
-    private boolean consumeOnEntityHit;
+    private double damageOnDirectHit;
+    private boolean consumeOnDirectHit;
 
     private boolean grounded = false;
     private int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
 
+    private final Set<UUID> spawnedProjectiles = new HashSet<>();
     private Projectile currentProjectile;
 
     /**
@@ -89,11 +94,11 @@ public class BouncyProjectile implements Listener {
 
         this.uuid = UUID.randomUUID();
         this.displayItem = displayItem;
-        this.currentProjectile = projectile;
+        setCurrentProjectile(projectile);
 
         // Remove the entity when the server stops
         //noinspection deprecation
-        currentProjectile.setPersistent(false);
+        getCurrentProjectile().setPersistent(false);
 
 
         updateTask = new BukkitRunnable() {
@@ -124,7 +129,7 @@ public class BouncyProjectile implements Listener {
                         p.getLocation() // Align the trail to fit the actual path better
                                 .add(p.getVelocity().multiply(-1).multiply(0.3))
                                 .add(0, RADIUS, 0),
-                        1, 0, 0, 0, 0);
+                        1, 0, 0, 0, 0, null, true);
             }
         };
         trailTask.runTaskTimer(plugin, TRAIL_FREQUENCY_TICKS, TRAIL_FREQUENCY_TICKS);
@@ -237,14 +242,23 @@ public class BouncyProjectile implements Listener {
     }
 
     /**
+     * Sets the damage that this projectile deals to entities it hits directly.
+     *
+     * @param damageOnDirectHit the damage on direct hits
+     */
+    public void setDamageOnDirectHit(double damageOnDirectHit) {
+        this.damageOnDirectHit = damageOnDirectHit;
+    }
+
+    /**
      * Sets if the projectile should disappear when it hits an entity.
      * <p>
      * This is useful together with {@link this#setOnHitEntity(BiConsumer)} for items with single target effects.
      *
-     * @param consumeOnEntityHit if the projectile should disappear when it hits an entity
+     * @param consumeOnDirectHit if the projectile should disappear when it hits an entity
      */
-    public void setConsumeOnEntityHit(boolean consumeOnEntityHit) {
-        this.consumeOnEntityHit = consumeOnEntityHit;
+    public void setConsumeOnDirectHit(boolean consumeOnDirectHit) {
+        this.consumeOnDirectHit = consumeOnDirectHit;
     }
 
     /**
@@ -258,6 +272,31 @@ public class BouncyProjectile implements Listener {
         } else {
             if (outlineEffect.hide()) OutlineEffect.refresh(getCurrentProjectile());
         }
+    }
+
+    /**
+     * Sets the current active projectile.
+     * <p>
+     * This should always be set to the projectile, spawned from this object, that is currently flying/rolling in the
+     * world.
+     *
+     * @param projectile the projectile to set as current
+     */
+    private void setCurrentProjectile(@NotNull Projectile projectile) {
+        this.currentProjectile = projectile;
+        spawnedProjectiles.add(projectile.getUniqueId());
+    }
+
+    /**
+     * Returns if the specified entity was spawned from this bouncy projectile.
+     * <p>
+     * This means either the original launched projectile or any that spawned after a bounce.
+     *
+     * @param entity the entity to check if spawned from this
+     * @return if the specified entity was spawned from this bouncy projectile
+     */
+    private boolean isFromThisBouncyProjectile(@NotNull Entity entity) {
+        return spawnedProjectiles.contains(entity.getUniqueId());
     }
 
     /**
@@ -350,9 +389,9 @@ public class BouncyProjectile implements Listener {
         p.setGravity(!isGrounded() && !manualGravity);
         if (isGrounded() || !manualGravity) return;
 
-        Vector velocity = currentProjectile.getVelocity();
+        Vector velocity = getCurrentProjectile().getVelocity();
         velocity.setY(velocity.getY() - gravity);
-        currentProjectile.setVelocity(velocity);
+        getCurrentProjectile().setVelocity(velocity);
     }
 
     /**
@@ -394,7 +433,7 @@ public class BouncyProjectile implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     private void onProjectileHit(ProjectileHitEvent event) {
         Projectile oldProjectile = event.getEntity();
-        if (!oldProjectile.getUniqueId().equals(currentProjectile.getUniqueId())) return;
+        if (!oldProjectile.getUniqueId().equals(getCurrentProjectile().getUniqueId())) return;
 
         Vector velocity = oldProjectile.getVelocity().clone();
         Block hitBlock = event.getHitBlock();
@@ -418,8 +457,8 @@ public class BouncyProjectile implements Listener {
         // On hit entity
         if (hitEntity != null) {
             if (onHitEntity != null) onHitEntity.accept(oldProjectile, hitEntity);
-            if (consumeOnEntityHit) {
-                remove();
+            if (consumeOnDirectHit) {
+                // Projectile will be removed after modifying damage in EntityDamageByEntityEvent
                 return;
             }
         }
@@ -443,7 +482,7 @@ public class BouncyProjectile implements Listener {
         }
 
         // Spawn new projectile with the post-bounce velocity
-        currentProjectile = world.spawn(hitLocation, PROJECTILE_CLASS, e -> {
+        setCurrentProjectile(world.spawn(hitLocation, PROJECTILE_CLASS, e -> {
             if (displayItem != null) e.setItem(displayItem);
             e.setVelocity(velocity);
             e.setGravity(oldProjectile.hasGravity());
@@ -451,7 +490,19 @@ public class BouncyProjectile implements Listener {
             e.setFireTicks(oldProjectile.getFireTicks());
             //noinspection deprecation
             e.setPersistent(oldProjectile.isPersistent());
-        });
+        }));
+    }
+
+    /**
+     * Makes the projectile deal damage on direct hits if enabled and removes it if it should be consumed on direct hit.
+     */
+    @EventHandler(priority = EventPriority.LOW)
+    private void onDirectHitDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
+        if (!isFromThisBouncyProjectile(event.getDamager())) return;
+
+        event.setDamage(damageOnDirectHit);
+        if (consumeOnDirectHit) remove();
     }
 
     /**
