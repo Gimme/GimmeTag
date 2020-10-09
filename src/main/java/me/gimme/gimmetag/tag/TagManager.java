@@ -8,7 +8,6 @@ import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,7 +20,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,28 +32,28 @@ public class TagManager implements Listener {
 
     private static final ChatColor INFO_MESSAGE_COLOR = ChatColor.YELLOW;
 
-    private Plugin plugin;
-    private Server server;
-    private TagScoreboard tagScoreboard;
-    private InventorySupplier inventorySupplier;
+    private final Plugin plugin;
+    private final Server server;
+    private final TagScoreboard tagScoreboard;
+    private final InventorySupplier inventorySupplier;
 
-    private Set<UUID> desiredHunters = new HashSet<>(); // Players that want to be hunters next round
-    private Map<UUID, GameplayState> previousStateByPlayer = new HashMap<>(); // Stores previous states during round
+    private final Set<UUID> desiredHunters = new HashSet<>(); // Players that want to be hunters next round
+    private final Map<UUID, GameplayState> previousStateByPlayer = new HashMap<>(); // Stores previous states during round
 
-    private Map<UUID, ItemStack[]> logoutItemsByPlayer = new HashMap<>(); // Stores inventories if quit during round
-    private Map<UUID, @Nullable Role> logoutRoleByPlayer = new HashMap<>(); // Stores roles if quit during round
+    private final Map<UUID, ItemStack[]> logoutItemsByPlayer = new HashMap<>(); // Stores inventories if quit during round
+    private final Map<UUID, @Nullable Role> logoutRoleByPlayer = new HashMap<>(); // Stores roles if quit during round
 
     // Active round
-    private Map<UUID, @Nullable Role> roleByPlayer = new HashMap<>();
-    private Set<UUID> hunters = new HashSet<>(); // Current hunters
-    private Set<UUID> runners = new HashSet<>(); // Current runners
-    private Map<UUID, BukkitRunnable> sleepingPlayers = new HashMap<>(); // For new hunters
-    private static Map<UUID, BukkitRunnable> countdownTasks = new HashMap<>();
+    private final Map<UUID, @Nullable Role> roleByPlayer = new HashMap<>();
+    private final Set<UUID> hunters = new HashSet<>(); // Current hunters
+    private final Set<UUID> runners = new HashSet<>(); // Current runners
+    private final Map<UUID, BukkitRunnable> sleepingPlayers = new HashMap<>(); // For new hunters
+    private static final Map<UUID, BukkitRunnable> countdownTasks = new HashMap<>();
     @Nullable
-    private BukkitRunnable pointsTicker = null;
+    private BukkitRunnable pointsTicker;
 
     // If there is an active round of tag
-    private boolean activeRound = false;
+    private boolean activeRound;
     private int sleepSeconds = Config.TAG_SLEEP_TIME.getValue();
 
     public TagManager(@NotNull Plugin plugin, @NotNull ItemManager itemManager) {
@@ -180,7 +178,7 @@ public class TagManager implements Listener {
                 Function<Long, Boolean> shouldDisplay = i -> i > sleepSeconds - 4;
 
                 runners.stream()
-                        .map(r -> server.getPlayer(r))
+                        .map(server::getPlayer)
                         .filter(Objects::nonNull)
                         .filter(OfflinePlayer::isOnline)
                         .forEach(p -> {
@@ -203,11 +201,11 @@ public class TagManager implements Listener {
             protected void onCount() {
                 if (getSeconds() <= 3) {
                     roleByPlayer.keySet().stream()
-                            .map(uuid -> server.getPlayer(uuid))
+                            .map(server::getPlayer)
                             .filter(Objects::nonNull)
                             .forEach(p -> {
                                 SoundEffects.COUNTDOWN.playLocal(p);
-                                if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", getSeconds() + "", 0, 25, 10);
+                                if (Role.RUNNER == getRole(p)) p.sendTitle("", getSeconds() + "", 0, 25, 10);
                             });
                 }
             }
@@ -215,11 +213,11 @@ public class TagManager implements Listener {
             @Override
             protected void onFinish() {
                 roleByPlayer.keySet().stream()
-                        .map(uuid -> server.getPlayer(uuid))
+                        .map(server::getPlayer)
                         .filter(Objects::nonNull)
                         .forEach(p -> {
                             SoundEffects.COUNTDOWN_FINISH.playLocal(p);
-                            if (Role.RUNNER.equals(getRole(p))) p.sendTitle("", "They're coming!", 0, 25, 10);
+                            if (Role.RUNNER == getRole(p)) p.sendTitle("", "They're coming!", 0, 25, 10);
                         });
             }
         }.start();
@@ -237,13 +235,13 @@ public class TagManager implements Listener {
                 boolean checkDistance = maxDistance > 0;
 
                 for (Player runner : getOnlineRunners()) {
-                    if (checkDistance && !isWithinRange(runner, getClosestHunter(runner, false), maxDistanceSquared, true))
+                    if (checkDistance && isOutOfRange2D(runner, getClosestHunter(runner, false), maxDistanceSquared))
                         continue;
                     tagScoreboard.addPoints(runner, runnerPointsPerTick);
                 }
 
                 for (Player hunter : getOnlineHunters(false)) {
-                    if (checkDistance && !isWithinRange(hunter, getClosestRunner(hunter), maxDistanceSquared, true))
+                    if (checkDistance && isOutOfRange2D(hunter, getClosestRunner(hunter), maxDistanceSquared))
                         continue;
                     tagScoreboard.addPoints(hunter, hunterPointsPerTick);
                 }
@@ -317,7 +315,7 @@ public class TagManager implements Listener {
         setRole(runner, Role.HUNTER, PlayerRoleSetEvent.Reason.TAG);
         setRole(hunter, Role.RUNNER, PlayerRoleSetEvent.Reason.TAG);
 
-        applySleep(runner, this.sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
+        applySleep(runner, sleepSeconds, Role.HUNTER.getColor() + "Tagged!");
 
         tagScoreboard.addPoints(hunter, Config.SCORING_POINTS_ON_TAG.getValue());
         tagScoreboard.addPoints(runner, Config.SCORING_POINTS_ON_TAGGED.getValue());
@@ -348,9 +346,8 @@ public class TagManager implements Listener {
 
         UUID id = UUID.randomUUID();
         BukkitRunnable runnable = new BukkitRunnable() {
-            UUID playerId = player.getUniqueId();
-            int ticksLeft = seconds * 20;
-            int potionTicks = 2;
+            private final UUID playerId = player.getUniqueId();
+            private int ticksLeft = seconds * 20;
 
             @Override
             public void run() {
@@ -363,6 +360,7 @@ public class TagManager implements Listener {
                 Player player = server.getPlayer(playerId);
                 if (player == null || !player.isOnline()) return;
 
+                int potionTicks = 2;
                 player.addPotionEffects(Arrays.asList(
                         new PotionEffect(PotionEffectType.BLINDNESS, potionTicks + 20, 1),
                         new PotionEffect(PotionEffectType.SLOW, potionTicks, 1000), // Prevents moving
@@ -390,11 +388,11 @@ public class TagManager implements Listener {
         UUID uuid = player.getUniqueId();
         Role previousRole = getRole(player);
 
-        if (Role.HUNTER.equals(previousRole)) hunters.remove(uuid);
-        else if (Role.RUNNER.equals(previousRole)) runners.remove(uuid);
+        if (Role.HUNTER == previousRole) hunters.remove(uuid);
+        else if (Role.RUNNER == previousRole) runners.remove(uuid);
 
-        if (Role.HUNTER.equals(role)) hunters.add(uuid);
-        else if (Role.RUNNER.equals(role)) runners.add(uuid);
+        if (Role.HUNTER == role) hunters.add(uuid);
+        else if (Role.RUNNER == role) runners.add(uuid);
 
         if (role != null) {
             tagScoreboard.setTeam(player, role);
@@ -508,7 +506,7 @@ public class TagManager implements Listener {
         // No drops
         if (getRole(player) != null) event.getDrops().clear();
 
-        if (!Role.RUNNER.equals(getRole(player))) return;
+        if (Role.RUNNER != getRole(player)) return;
         deathTag(player);
     }
 
@@ -525,7 +523,7 @@ public class TagManager implements Listener {
         if (closestHunter == null) return;
 
         // If tagDeathDistance is negative, infinite range is used
-        if (tagDeathDistance > 0 && !isWithinRange(player, closestHunter, tagDeathDistance * tagDeathDistance, true))
+        if (tagDeathDistance > 0 && isOutOfRange2D(player, closestHunter, tagDeathDistance * tagDeathDistance))
             return;
 
         tag(player, closestHunter);
@@ -542,7 +540,7 @@ public class TagManager implements Listener {
         Entity damagerEntity = event.getDamager();
         Entity damagedEntity = event.getEntity();
         // Return if it's not two players
-        if (!(damagerEntity.getType().equals(EntityType.PLAYER) && damagedEntity.getType().equals(EntityType.PLAYER)))
+        if (!(damagerEntity.getType() == EntityType.PLAYER && damagedEntity.getType() == EntityType.PLAYER))
             return;
 
         Player damager = (Player) damagerEntity;
@@ -554,7 +552,7 @@ public class TagManager implements Listener {
         }
 
         // Tag if hunter hits runner
-        if (Role.HUNTER.equals(getRole(damager)) && Role.RUNNER.equals(getRole(damaged))) {
+        if (Role.HUNTER == getRole(damager) && Role.RUNNER == getRole(damaged)) {
             tag(damaged, damager);
             event.setCancelled(true);
         }
@@ -656,7 +654,7 @@ public class TagManager implements Listener {
      */
     public List<Player> getOnlineHunters(boolean includeSleeping) {
         return hunters.stream()
-                .map(id -> server.getPlayer(id))
+                .map(server::getPlayer)
                 .filter(hunter -> hunter != null && (includeSleeping || !isSleeping(hunter)))
                 .collect(Collectors.toList());
     }
@@ -668,7 +666,7 @@ public class TagManager implements Listener {
      */
     public List<Player> getOnlineRunners() {
         return runners.stream()
-                .map(id -> server.getPlayer(id))
+                .map(server::getPlayer)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -688,39 +686,38 @@ public class TagManager implements Listener {
     }
 
     public Set<UUID> getPlayersByRole(@NotNull Role role) {
-        if (role.equals(Role.RUNNER)) return getRunners();
+        if (role == Role.RUNNER) return getRunners();
         else return getHunters();
     }
 
 
     /**
-     * Returns if the specified players are within the specified range of each other.
+     * Returns if the specified players are out of the specified range of each other.
      *
      * @param player       the first player to check
      * @param otherPlayer  the second player to check
-     * @param rangeSquared the range in blocks
-     * @return if the specified players are within the specified range of each other
+     * @param rangeSquared the range in blocks, squared
+     * @return if the specified players are out of the specified range of each other
      */
-    private static boolean isWithinRange(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared, boolean ignoreY) {
-        if (otherPlayer == null) return false;
+    private static boolean isOutOfRange2D(@NotNull Player player, @Nullable Player otherPlayer, double rangeSquared) {
+        if (otherPlayer == null) return true;
 
         Location location = player.getLocation();
         Location otherLocation = otherPlayer.getLocation();
 
-        if (ignoreY) {
-            location.setY(0);
-            otherLocation.setY(0);
-        }
+        // Convert to 2D, ignoring y difference
+        location.setY(0);
+        otherLocation.setY(0);
 
         double distanceSquared = location.distanceSquared(otherLocation);
-        return distanceSquared <= rangeSquared;
+        return !(distanceSquared <= rangeSquared);
     }
 
 
     private abstract static class CountdownTimerTask extends me.gimme.gimmecore.util.countdown.CountdownTimerTask {
-        private UUID id = UUID.randomUUID();
+        private final UUID id = UUID.randomUUID();
 
-        protected CountdownTimerTask(@NotNull Plugin plugin, long seconds) {
+        CountdownTimerTask(@NotNull Plugin plugin, long seconds) {
             super(plugin, seconds);
         }
 
@@ -737,9 +734,9 @@ public class TagManager implements Listener {
     }
 
     private static class PlayerCountdownTimerTask extends me.gimme.gimmecore.util.countdown.PlayerCountdownTimerTask {
-        private UUID id = UUID.randomUUID();
+        private final UUID id = UUID.randomUUID();
 
-        public PlayerCountdownTimerTask(@NotNull Plugin plugin, long seconds, @NotNull Player player, @Nullable String title, @Nullable String subtitle, @Nullable String finishTitle, @Nullable String finishSubtitle) {
+        private PlayerCountdownTimerTask(@NotNull Plugin plugin, long seconds, @NotNull Player player, @Nullable String title, @Nullable String subtitle, @Nullable String finishTitle, @Nullable String finishSubtitle) {
             super(plugin, seconds, player, title, subtitle, finishTitle, finishSubtitle);
         }
 
