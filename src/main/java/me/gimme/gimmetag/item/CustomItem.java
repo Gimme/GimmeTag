@@ -52,7 +52,7 @@ public abstract class CustomItem {
      * @param type        the item type of the generated item stacks
      */
     public CustomItem(@NotNull String id, @NotNull String displayName, @NotNull Material type) {
-        this.id = ChatColor.stripColor(id).toLowerCase().replaceAll(" ", "_");
+        this.id = ChatColor.stripColor(id).toLowerCase().replaceAll(" ", "_").replaceAll("[^a-z_]", "");
         this.displayName = displayName;
         this.type = type;
     }
@@ -169,7 +169,7 @@ public abstract class CustomItem {
     /**
      * Stops the glow (enchant) effect from being applied to the created item stacks.
      * <p>
-     * The glow effect is enabled by default.
+     * The glow effect is enabled by default and will hide any real enchantments.
      */
     protected void disableGlow() {
         setGlowing(false);
@@ -182,6 +182,16 @@ public abstract class CustomItem {
      */
     protected void setGlowing(boolean glowing) {
         this.glowing = glowing;
+    }
+
+    /**
+     * Returns if the given item stack was created from this custom item.
+     *
+     * @param itemStack the item stack to check
+     * @return if the given item stack was created from this custom item
+     */
+    protected boolean isThisCustomItem(@NotNull ItemStack itemStack) {
+        return getId().equals(getCustomItemId(itemStack));
     }
 
     /**

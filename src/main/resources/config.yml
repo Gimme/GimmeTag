@@ -6,7 +6,7 @@ disable-hunger: true
 # If arrows should not deal damage during a round (will still have a knockback effect).
 disable-arrow-damage: true
 
-# If players should be able to push each other (damage is still disabled).
+# If players on the same team should be able to hit each other (damage is still disabled).
 enable-pvp: false
 
 # The game mode that players have during the round (e.g., ADVENTURE, SURVIVAL).
@@ -83,6 +83,7 @@ hunter:
     hunter_bow: 1
     arrow: 1
     impulse_grenade: 1
+    pykes_hook: 1
 
 runner:
   teammate-outline: true
@@ -141,14 +142,27 @@ custom-item:
     # 0: Show current distance as of activation.
     duration: -1
 
+
+  # PROJECTILES
+
+  pykes_hook:
+    consumable: false
+    cooldown: 10.0
+    speed: 0.5
+    ground-explosion-timer: 1.0
+    sticky: true
+    consume-on-direct-hit: true
+    # Pull strength
+    power: 2
+
   swapper_ball:
     consumable: false
     cooldown: 20.0
     speed: 1.0
-    max-explosion-timer: 15.0
     ground-explosion-timer: 2.0
     restitution-factor: 0.6
     friction-factor: 0.9
+    consume-on-direct-hit: true
     allow-hunter-swap: true
 
   smoke_grenade:
@@ -157,6 +171,7 @@ custom-item:
     # How long the smoke shroud lasts.
     duration: 10.0
     speed: 0.45
+    max-explosion-timer: 4.0
     # The radius of the smoke area.
     radius: 5.0
     # Thickness of the smoke cloud.
@@ -169,28 +184,32 @@ custom-item:
 
   impulse_grenade:
     consumable: false
-    cooldown: 20
+    cooldown: 20.0
     speed: 0.8
-    restitution-factor: 0.0
-    friction-factor: 0.0
+    sticky: true
     radius: 6.0
     # The power of the impulse.
     power: 3.0
 
 # Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
+#
+# Despite the name, the projectiles do not need to be bouncy. With sticky=true, ground-explosion-timer=0 and
+# consume-on-direct-hit=true, it acts like a normal snowball would when it hits something.
 default-bouncy-projectile:
   # Initial speed of the projectile, where 1.0 is the standard.
   speed: 0.8
   # The y-velocity decrease per tick, where 0.028 is the standard (works best for client-side prediction, reducing lag).
   gravity: 0.028
   # Max travel time before explosion.
-  max-explosion-timer: 4.0
+  max-explosion-timer: 20.0
   # Time after the bouncing stops before explosion.
   ground-explosion-timer: 0.5
   # 1 means lossless bounces and 0 means no bounciness.
   restitution-factor: 0.45
   # 1 is slippery and 0 is sticky.
   friction-factor: 0.8
+  # If the projectile should stick to the first surface it hits.
+  sticky: false
   # If the projectile should be followed by a trail.
   trail: true
   # If the bounces should leave behind visible marks for a short duration.
@@ -203,5 +222,7 @@ default-bouncy-projectile:
   power: 1.0
   # Damage dealt on direct hits to entities. Anything above 0 carries a knockback.
   direct-hit-damage: 0.0
+  # If the projectile should disappear when it hits an entity.
+  consume-on-direct-hit: false
   # If the explosion effect should affect players from the same team.
   friendly-fire: false

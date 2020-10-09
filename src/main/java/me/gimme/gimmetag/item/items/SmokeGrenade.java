@@ -64,7 +64,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<Entity> livingEntities) {
+    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<@NotNull Entity> livingEntities) {
         Location location = projectile.getLocation();
         ProjectileSource shooter = projectile.getShooter();
 

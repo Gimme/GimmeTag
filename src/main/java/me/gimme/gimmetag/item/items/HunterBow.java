@@ -21,6 +21,6 @@ public class HunterBow extends CustomItem {
     @Override
     protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
         itemMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
-        itemMeta.addEnchant(Enchantment.DURABILITY, 10, true);
+        itemMeta.setUnbreakable(true);
     }
 }

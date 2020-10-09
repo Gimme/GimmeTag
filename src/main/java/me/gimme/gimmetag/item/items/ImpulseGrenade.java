@@ -32,7 +32,7 @@ public class ImpulseGrenade extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<Entity> livingEntities) {
+    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<@NotNull Entity> livingEntities) {
         World world = projectile.getWorld();
         Location location = projectile.getLocation();
         double radius = getRadius();

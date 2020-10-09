@@ -63,6 +63,7 @@ public abstract class Config {
     public static final AbilityItemConfig HUNTER_RADAR = new AbilityItemConfig(CUSTOM_ITEM, "hunter_radar");
 
     private static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig("default-bouncy-projectile", null);
+    public static final BouncyProjectileConfig PYKES_HOOK = new BouncyProjectileConfig(CUSTOM_ITEM, "pykes_hook", DEFAULT_BOUNCY_PROJECTILE);
     public static final BouncyProjectileConfig SWAPPER_BALL = new BouncyProjectileConfig(CUSTOM_ITEM, "swapper_ball", DEFAULT_BOUNCY_PROJECTILE);
     public static final AbstractConfig<Boolean> SWAPPER_ALLOW_HUNTER_SWAP = new ValueConfig<>(SWAPPER_BALL, "allow-hunter-swap", Boolean.class);
     public static final BouncyProjectileConfig SMOKE_GRENADE = new BouncyProjectileConfig(CUSTOM_ITEM, "smoke_grenade", DEFAULT_BOUNCY_PROJECTILE);

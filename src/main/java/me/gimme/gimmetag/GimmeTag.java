@@ -112,6 +112,10 @@ public final class GimmeTag extends JavaPlugin {
                 this
         ));
         itemManager.registerItem(new ImpulseGrenade(Config.IMPULSE_GRENADE, this));
+        itemManager.registerItem(new PykesHook(
+                Config.PYKES_HOOK,
+                this
+        ));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {

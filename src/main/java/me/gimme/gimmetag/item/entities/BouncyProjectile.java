@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item.entities;
 
+import me.gimme.gimmetag.sfx.PlayableSound;
 import me.gimme.gimmetag.utils.outline.OutlineEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -15,15 +16,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * Represents a projectile that bounces when it hits a surface.
@@ -39,30 +39,39 @@ public class BouncyProjectile implements Listener {
     private static final double DEFAULT_GRAVITY = 0.028;                // ~0.028 is the standard gravity for a snowball
 
     private final UUID uuid;
+    private final LivingEntity source;
+    private final boolean sourceIsPlayer;
+    private final Class<? extends Projectile> projectileClass;
+    private final boolean isArrow;
     private final BukkitRunnable updateTask;
     private final BukkitRunnable explosionTimerTask;
     private final BukkitRunnable trailTask;
     private final OutlineEffect outlineEffect;
 
     @Nullable
-    private Consumer<@NotNull Projectile> onExplode;
+    private BiConsumer<@NotNull Projectile, @NotNull Collection<@NotNull Entity>> onExplode;
     @Nullable
     private BiConsumer<@NotNull Projectile, @NotNull Entity> onHitEntity;
     private int groundExplosionTimerTicks = -1;
-    private boolean manualGravity = false;
+    private boolean manualGravity;
     private double gravity = DEFAULT_GRAVITY;
     private double restitutionFactor = 0.45;
     private double frictionFactor = 0.8;
-    private boolean showTrail = false;
-    private boolean showBounceMarks = false;
+    private boolean sticky;
+    private boolean showTrail;
+    private boolean showBounceMarks;
+    private double radius;
     private double damageOnDirectHit;
     private boolean consumeOnDirectHit;
+    private boolean friendlyFire;
     @Nullable
-    private final ItemStack displayItem;
+    private PlayableSound explosionSound;
+    @Nullable
+    private ItemStack displayItem;
     private Particle trailParticle = Particle.END_ROD;
 
-    private boolean grounded = false;
-    private int groundedTicks = 0; // Amount of ticks the projectile has been rolling on the ground
+    private boolean grounded;
+    private int groundedTicks; // Amount of ticks the projectile has been rolling on the ground
 
     private final Set<UUID> spawnedProjectiles = new HashSet<>();
     private Projectile currentProjectile;
@@ -85,16 +94,29 @@ public class BouncyProjectile implements Listener {
         projectile.setShooter(source);
         projectile.setVelocity(projectile.getVelocity().multiply(speed));
 
-        return new BouncyProjectile(plugin, projectile, source, maxTicks, displayItem);
+        BouncyProjectile bouncyProjectile = new BouncyProjectile(plugin, projectile, source, maxTicks);
+        bouncyProjectile.setDisplayItem(displayItem);
+        return bouncyProjectile;
     }
 
-    private BouncyProjectile(@NotNull Plugin plugin, @NotNull Projectile projectile, @NotNull Entity source, int maxTicks,
-                             @Nullable ItemStack displayItem) {
+    /**
+     * Creates a new bouncy projectile out of the given normal projectile. The given normal projectile can have been
+     * spawned from anywhere but the specified source living entity will be set as the shooter.
+     *
+     * @param plugin     the plugin to register the events with
+     * @param projectile the projectile to turn into a bouncy projectile
+     * @param source     the living entity that will be set as the shooter of the projectile
+     * @param maxTicks   the max amount of ticks this projectile can live before being removed
+     */
+    public BouncyProjectile(@NotNull Plugin plugin, @NotNull Projectile projectile, @NotNull LivingEntity source, int maxTicks) {
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         this.uuid = UUID.randomUUID();
-        this.displayItem = displayItem;
+        this.source = source;
+        this.sourceIsPlayer = source instanceof Player;
+        this.projectileClass = projectile.getClass();
+        this.isArrow = AbstractArrow.class.isAssignableFrom(projectileClass);
         setCurrentProjectile(projectile);
 
         // Remove the entity when the server stops
@@ -144,7 +166,29 @@ public class BouncyProjectile implements Listener {
      * Makes the projectile explode (figuratively) and disappear from the world.
      */
     public void explode() {
-        if (onExplode != null) onExplode.accept(getCurrentProjectile());
+        Projectile projectile = getCurrentProjectile();
+        if (explosionSound != null) explosionSound.play(projectile.getLocation());
+
+        if (onExplode != null) {
+            Location location = projectile.getLocation().clone();
+            double extendedRadius = radius + 3;
+            Collection<Entity> nearbyLivingEntities = radius <= 0 ? new ArrayList<>() : projectile.getWorld().getNearbyEntities(
+                    location, extendedRadius, extendedRadius, extendedRadius,
+                    e -> {
+                        if (!checkFriendlyFire(e)) return false;
+
+                        double halfHeight = e.getHeight() / 2;
+
+                        location.subtract(0, halfHeight, 0);
+                        boolean inRange = e.getType().isAlive() && e.getLocation().distanceSquared(location) <= radius * radius;
+                        location.add(0, halfHeight, 0);
+
+                        return inRange;
+                    }
+            );
+
+            onExplode.accept(projectile, nearbyLivingEntities);
+        }
         remove();
     }
 
@@ -167,7 +211,7 @@ public class BouncyProjectile implements Listener {
      *
      * @param onExplode the consumer to set
      */
-    public void setOnExplode(@Nullable Consumer<@NotNull Projectile> onExplode) {
+    public void setOnExplode(@Nullable BiConsumer<@NotNull Projectile, @NotNull Collection<@NotNull Entity>> onExplode) {
         this.onExplode = onExplode;
     }
 
@@ -243,6 +287,17 @@ public class BouncyProjectile implements Listener {
     }
 
     /**
+     * Sets the radius of the explosion effect.
+     * <p>
+     * Only living entities that have the center of their body within this range will be affected by the explosion.
+     *
+     * @param radius the radius of the explosion effect
+     */
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    /**
      * Sets the damage that this projectile deals to entities it hits directly.
      *
      * @param damageOnDirectHit the damage on direct hits
@@ -260,6 +315,24 @@ public class BouncyProjectile implements Listener {
      */
     public void setConsumeOnDirectHit(boolean consumeOnDirectHit) {
         this.consumeOnDirectHit = consumeOnDirectHit;
+    }
+
+    /**
+     * Sets if entities from the same team as the thrower of the projectile get affected by the explosion effect.
+     *
+     * @param friendlyFire if entities from the same team get affected by the explosion
+     */
+    public void setFriendlyFire(boolean friendlyFire) {
+        this.friendlyFire = friendlyFire;
+    }
+
+    /**
+     * Sets the sound that gets played on explosion, or null for no sound.
+     *
+     * @param explosionSound the sound to play on explosion, or null for no sound
+     */
+    public void setExplosionSound(@Nullable PlayableSound explosionSound) {
+        this.explosionSound = explosionSound;
     }
 
     /**
@@ -286,6 +359,17 @@ public class BouncyProjectile implements Listener {
      */
     public void setTrailParticle(@NotNull Particle trailParticle) {
         this.trailParticle = trailParticle;
+    }
+
+    /**
+     * Sets the item to be displayed on the projectile.
+     * <p>
+     * This only affects throwable projectiles and does not work for things like arrows.
+     *
+     * @param displayItem the item to be displayed on the projectile
+     */
+    public void setDisplayItem(@Nullable ItemStack displayItem) {
+        this.displayItem = displayItem;
     }
 
     /**
@@ -362,8 +446,22 @@ public class BouncyProjectile implements Listener {
         return getCurrentProjectile().getVelocity().lengthSquared() < 0.0001;
     }
 
-    private boolean isSticky() {
-        return getFrictionFactor() == 0 && getRestitutionFactor() == 0;
+    /**
+     * Sets if the projectile should stick to the first surface it hits.
+     *
+     * @param sticky if the projectile should stick to the first surface it hits
+     */
+    public void setSticky(boolean sticky) {
+        this.sticky = sticky;
+    }
+
+    /**
+     * Returns if the projectile sticks to the first surface it hits.
+     *
+     * @return if the projectile sticks to the first surface it hits
+     */
+    public boolean isSticky() {
+        return sticky;
     }
 
     /**
@@ -470,11 +568,22 @@ public class BouncyProjectile implements Listener {
 
         // On hit entity
         if (hitEntity != null) {
-            if (onHitEntity != null) onHitEntity.accept(oldProjectile, hitEntity);
-            if (consumeOnDirectHit) {
-                // Projectile will be removed after modifying damage in EntityDamageByEntityEvent
+            if (onHitEntity != null && checkFriendlyFire(hitEntity)) onHitEntity.accept(oldProjectile, hitEntity);
+            // Projectile will be removed after modifying damage in EntityDamageByEntityEvent
+            if (consumeOnDirectHit) return;
+        }
+
+        if (isArrow) {
+            // If it is a sticky arrow-like projectile, it can be left stuck in the ground, as it is, without having to spawn a new one.
+            if (isSticky()) {
+                grounded = true;
+                // Don't allow picking it back up
+                ((AbstractArrow) getCurrentProjectile()).setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
                 return;
             }
+
+            // Remove previous projectile, which is left stuck in the ground
+            oldProjectile.remove();
         }
 
 
@@ -496,22 +605,21 @@ public class BouncyProjectile implements Listener {
         }
 
         // Spawn new projectile with the post-bounce velocity
-        setCurrentProjectile(world.spawn(hitLocation, PROJECTILE_CLASS, e -> {
-            ProjectileSource shooter = oldProjectile.getShooter();
-
-            if (displayItem != null) e.setItem(displayItem);
+        setCurrentProjectile(world.spawn(hitLocation, projectileClass, e -> {
+            if (displayItem != null && e instanceof ThrowableProjectile) ((ThrowableProjectile) e).setItem(displayItem);
             e.setVelocity(velocity);
             e.setGravity(oldProjectile.hasGravity());
-            e.setShooter(shooter);
+            e.setShooter(source);
             e.setFireTicks(oldProjectile.getFireTicks());
             //noinspection deprecation
             e.setPersistent(oldProjectile.isPersistent());
-            if (shooter instanceof Player && outlineEffect.isShown()) OutlineEffect.setColor(null, (Player) shooter, e);
+            if (sourceIsPlayer && outlineEffect.isShown()) OutlineEffect.setColor(null, (Player) source, e);
         }));
     }
 
     /**
-     * Makes the projectile deal damage on direct hits if enabled and removes it if it should be consumed on direct hit.
+     * Makes the projectile deal damage on direct hits if enabled and removes it if it should be consumed on direct
+     * hit.
      */
     @EventHandler(priority = EventPriority.LOW)
     private void onDirectHitDamage(EntityDamageByEntityEvent event) {
@@ -554,6 +662,16 @@ public class BouncyProjectile implements Listener {
             velocity.multiply(-1);
             velocity.multiply(getRestitutionFactor());
         }
+    }
+
+    /**
+     * Checks if the given hit entity is allowed to be affected by this projectile in regards to friendly fire.
+     *
+     * @param hitEntity the entity to check if allowed to be hit
+     * @return if the given hit entity is allowed to be affected by this projectile
+     */
+    private boolean checkFriendlyFire(@NotNull Entity hitEntity) {
+        return !(!friendlyFire && sourceIsPlayer && fromSameTeam((Player) source, hitEntity));
     }
 
 
@@ -625,5 +743,21 @@ public class BouncyProjectile implements Listener {
 
         // The center of the projectile at the moment of impact
         return lastLocation.clone().add(velocity.clone().multiply(distanceToSurface / projectedVelocity).subtract(projectileDirection.clone().multiply(offset)));
+    }
+
+    /**
+     * Returns if the given other entity is on the specified player's team.
+     *
+     * @param player the player to get the team from
+     * @param other  the entity to check if on the player's team
+     * @return if the other entity is on the player's team
+     */
+    private static boolean fromSameTeam(@NotNull Player player, @NotNull Entity other) {
+        if (player.getUniqueId().equals(other.getUniqueId())) return true;
+
+        Scoreboard scoreboard = player.getScoreboard();
+        Team team1 = scoreboard.getEntryTeam(player.getName());
+        Team team2 = scoreboard.getEntryTeam(other.getName());
+        return team1 != null && team1.equals(team2);
     }
 }

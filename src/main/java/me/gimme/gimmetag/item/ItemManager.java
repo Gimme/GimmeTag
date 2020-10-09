@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -25,6 +26,10 @@ public class ItemManager {
     }
 
     public void registerItem(@NotNull CustomItem customItem) {
+        if (customItemsById.containsKey(customItem.getId())) {
+            Bukkit.getLogger().warning("An item with the id \"" + customItem.getId() + "\" has already been registered. Skipping this one.");
+            return;
+        }
         customItemsById.put(customItem.getId(), customItem);
     }
 
@@ -54,7 +59,7 @@ public class ItemManager {
     private class OnUseListener implements Listener {
         @EventHandler(priority = EventPriority.HIGH)
         private void onInteract(PlayerInteractEvent event) {
-            if (event.useItemInHand().equals(Event.Result.DENY)) return;
+            if (event.useItemInHand() == Event.Result.DENY) return;
 
             ItemStack item = event.getItem();
             if (item == null) return;
@@ -71,7 +76,7 @@ public class ItemManager {
             event.setUseItemInHand(Event.Result.DENY);
 
             // Check if right click
-            if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)))
+            if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK))
                 return;
 
             // Don't use if clicked an interactable block while not sneaking

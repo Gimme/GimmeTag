@@ -30,7 +30,6 @@ public class SwapperBall extends BouncyProjectileItem {
         this.tagManager = tagManager;
 
         setInfo(INFO);
-        setConsumeOnEntityHit(true);
         setDisplayItem(MATERIAL, true);
         setTrailParticle(Particle.DRAGON_BREATH);
     }
@@ -40,7 +39,7 @@ public class SwapperBall extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<Entity> livingEntities) {
+    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<@NotNull Entity> livingEntities) {
     }
 
     @Override

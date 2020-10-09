@@ -556,8 +556,10 @@ public class TagManager implements Listener {
         // Tag if hunter hits runner
         if (Role.HUNTER.equals(getRole(damager)) && Role.RUNNER.equals(getRole(damaged))) {
             tag(damaged, damager);
+            event.setCancelled(true);
         }
 
+        // Prevent melee hits. Only relevant when runner punches hunter as all other relations are covered.
         if (!Config.ENABLE_PVP.getValue()) event.setCancelled(true);
 
         // No damage
