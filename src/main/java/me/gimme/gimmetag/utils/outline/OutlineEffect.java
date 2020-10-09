@@ -1,7 +1,8 @@
-package me.gimme.gimmetag.utils;
+package me.gimme.gimmetag.utils.outline;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
@@ -19,8 +20,9 @@ import java.util.List;
  * Creates an outline effect around targets which is only visible to certain players.
  */
 public class OutlineEffect {
-    private PacketListener packetListener;
-    private boolean isShown = false;
+    private final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    private final PacketListener packetListener;
+    private boolean isShown;
 
     public OutlineEffect(@NotNull Plugin plugin, @NotNull ShowOutlineCondition condition) {
         this.packetListener = new PacketAdapter(plugin, PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.NAMED_ENTITY_SPAWN) {
@@ -53,26 +55,26 @@ public class OutlineEffect {
     }
 
     /**
-     * Show this outline effect.
+     * Shows this outline effect.
      *
-     * @return if anything changed from this method call
+     * @return if the state changed
      */
     public boolean show() {
         if (isShown) return false;
         isShown = true;
-        ProtocolLibrary.getProtocolManager().addPacketListener(packetListener);
+        protocolManager.addPacketListener(packetListener);
         return true;
     }
 
     /**
-     * Hide this outline effect.
+     * Hides this outline effect.
      *
-     * @return if anything changed from this method call
+     * @return if the state changed
      */
     public boolean hide() {
         if (!isShown) return false;
         isShown = false;
-        ProtocolLibrary.getProtocolManager().removePacketListener(packetListener);
+        protocolManager.removePacketListener(packetListener);
         return true;
     }
 
@@ -80,7 +82,7 @@ public class OutlineEffect {
      * @return if this outline effect is currently shown
      */
     public boolean isShown() {
-        return this.isShown;
+        return isShown;
     }
 
     /**

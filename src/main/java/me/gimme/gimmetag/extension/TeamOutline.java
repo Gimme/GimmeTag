@@ -4,7 +4,7 @@ import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.events.PlayerRoleSetEvent;
 import me.gimme.gimmetag.tag.Role;
 import me.gimme.gimmetag.tag.TagManager;
-import me.gimme.gimmetag.utils.OutlineEffect;
+import me.gimme.gimmetag.utils.outline.OutlineEffect;
 import org.bukkit.Server;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

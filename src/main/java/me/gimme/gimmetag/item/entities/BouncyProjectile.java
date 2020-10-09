@@ -1,6 +1,6 @@
 package me.gimme.gimmetag.item.entities;
 
-import me.gimme.gimmetag.utils.OutlineEffect;
+import me.gimme.gimmetag.utils.outline.OutlineEffect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
