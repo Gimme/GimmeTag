@@ -9,19 +9,25 @@ import com.comphenix.protocol.events.PacketListener;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Creates an outline effect around targets which is only visible to certain players.
  */
 public class OutlineEffect {
-    private final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    private static final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
     private final PacketListener packetListener;
+
     private boolean isShown;
 
     public OutlineEffect(@NotNull Plugin plugin, @NotNull ShowOutlineCondition condition) {
@@ -115,6 +121,87 @@ public class OutlineEffect {
         boolean isGlowing = entity.isGlowing();
         entity.setGlowing(!isGlowing);
         entity.setGlowing(isGlowing);
+    }
+
+    /**
+     * Sets the outline color of the given entities for the given player. If the color is null, the given player's team
+     * color will be used instead.
+     * <p>
+     * Note that any entity that is in a scoreboard team will use that team's color above all else.
+     *
+     * @param color    the color to set for the outline, or null to use the given player's team color
+     * @param player   the player that will see the color change
+     * @param entities the entities to set the outline color of
+     */
+    public static void setColor(@Nullable ChatColor color, @NotNull Player player, @NotNull Entity... entities) {
+        if (color == null) {
+            Team playerTeam = player.getScoreboard().getEntryTeam(player.getName());
+            if (playerTeam != null) color = playerTeam.getColor();
+            if (color == null) color = ChatColor.WHITE; // Default outline color
+        }
+
+        setColor(color, Collections.singletonList(player), entities);
+    }
+
+    /**
+     * Sets the outline color of the given entities for all online players.
+     * <p>
+     * Note that any entity that is in a scoreboard team will use that team's color above all else.
+     *
+     * @param color    the color to set for the outline
+     * @param entities the entities to set the outline color of
+     */
+    public static void broadcastColor(@NotNull ChatColor color, @NotNull Entity... entities) {
+        setColor(color, (Iterable<Player>) null, entities);
+    }
+
+    /**
+     * Sets the outline color of the given entities for the given players, or null for all online players.
+     * <p>
+     * Note that any entity that is in a scoreboard team will use that team's color above all else.
+     *
+     * @param color    the color to set for the outline
+     * @param players  the players that will see the color change, or null for all online players
+     * @param entities the entities to set the outline color of
+     */
+    private static void setColor(@NotNull ChatColor color, @Nullable Iterable<Player> players, @NotNull Entity... entities) {
+        String teamName = getTeamName(color);
+
+        PlayServerScoreboardTeamWrapper createTeamPacket = new PlayServerScoreboardTeamWrapper(PlayServerScoreboardTeamWrapper.Mode.TEAM_CREATED);
+        createTeamPacket.setName(teamName);
+        createTeamPacket.setColor(color);
+
+        PlayServerScoreboardTeamWrapper addEntitiesPacket = new PlayServerScoreboardTeamWrapper(PlayServerScoreboardTeamWrapper.Mode.ENTRIES_ADDED);
+        addEntitiesPacket.setName(teamName);
+        addEntitiesPacket.setEntries(Arrays.stream(entities)
+                .map(e -> e.getType() == EntityType.PLAYER ? e.getName() : e.getUniqueId().toString())
+                .collect(Collectors.toList()));
+
+        if (players != null) {
+            for (Player player : Objects.requireNonNull(players)) {
+                createTeamPacket.send(player);
+                addEntitiesPacket.send(player);
+            }
+        } else {
+            createTeamPacket.broadcast();
+            addEntitiesPacket.broadcast();
+        }
+    }
+
+    /**
+     * Returns the team name to use for the specified color.
+     * <p>
+     * This is used to keep the names at max 16 characters and avoid conflicts of already used team names.
+     *
+     * @param color the color to get the team name of
+     * @return the team name to use for the specified color
+     */
+    @NotNull
+    private static String getTeamName(@NotNull ChatColor color) {
+        String name = "_" + color.name();
+        // Max team name length is 16 or the client crashes.
+        if (name.length() > 16) name = name.subSequence(0, 16).toString();
+        return name;
     }
 
 

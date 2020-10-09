@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -268,7 +269,11 @@ public class BouncyProjectile implements Listener {
      */
     public void setGlowing(boolean glowing) {
         if (glowing) {
-            if (outlineEffect.show()) OutlineEffect.refresh(getCurrentProjectile());
+            if (outlineEffect.show()) {
+                ProjectileSource shooter = getCurrentProjectile().getShooter();
+                if (shooter instanceof Player) OutlineEffect.setColor(null, (Player) shooter, getCurrentProjectile());
+                OutlineEffect.refresh(getCurrentProjectile());
+            }
         } else {
             if (outlineEffect.hide()) OutlineEffect.refresh(getCurrentProjectile());
         }
@@ -492,13 +497,16 @@ public class BouncyProjectile implements Listener {
 
         // Spawn new projectile with the post-bounce velocity
         setCurrentProjectile(world.spawn(hitLocation, PROJECTILE_CLASS, e -> {
+            ProjectileSource shooter = oldProjectile.getShooter();
+
             if (displayItem != null) e.setItem(displayItem);
             e.setVelocity(velocity);
             e.setGravity(oldProjectile.hasGravity());
-            e.setShooter(oldProjectile.getShooter());
+            e.setShooter(shooter);
             e.setFireTicks(oldProjectile.getFireTicks());
             //noinspection deprecation
             e.setPersistent(oldProjectile.isPersistent());
+            if (shooter instanceof Player && outlineEffect.isShown()) OutlineEffect.setColor(null, (Player) shooter, e);
         }));
     }
 
