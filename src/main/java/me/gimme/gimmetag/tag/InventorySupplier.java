@@ -5,7 +5,9 @@ import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -25,8 +27,8 @@ public class InventorySupplier {
     /**
      * Sets the inventory of the specified player to the starting state of the specified role.
      *
-     * @param player      the player to set the inventory for
-     * @param role        the role to get the starting inventory state of
+     * @param player the player to set the inventory for
+     * @param role   the role to get the starting inventory state of
      */
     void setInventory(@NotNull Player player, @NotNull Role role) {
         player.getInventory().clear();
@@ -69,8 +71,13 @@ public class InventorySupplier {
         }
 
         ItemStack armor = new ItemStack(material);
-        LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
-        Objects.requireNonNull(meta).setColor(color);
+        LeatherArmorMeta meta = Objects.requireNonNull((LeatherArmorMeta) armor.getItemMeta());
+
+        meta.setColor(color);
+        meta.setUnbreakable(true);
+        meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
         armor.setItemMeta(meta);
         return armor;
     }
