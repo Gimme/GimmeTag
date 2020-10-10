@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +31,27 @@ public class OutlineEffect {
 
     private boolean isShown;
 
+    /**
+     * Creates an outline effect around targets that is only visible to the specified entity.
+     * <p>
+     * It's an entity for compatibility reasons, but an outline effect only makes sense to be displayed to players.
+     *
+     * @param plugin          the plugin to register the effect with
+     * @param entity          the entity that will be the only one to see this outline effect
+     * @param showForEntityId a predicate deciding if the entity with the given entityId should have an outline
+     * @return the created outline effect
+     */
+    public static OutlineEffect personalEffect(@NotNull Plugin plugin, @NotNull Entity entity, @NotNull Predicate<Integer> showForEntityId) {
+        return new OutlineEffect(plugin, ((p, entityId) -> entity.getUniqueId().equals(p.getUniqueId()) && showForEntityId.test(entityId)));
+    }
+
+    /**
+     * Creates an outline effect around targets that is only visible to certain players.
+     *
+     * @param plugin    the plugin to register the effect with
+     * @param condition a condition that decides if the the entity with the given entityId should have an outline
+     *                  displayed to the given player
+     */
     public OutlineEffect(@NotNull Plugin plugin, @NotNull ShowOutlineCondition condition) {
         this.packetListener = new PacketAdapter(plugin, PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.NAMED_ENTITY_SPAWN) {
             @Override

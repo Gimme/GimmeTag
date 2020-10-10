@@ -157,9 +157,7 @@ public class BouncyProjectile implements Listener {
         };
         trailTask.runTaskTimer(plugin, TRAIL_FREQUENCY_TICKS, TRAIL_FREQUENCY_TICKS);
 
-        outlineEffect = new OutlineEffect(plugin, (player, entityId) ->
-                player.getUniqueId().equals(source.getUniqueId()) && entityId == getCurrentProjectile().getEntityId()
-        );
+        outlineEffect = OutlineEffect.personalEffect(plugin, source, entityId -> entityId == getCurrentProjectile().getEntityId());
     }
 
     /**

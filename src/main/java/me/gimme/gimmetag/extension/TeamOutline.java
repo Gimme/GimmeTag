@@ -20,8 +20,8 @@ import java.util.Objects;
  * Show outlines of teammates (can be seen through walls).
  */
 public class TeamOutline implements Listener {
-    private Server server;
-    private TagManager tagManager;
+    private final Server server;
+    private final TagManager tagManager;
 
     public TeamOutline(@NotNull Plugin plugin, @NotNull TagManager tagManager) {
         this.server = plugin.getServer();
@@ -48,8 +48,8 @@ public class TeamOutline implements Listener {
         Role role = tagManager.getRole(player);
 
         if (role == null) return false;
-        if (role.equals(Role.HUNTER) && !Config.HUNTER_TEAMMATE_OUTLINE.getValue()) return false;
-        if (role.equals(Role.RUNNER) && !Config.RUNNER_TEAMMATE_OUTLINE.getValue()) return false;
+        if (role == Role.HUNTER && !Config.HUNTER_TEAMMATE_OUTLINE.getValue()) return false;
+        if (role == Role.RUNNER && !Config.RUNNER_TEAMMATE_OUTLINE.getValue()) return false;
 
         return hasRole(entityId, role);
     }
@@ -63,7 +63,7 @@ public class TeamOutline implements Listener {
      */
     private boolean hasRole(int entityId, @NotNull Role role) {
         return tagManager.getPlayersByRole(role).stream()
-                .map(uuid -> server.getPlayer(uuid))
+                .map(server::getPlayer)
                 .filter(Objects::nonNull)
                 .map(Entity::getEntityId)
                 .anyMatch(id -> id == entityId);
