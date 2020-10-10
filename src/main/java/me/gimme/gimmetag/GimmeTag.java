@@ -65,7 +65,6 @@ public final class GimmeTag extends JavaPlugin {
         registerCommand(new RunnerCommand(tagManager));
         registerCommand(new SuicideCommand());
         registerCommand(new GiveCommand(getServer(), itemManager));
-        registerCommand(new NoteCommand());
         registerCommand(new TestCommand());
     }
 
