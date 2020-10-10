@@ -1,6 +1,5 @@
 package me.gimme.gimmetag.config;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +17,6 @@ class ValueConfig<T> extends AbstractConfig<T> {
     @NotNull
     @Override
     public T getValue() {
-        // TODO: safe type check?, make sure the config values get loaded on first run?
-        return (T) Objects.requireNonNull(getConfig().get(path, cls));
+        return (T) Objects.requireNonNull(getConfig().getObject(path, Object.class));
     }
 }
