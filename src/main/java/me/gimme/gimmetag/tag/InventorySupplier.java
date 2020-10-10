@@ -6,6 +6,7 @@ import me.gimme.gimmetag.item.ItemManager;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -32,8 +33,8 @@ public class InventorySupplier {
      */
     void setInventory(@NotNull Player player, @NotNull Role role) {
         player.getInventory().clear();
-        if (Role.HUNTER.equals(role)) setHunterInventory(player.getInventory());
-        if (Role.RUNNER.equals(role)) setRunnerInventory(player.getInventory());
+        if (Role.HUNTER == role) setHunterInventory(player.getInventory());
+        if (Role.RUNNER == role) setRunnerInventory(player.getInventory());
     }
 
     private void setHunterInventory(@NotNull PlayerInventory inventory) {
@@ -83,6 +84,8 @@ public class InventorySupplier {
     }
 
     private void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items) {
+        HumanEntity holder = inventory.getHolder();
+
         items.forEach((itemId, amount) -> {
 
             // Check if valid custom item
@@ -95,8 +98,10 @@ public class InventorySupplier {
                 if (material != null) item = new ItemStack(material, amount);
             }
 
-            // Add to inventory if valid item
-            if (item != null) inventory.addItem(item);
+            // Add to inventory and clear cooldown if valid item
+            if (item == null) return;
+            inventory.addItem(item);
+            if (holder != null) holder.setCooldown(item.getType(), 0);
         });
     }
 
