@@ -38,7 +38,6 @@ public final class GimmeTag extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        getConfig().options().copyDefaults(true);
         saveDefaultConfig();
 
         commandManager = new CommandManager(this);
