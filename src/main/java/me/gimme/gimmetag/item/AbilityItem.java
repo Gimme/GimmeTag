@@ -227,7 +227,7 @@ public abstract class AbilityItem extends CustomItem {
      *
      * @param showLevel if the level should be displayed next to the display name
      */
-    private void showLevel(boolean showLevel) {
+    protected void showLevel(boolean showLevel) {
         this.showLevel = showLevel;
     }
 

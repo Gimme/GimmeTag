@@ -103,6 +103,7 @@ public final class GimmeTag extends JavaPlugin {
         itemManager.registerItem(new BalloonGrenade(Config.BALLOON_GRENADE));
         itemManager.registerItem(new HunterCompass(Config.HUNTER_COMPASS, tagManager));
         itemManager.registerItem(new HunterRadar(Config.HUNTER_RADAR, tagManager));
+        itemManager.registerItem(new SpyEye(Config.SPY_EYE, Config.SPY_EYE_SELF_GLOW.getValue(), this));
         itemManager.registerItem(new SmokeGrenade(
                 Config.SMOKE_GRENADE,
                 Config.SMOKE_GRENADE_COLOR.getValue(),

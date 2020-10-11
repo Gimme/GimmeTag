@@ -20,7 +20,7 @@ permissions:
       gimmetag.tag.*: true
 
   gimmetag.tag.*:
-    description: Can use tag commands
+    description: Can use all tag commands
 
   gimmetag.tag:
     description: Can use tag commands

@@ -61,6 +61,8 @@ public abstract class Config {
     public static final AbilityItemConfig BALLOON_GRENADE = new AbilityItemConfig(CUSTOM_ITEM, "balloon_grenade");
     public static final AbilityItemConfig HUNTER_COMPASS = new AbilityItemConfig(CUSTOM_ITEM, "hunter_compass");
     public static final AbilityItemConfig HUNTER_RADAR = new AbilityItemConfig(CUSTOM_ITEM, "hunter_radar");
+    public static final AbilityItemConfig SPY_EYE = new AbilityItemConfig(CUSTOM_ITEM, "spy_eye");
+    public static final AbstractConfig<Boolean> SPY_EYE_SELF_GLOW = new ValueConfig<>(SPY_EYE, "self-glow", Boolean.class);
 
     private static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig("default-bouncy-projectile", null);
     public static final BouncyProjectileConfig PYKES_HOOK = new BouncyProjectileConfig(CUSTOM_ITEM, "pykes_hook", DEFAULT_BOUNCY_PROJECTILE);

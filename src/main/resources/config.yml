@@ -79,6 +79,7 @@ hunter:
   items:
     hunter_compass: 1
     hunter_radar: 1
+    spy_eye: 1
     hunter_speed_boost: 1
     hunter_bow: 1
     arrow: 1
@@ -141,6 +142,16 @@ custom-item:
     # -1: Infinite.
     # 0: Show current distance as of activation.
     duration: -1
+
+  spy_eye:
+    consumable: false
+    cooldown: 60.0
+    # -1: Infinite.
+    duration: 3.0
+    # Strength of the self slow effect.
+    level: 6
+    # If the user should glow to others during the effect.
+    self-glow: true
 
 
   # PROJECTILES

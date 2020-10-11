@@ -344,6 +344,7 @@ public class TagManager implements Listener {
                 title, "Waking up in",
                 "Hunt!", "").start();
 
+        player.setSprinting(false);
         UUID id = UUID.randomUUID();
         BukkitRunnable runnable = new BukkitRunnable() {
             private final UUID playerId = player.getUniqueId();
@@ -351,25 +352,24 @@ public class TagManager implements Listener {
 
             @Override
             public void run() {
-                if (ticksLeft <= 0) {
+                if (ticksLeft-- <= 0) {
                     cancel();
                     countdownTasks.remove(id);
                 }
-                ticksLeft--;
 
                 Player player = server.getPlayer(playerId);
                 if (player == null || !player.isOnline()) return;
 
                 int potionTicks = 2;
                 player.addPotionEffects(Arrays.asList(
-                        new PotionEffect(PotionEffectType.BLINDNESS, potionTicks + 20, 1),
-                        new PotionEffect(PotionEffectType.SLOW, potionTicks, 1000), // Prevents moving
-                        new PotionEffect(PotionEffectType.JUMP, potionTicks, 200), // Prevents jumping
-                        new PotionEffect(PotionEffectType.WATER_BREATHING, potionTicks + 5 * 20, 0),
-                        new PotionEffect(PotionEffectType.FIRE_RESISTANCE, potionTicks + 5 * 20, 0),
-                        new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, potionTicks, 1000),
-                        new PotionEffect(PotionEffectType.SLOW_FALLING, potionTicks, 1),
-                        new PotionEffect(PotionEffectType.GLOWING, potionTicks, 1)
+                        new PotionEffect(PotionEffectType.GLOWING, potionTicks, 1, false, false),
+                        new PotionEffect(PotionEffectType.BLINDNESS, potionTicks + 20, 1, false, false),
+                        new PotionEffect(PotionEffectType.SLOW, potionTicks, 1000, false, false), // Prevents moving
+                        new PotionEffect(PotionEffectType.JUMP, potionTicks, 200, false, false, false), // Prevents jumping
+                        new PotionEffect(PotionEffectType.WATER_BREATHING, potionTicks + 5 * 20, 0, false, false, false),
+                        new PotionEffect(PotionEffectType.FIRE_RESISTANCE, potionTicks + 5 * 20, 0, false, false, false),
+                        new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, potionTicks, 1000, false, false, false),
+                        new PotionEffect(PotionEffectType.SLOW_FALLING, potionTicks, 1, false, false, false)
                 ));
             }
         };

@@ -30,6 +30,8 @@ public class OutlineEffect {
     private final PacketListener packetListener;
 
     private boolean isShown;
+    @Nullable
+    private ShowOutlineCondition condition;
 
     /**
      * Creates an outline effect around targets that is only visible to the specified entity.
@@ -37,22 +39,24 @@ public class OutlineEffect {
      * It's an entity for compatibility reasons, but an outline effect only makes sense to be displayed to players.
      *
      * @param plugin          the plugin to register the effect with
-     * @param entity          the entity that will be the only one to see this outline effect
+     * @param povEntity       the entity that will be the only one to see this outline effect
      * @param showForEntityId a predicate deciding if the entity with the given entityId should have an outline
      * @return the created outline effect
      */
-    public static OutlineEffect personalEffect(@NotNull Plugin plugin, @NotNull Entity entity, @NotNull Predicate<Integer> showForEntityId) {
-        return new OutlineEffect(plugin, ((p, entityId) -> entity.getUniqueId().equals(p.getUniqueId()) && showForEntityId.test(entityId)));
+    public static OutlineEffect personalEffect(@NotNull Plugin plugin, @NotNull Entity povEntity, @NotNull Predicate<Integer> showForEntityId) {
+        return new OutlineEffect(plugin, ((p, entityId) -> povEntity.getUniqueId().equals(p.getUniqueId()) && showForEntityId.test(entityId)));
     }
 
     /**
      * Creates an outline effect around targets that is only visible to certain players.
      *
      * @param plugin    the plugin to register the effect with
-     * @param condition a condition that decides if the the entity with the given entityId should have an outline
-     *                  displayed to the given player
+     * @param condition a condition that decides if the entity with the given entityId should have an outline displayed
+     *                  to the given player
      */
-    public OutlineEffect(@NotNull Plugin plugin, @NotNull ShowOutlineCondition condition) {
+    public OutlineEffect(@NotNull Plugin plugin, @Nullable ShowOutlineCondition condition) {
+        setOutlineCondition(condition);
+
         this.packetListener = new PacketAdapter(plugin, PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.NAMED_ENTITY_SPAWN) {
             @Override
             public void onPacketSending(PacketEvent event) {
@@ -60,7 +64,7 @@ public class OutlineEffect {
                 int entityId = event.getPacket().getIntegers().read(0);
                 PacketType packetType = event.getPacketType();
 
-                if (!condition.showOutline(player, entityId)) return;
+                if (getCondition() == null || !getCondition().showOutline(player, entityId)) return;
 
                 if (packetType.equals(PacketType.Play.Server.ENTITY_METADATA)) {
                     List<WrappedWatchableObject> watchableObjects = event.getPacket().getWatchableCollectionModifier().read(0);
@@ -107,34 +111,60 @@ public class OutlineEffect {
     }
 
     /**
-     * @return if this outline effect is currently shown
+     * Returns if this outline effect is currently being shown.
+     *
+     * @return if this outline effect is currently being shown
      */
     public boolean isShown() {
         return isShown;
     }
 
     /**
-     * Refreshes the outline status on all players on the server.
+     * Sets the condition that decides if the entity with the given entityId should have an outline displayed to the
+     * given player, or null if no outline condition currently.
+     *
+     * @param condition the condition that decides if the outline should be displayed between the given entities, or
+     *                  null if no outline condition currently
      */
-    public static void refreshPlayers() {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            refresh(player);
-        }
+    void setOutlineCondition(@Nullable ShowOutlineCondition condition) {
+        this.condition = condition;
     }
 
     /**
-     * Refreshes the outline status on the specified entities.
+     * Returns the condition that decides if the entity with the given entityId should have an outline displayed to the
+     * given player, or null if no outline condition currently.
+     *
+     * @return the condition that decides if the outline should be displayed between the given entities, or null if no
+     * outline condition currently
      */
-    public static void refresh(@NotNull Iterable<Entity> entities) {
+    @Nullable
+    private ShowOutlineCondition getCondition() {
+        return condition;
+    }
+
+
+    /**
+     * Refreshes the outline status of all players on the server.
+     */
+    public static void refreshOnlinePlayers() {
+        refresh(Bukkit.getServer().getOnlinePlayers());
+    }
+
+    /**
+     * Refreshes the outline status of the specified entities.
+     *
+     * @param entities the entities to refresh
+     */
+    public static void refresh(@NotNull Iterable<? extends Entity> entities) {
         for (Entity entity : entities) {
             refresh(entity);
         }
     }
 
     /**
-     * Refreshes the specified entity.
+     * Refreshes the outline status of the specified entity.
      * <p>
-     * This forces the server send new metadata packets for that entity, which can then be intercepted and have the
+     * This forces the server to send new metadata packets for that entity, which can then be intercepted and have the
      * outline effect added.
      *
      * @param entity the entity to refresh
