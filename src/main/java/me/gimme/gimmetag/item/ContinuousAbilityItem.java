@@ -156,7 +156,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         private final Player user;
         private final ItemStack item;
         private final int itemSlot;
-        private final int durationTicks;
+        private final boolean infinte;
         private final int ticksPerCalculation;
 
         private int ticksLeft;
@@ -167,8 +167,8 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             this.user = user;
             this.item = item;
             this.itemSlot = user.getInventory().getHeldItemSlot();
+            this.infinte = durationTicks < 0;
             this.ticksPerCalculation = ticksPerCalculation;
-            this.durationTicks = durationTicks;
 
             this.ticksLeft = durationTicks;
             this.ticksUntilCalculation = 0;
@@ -176,7 +176,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
         @Override
         public void run() {
-            if (durationTicks >= 0 && ticksLeft-- < 0) {
+            if (!infinte && ticksLeft-- < 0) {
                 cancel();
                 return;
             }
@@ -184,7 +184,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             if (--ticksUntilCalculation <= 0) {
                 ticksUntilCalculation = ticksPerCalculation;
 
-                if (!user.isOnline() || item.getType() == Material.AIR || !isItemInSlot(item, user, itemSlot)) {
+                if (!user.isOnline() || (infinte && (item.getType() == Material.AIR || !isItemInSlot(item, user, itemSlot)))) {
                     cancel();
                     return;
                 }
