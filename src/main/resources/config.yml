@@ -73,32 +73,73 @@ scoring:
 # ---------- TEAMS ----------
 
 hunter:
-  leather-color: 0xFF0000
+  default-outfit-color: 0xFF0000
   teammate-outline: true
   hide-name-tag: true
-  items:
-    hunter_compass: 1
-    hunter_radar: 1
-    spy_eye: 1
-    hunter_speed_boost: 1
-    hunter_bow: 1
-    arrow: 1
-    impulse_grenade: 1
-    pykes_hook: 1
+  allow-class-change-on-respawn: true
 
 runner:
   teammate-outline: true
   hide-name-tag: true
   collision-with-runner: true
   collision-with-hunter: false
-  items:
-    swapper_ball: 1
-    egg: 5
-    chorus_fruit: 3
-    invis_potion: 1
-    runner_speed_boost: 3
-    balloon_grenade: 1
-    smoke_grenade: 1
+  allow-class-change-on-respawn: true
+
+
+
+# ---------- CLASSES ----------
+
+default-runner-class: Dasher
+runner-classes:
+  - ==: RoleClass
+    name: Dasher
+    icon: sugar
+    items:
+      dash: 1
+      egg: 5
+  - ==: RoleClass
+    name: Swapper
+    icon: ender_pearl
+    items:
+      swapper_ball: 1
+      chorus_fruit: 3
+  - ==: RoleClass
+    name: Stealth
+    icon: clay_ball
+    items:
+      smoke_grenade: 1
+      invis_potion: 1
+  - ==: RoleClass
+    name: Alchemist
+    icon: potion
+    items:
+      balloon_grenade: 1
+      invis_potion: 1
+
+default-hunter-class: Pyke
+hunter-classes:
+  - ==: RoleClass
+    name: Pyke
+    icon: trident
+    items:
+      hunter_compass: 1
+      hunter_speed_boost: 1
+      pykes_hook: 1
+  - ==: RoleClass
+    name: Impulse
+    icon: heart_of_the_sea
+    items:
+      hunter_radar: 1
+      hunter_speed_boost: 1
+      impulse_grenade: 1
+  - ==: RoleClass
+    name: Spy
+    icon: ender_eye
+    items:
+      spy_eye: 1
+      hunter_speed_boost: 1
+      hunter_bow: 1
+      arrow: 1
 
 
 
@@ -108,16 +149,16 @@ runner:
 soulbound-items: true
 
 # Settings for some of the various custom items.
+#
+# TODO: explain all parameters
 custom-item:
   speed-boosts:
     hunter_speed_boost:
-      consumable: false
       cooldown: 15.0
       duration: 5.0
       level: 1
-    runner_speed_boost:
-      consumable: true
-      cooldown: 5.0
+    dash:
+      cooldown: 20.0
       duration: 0.2
       level: 50
 
@@ -137,14 +178,12 @@ custom-item:
     duration: -1
 
   hunter_radar:
-    consumable: false
     cooldown: 0.5
     # -1: Infinite.
     # 0: Show current distance as of activation.
     duration: -1
 
   spy_eye:
-    consumable: false
     cooldown: 60.0
     # -1: Infinite.
     duration: 3.0
@@ -157,7 +196,6 @@ custom-item:
   # PROJECTILES
 
   pykes_hook:
-    consumable: false
     cooldown: 10.0
     speed: 0.5
     ground-explosion-timer: 1.0
@@ -167,7 +205,6 @@ custom-item:
     power: 2
 
   swapper_ball:
-    consumable: false
     cooldown: 20.0
     speed: 1.0
     ground-explosion-timer: 2.0
@@ -177,7 +214,6 @@ custom-item:
     allow-hunter-swap: true
 
   smoke_grenade:
-    consumable: false
     cooldown: 30.0
     # How long the smoke shroud lasts.
     duration: 10.0
@@ -194,7 +230,6 @@ custom-item:
     use-team-color: true
 
   impulse_grenade:
-    consumable: false
     cooldown: 20.0
     speed: 0.8
     sticky: true

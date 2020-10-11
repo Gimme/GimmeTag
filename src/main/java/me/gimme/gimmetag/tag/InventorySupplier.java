@@ -3,54 +3,80 @@ package me.gimme.gimmetag.tag;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
+import me.gimme.gimmetag.roleclass.RoleClass;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class InventorySupplier {
 
-    private ItemManager itemManager;
+    private final ItemManager itemManager;
 
     public InventorySupplier(@NotNull ItemManager itemManager) {
         this.itemManager = itemManager;
     }
 
     /**
-     * Sets the inventory of the specified player to the starting state of the specified role.
+     * Sets the given inventory to the starting state of the specified role class.
      *
-     * @param player the player to set the inventory for
-     * @param role   the role to get the starting inventory state of
+     * @param inventory      the inventory to set the state of
+     * @param roleClass      the role class to get the starting inventory state of
+     * @param clearCooldowns if the cooldowns of the added items should be cleared
      */
-    void setInventory(@NotNull Player player, @NotNull Role role) {
-        player.getInventory().clear();
-        if (Role.HUNTER == role) setHunterInventory(player.getInventory());
-        if (Role.RUNNER == role) setRunnerInventory(player.getInventory());
+    void setInventory(@NotNull PlayerInventory inventory, @Nullable RoleClass roleClass, boolean clearCooldowns) {
+        inventory.clear();
+
+        if (roleClass == null) return;
+        addItems(inventory, roleClass.getItemMap(), clearCooldowns);
+
+        if (roleClass.getColors() != null) roleClass.getColors().forEach(
+                (armorSlot, color) -> armorSlot.equip(inventory, getColoredLeatherArmor(armorSlot, color))
+        );
     }
 
-    private void setHunterInventory(@NotNull PlayerInventory inventory) {
-        addItems(inventory, Config.HUNTER_ITEMS.getValue());
+    private void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items, boolean clearCooldowns) {
+        HumanEntity holder = inventory.getHolder();
 
-        Color c = Color.fromRGB(Config.HUNTER_LEATHER_COLOR.getValue());
-        inventory.setHelmet(getColoredLeatherArmor(ArmorSlot.HEAD, c));
-        inventory.setChestplate(getColoredLeatherArmor(ArmorSlot.CHEST, c));
-        inventory.setLeggings(getColoredLeatherArmor(ArmorSlot.LEGS, c));
-        inventory.setBoots(getColoredLeatherArmor(ArmorSlot.FEET, c));
+        for (ItemStack item : getItems(items)) {
+            if (Config.SOULBOUND_ITEMS.getValue() && CustomItem.isCustomItem(item)) CustomItem.soulbind(item, holder);
+            if (clearCooldowns && holder != null) holder.setCooldown(item.getType(), 0);
+            inventory.addItem(item);
+        }
     }
 
-    private void setRunnerInventory(@NotNull PlayerInventory inventory) {
-        addItems(inventory, Config.RUNNER_ITEMS.getValue());
-    }
+    public List<ItemStack> getItems(@NotNull Map<String, Integer> items) {
+        List<ItemStack> contents = new ArrayList<>();
 
+        items.forEach((itemId, amount) -> {
+
+            // Check if valid custom item
+            ItemStack item = itemManager.createItemStack(itemId, amount);
+
+            // Check if valid normal item
+            if (item == null) {
+                Material material = Material.matchMaterial(itemId);
+                if (material != null) item = new ItemStack(material, amount);
+            }
+
+            // Add to contents if valid item
+            if (item == null) return;
+            contents.add(item);
+        });
+
+        return contents;
+    }
 
     private static ItemStack getColoredLeatherArmor(@NotNull ArmorSlot armorSlot, @NotNull Color color) {
         Material material;
@@ -81,35 +107,5 @@ public class InventorySupplier {
 
         armor.setItemMeta(meta);
         return armor;
-    }
-
-    private void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items) {
-        HumanEntity holder = inventory.getHolder();
-
-        items.forEach((itemId, amount) -> {
-
-            // Check if valid custom item
-            ItemStack item = itemManager.createItemStack(itemId, amount);
-            if (Config.SOULBOUND_ITEMS.getValue() && item != null) CustomItem.soulbind(item, inventory.getHolder());
-
-            // Check if valid normal item
-            if (item == null) {
-                Material material = Material.matchMaterial(itemId);
-                if (material != null) item = new ItemStack(material, amount);
-            }
-
-            // Add to inventory and clear cooldown if valid item
-            if (item == null) return;
-            inventory.addItem(item);
-            if (holder != null) holder.setCooldown(item.getType(), 0);
-        });
-    }
-
-
-    private enum ArmorSlot {
-        HEAD,
-        CHEST,
-        LEGS,
-        FEET
     }
 }

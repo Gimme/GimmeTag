@@ -1,8 +1,9 @@
 package me.gimme.gimmetag.config;
 
+import me.gimme.gimmetag.roleclass.RoleClass;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 public abstract class Config {
@@ -38,17 +39,23 @@ public abstract class Config {
 
 
     private static final AbstractConfig<ConfigurationSection> HUNTER = new ValueConfig<>("hunter", ConfigurationSection.class);
-    public static final AbstractConfig<Integer> HUNTER_LEATHER_COLOR = new ValueConfig<>(HUNTER, "leather-color", Integer.class);
+    public static final AbstractConfig<Integer> HUNTER_DEFAULT_OUTFIT_COLOR = new ValueConfig<>(HUNTER, "default-outfit-color", Integer.class);
     public static final AbstractConfig<Boolean> HUNTER_TEAMMATE_OUTLINE = new ValueConfig<>(HUNTER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> HUNTER_HIDE_NAME_TAG = new ValueConfig<>(HUNTER, "hide-name-tag", Boolean.class);
-    public static final AbstractConfig<Map<String, Integer>> HUNTER_ITEMS = new MapConfig<>(HUNTER, "items");
+    public static final AbstractConfig<Boolean> HUNTER_ALLOW_CLASS_CHANGE_ON_RESPAWN = new ValueConfig<>(HUNTER, "allow-class-change-on-respawn", Boolean.class);
 
     private static final AbstractConfig<ConfigurationSection> RUNNER = new ValueConfig<>("runner", ConfigurationSection.class);
     public static final AbstractConfig<Boolean> RUNNER_TEAMMATE_OUTLINE = new ValueConfig<>(RUNNER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_HIDE_NAME_TAG = new ValueConfig<>(RUNNER, "hide-name-tag", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_RUNNER = new ValueConfig<>(RUNNER, "collision-with-runner", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_HUNTER = new ValueConfig<>(RUNNER, "collision-with-hunter", Boolean.class);
-    public static final AbstractConfig<Map<String, Integer>> RUNNER_ITEMS = new MapConfig<>(RUNNER, "items");
+    public static final AbstractConfig<Boolean> RUNNER_ALLOW_CLASS_CHANGE_ON_RESPAWN = new ValueConfig<>(RUNNER, "allow-class-change-on-respawn", Boolean.class);
+
+
+    public static final AbstractConfig<String> DEFAULT_RUNNER_CLASS = new ValueConfig<>("default-runner-class", String.class);
+    public static final AbstractConfig<String> DEFAULT_HUNTER_CLASS = new ValueConfig<>("default-hunter-class", String.class);
+    public static final AbstractConfig<List<RoleClass>> RUNNER_CLASSES = new ListConfig<>("runner-classes");
+    public static final AbstractConfig<List<RoleClass>> HUNTER_CLASSES = new ListConfig<>("hunter-classes");
 
 
     public static final AbstractConfig<Boolean> SOULBOUND_ITEMS = new ValueConfig<>("soulbound-items", Boolean.class);

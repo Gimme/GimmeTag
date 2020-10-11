@@ -291,6 +291,16 @@ public abstract class CustomItem {
     }
 
     /**
+     * Returns if the given item stack was created from a custom item.
+     *
+     * @param itemStack the item stack to check if created from a custom item
+     * @return if the given item stack was created from a custom item
+     */
+    public static boolean isCustomItem(@NotNull ItemStack itemStack) {
+        return getCustomItemId(itemStack) != null;
+    }
+
+    /**
      * Converts the specified ticks into seconds and returns it in a string formatted according to the standard way to
      * display time.
      *

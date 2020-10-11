@@ -12,8 +12,11 @@ import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
 import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.item.items.*;
+import me.gimme.gimmetag.roleclass.ClassSelectionManager;
+import me.gimme.gimmetag.roleclass.RoleClass;
 import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +32,7 @@ public final class GimmeTag extends JavaPlugin {
     private CommandManager commandManager;
     private ItemManager itemManager;
     private TagManager tagManager;
+    private ClassSelectionManager classSelectionManager;
 
     @NotNull
     public TagManager getTagManager() {
@@ -39,10 +43,12 @@ public final class GimmeTag extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        ConfigurationSerialization.registerClass(RoleClass.class);
 
         commandManager = new CommandManager(this);
         itemManager = new ItemManager(this);
-        tagManager = new TagManager(this, itemManager);
+        classSelectionManager = new ClassSelectionManager(this, itemManager);
+        tagManager = new TagManager(this, itemManager, classSelectionManager);
 
         registerCommands();
         registerEvents();
@@ -65,13 +71,15 @@ public final class GimmeTag extends JavaPlugin {
         registerCommand(new RunnerCommand(tagManager));
         registerCommand(new SuicideCommand());
         registerCommand(new GiveCommand(getServer(), itemManager));
+        registerCommand(new ClassCommand(classSelectionManager));
         registerCommand(new TestCommand());
     }
 
     private void registerEvents() {
         registerEvents(tagManager);
         if (Config.DISABLE_HUNGER.getValue()) registerEvents(new DisableHunger(() -> tagManager.isActiveRound()));
-        if (Config.DISABLE_ARROW_DAMAGE.getValue()) registerEvents(new DisableArrowDamage(() -> tagManager.isActiveRound()));
+        if (Config.DISABLE_ARROW_DAMAGE.getValue())
+            registerEvents(new DisableArrowDamage(() -> tagManager.isActiveRound()));
         registerEvents(new EnableProjectileKnockback(() -> tagManager.isActiveRound()));
         registerEvents(new SleepProgressbar(this, tagManager));
         registerEvents(new EventEffects(getServer()));
@@ -127,6 +135,7 @@ public final class GimmeTag extends JavaPlugin {
 
 
     private static GimmeTag instance;
+
     public static GimmeTag getPlugin() {
         if (instance == null) throw new IllegalStateException("Plugin has not been initialized yet");
         return instance;

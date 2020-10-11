@@ -3,6 +3,8 @@ package me.gimme.gimmetag.tag;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.events.*;
 import me.gimme.gimmetag.item.ItemManager;
+import me.gimme.gimmetag.roleclass.ClassSelectionManager;
+import me.gimme.gimmetag.roleclass.RoleClass;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -15,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.Plugin;
@@ -36,6 +39,7 @@ public class TagManager implements Listener {
     private final Server server;
     private final TagScoreboard tagScoreboard;
     private final InventorySupplier inventorySupplier;
+    private final ClassSelectionManager classSelectionManager;
 
     private final Set<UUID> desiredHunters = new HashSet<>(); // Players that want to be hunters next round
     private final Map<UUID, GameplayState> previousStateByPlayer = new HashMap<>(); // Stores previous states during round
@@ -56,10 +60,11 @@ public class TagManager implements Listener {
     private boolean activeRound;
     private int sleepSeconds = Config.TAG_SLEEP_TIME.getValue();
 
-    public TagManager(@NotNull Plugin plugin, @NotNull ItemManager itemManager) {
+    public TagManager(@NotNull Plugin plugin, @NotNull ItemManager itemManager, @NotNull ClassSelectionManager classSelectionManager) {
         this.plugin = plugin;
         this.server = plugin.getServer();
         this.inventorySupplier = new InventorySupplier(itemManager);
+        this.classSelectionManager = classSelectionManager;
 
         tagScoreboard = new TagScoreboard(server);
         server.getPluginManager().registerEvents(tagScoreboard, plugin);
@@ -418,8 +423,8 @@ public class TagManager implements Listener {
         player.setDisplayName(role.playerDisplayName(player));
         // Set game mode
         player.setGameMode(GameMode.valueOf(Config.GAME_MODE.getValue()));
-        // Clear inventory and then add items depending on role
-        inventorySupplier.setInventory(player, role);
+        // Clear inventory and then add items depending on role and class
+        setInventory(player, role, true);
         // Heal
         player.setHealth(20);
         // Fill food level
@@ -430,6 +435,29 @@ public class TagManager implements Listener {
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
+    }
+
+    /**
+     * Sets the inventory of the specified player to the starting state of their class under the specified role.
+     *
+     * @param player         the player to set the inventory for
+     * @param role           the role to get the player's selected class (containing the starting inventory state)
+     *                       under
+     * @param clearCooldowns if the cooldowns of the added items should be cleared
+     */
+    private void setInventory(@NotNull Player player, @NotNull Role role, boolean clearCooldowns) {
+        RoleClass roleClass = classSelectionManager.getRoleClass(player, role);
+        if (role == Role.HUNTER) {
+            if (roleClass == null) {
+                roleClass = ClassSelectionManager.EMPTY_HUNTER_CLASS;
+            }
+            if (roleClass.getColors() == null) {
+                for (ArmorSlot armorSlot : ArmorSlot.values()) {
+                    roleClass.setColor(armorSlot, Color.fromRGB(Config.HUNTER_DEFAULT_OUTFIT_COLOR.getValue()));
+                }
+            }
+        }
+        inventorySupplier.setInventory(player.getInventory(), roleClass, clearCooldowns);
     }
 
     /**
@@ -489,11 +517,30 @@ public class TagManager implements Listener {
     }
 
     /**
+     * Updates the inventories of respawning players to match their most recently selected class, if allowed to change
+     * during round.
+     */
+    @EventHandler
+    private void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        Role role = getRole(player);
+        if (role == null) return;
+
+        if (role == Role.RUNNER && !Config.RUNNER_ALLOW_CLASS_CHANGE_ON_RESPAWN.getValue()) return;
+        if (role == Role.HUNTER && !Config.HUNTER_ALLOW_CLASS_CHANGE_ON_RESPAWN.getValue()) return;
+
+        setInventory(player, role, false);
+    }
+
+    /**
      * Keeps inventories on death.
      */
     @EventHandler
-    private void onPlayerRespawn(PlayerDeathEvent event) {
-        if (!activeRound) return;
+    private void onPlayerInventoryDeath(PlayerDeathEvent event) {
+        if (getRole(event.getEntity()) == null) return;
+        // No drops
+        event.getDrops().clear();
+        // Keep inventory
         event.setKeepInventory(true);
     }
 
@@ -503,10 +550,8 @@ public class TagManager implements Listener {
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        // No drops
-        if (getRole(player) != null) event.getDrops().clear();
 
-        if (Role.RUNNER != getRole(player)) return;
+        if (getRole(player) != Role.RUNNER) return;
         deathTag(player);
     }
 
