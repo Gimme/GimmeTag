@@ -42,14 +42,15 @@ public abstract class Config {
     public static final AbstractConfig<Integer> HUNTER_DEFAULT_OUTFIT_COLOR = new ValueConfig<>(HUNTER, "default-outfit-color", Integer.class);
     public static final AbstractConfig<Boolean> HUNTER_TEAMMATE_OUTLINE = new ValueConfig<>(HUNTER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> HUNTER_HIDE_NAME_TAG = new ValueConfig<>(HUNTER, "hide-name-tag", Boolean.class);
+    public static final AbstractConfig<Boolean> HUNTER_OWN_TEAM_COLLISION = new ValueConfig<>(HUNTER, "own-team-collision", Boolean.class);
     public static final AbstractConfig<Boolean> HUNTER_ALLOW_CLASS_CHANGE_ON_RESPAWN = new ValueConfig<>(HUNTER, "allow-class-change-on-respawn", Boolean.class);
 
     private static final AbstractConfig<ConfigurationSection> RUNNER = new ValueConfig<>("runner", ConfigurationSection.class);
     public static final AbstractConfig<Integer> RUNNER_DEFAULT_OUTFIT_COLOR = new ValueConfig<>(RUNNER, "default-outfit-color", Integer.class);
     public static final AbstractConfig<Boolean> RUNNER_TEAMMATE_OUTLINE = new ValueConfig<>(RUNNER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_HIDE_NAME_TAG = new ValueConfig<>(RUNNER, "hide-name-tag", Boolean.class);
-    public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_RUNNER = new ValueConfig<>(RUNNER, "collision-with-runner", Boolean.class);
-    public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_HUNTER = new ValueConfig<>(RUNNER, "collision-with-hunter", Boolean.class);
+    public static final AbstractConfig<Boolean> RUNNER_OWN_TEAM_COLLISION = new ValueConfig<>(RUNNER, "own-team-collision", Boolean.class);
+    public static final AbstractConfig<Boolean> RUNNER_OTHER_TEAM_COLLISION = new ValueConfig<>(RUNNER, "other-team-collision", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_ALLOW_CLASS_CHANGE_ON_RESPAWN = new ValueConfig<>(RUNNER, "allow-class-change-on-respawn", Boolean.class);
 
 

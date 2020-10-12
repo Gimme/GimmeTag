@@ -75,16 +75,22 @@ scoring:
 hunter:
   # Default color of leather armor, or -1 for no default armor.
   default-outfit-color: 0xFF0000
+  # See teammates with an outline through walls.
   teammate-outline: true
+  # No name tag above head that can be seen through walls.
   hide-name-tag: true
+  # Allow collision between teammates.
+  own-team-collision: false
+  # Class changes additionally take effect on respawn.
   allow-class-change-on-respawn: true
 
 runner:
   default-outfit-color: -1
   teammate-outline: true
   hide-name-tag: true
-  collision-with-runner: true
-  collision-with-hunter: false
+  own-team-collision: true
+  # Allow collision with hunters.
+  other-team-collision: false
   allow-class-change-on-respawn: true
 
 
