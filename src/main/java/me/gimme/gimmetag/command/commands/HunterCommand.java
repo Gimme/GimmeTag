@@ -9,12 +9,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class HunterCommand extends BaseCommand {
 
-    private TagManager tagManager;
+    private final TagManager tagManager;
 
     public HunterCommand(@NotNull TagManager tagManager) {
         super("hunter");
 
-        addAlias("h");
         setPlayerOnly(true);
         setDescription("Mark yourself as hunter for the next round");
 

@@ -18,14 +18,16 @@ import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public final class GimmeTag extends JavaPlugin {
 
-    public static final String PERMISSIONS_PATH = "gimmetag";
     public static final String TAG_COMMAND = "tag";
+    public static final String PERMISSIONS_PATH = "gimmetag";
+    public static final String DEV_PERMISSIONS_PATH = PERMISSIONS_PATH + ".dev";
 
     private static final String PROTOCOL_LIB_NAME = "ProtocolLib";
 
@@ -45,6 +47,10 @@ public final class GimmeTag extends JavaPlugin {
         saveDefaultConfig();
         ConfigurationSerialization.registerClass(RoleClass.class);
 
+        init();
+    }
+
+    private void init() {
         commandManager = new CommandManager(this);
         itemManager = new ItemManager(this);
         classSelectionManager = new ClassSelectionManager(this, itemManager);
@@ -53,11 +59,24 @@ public final class GimmeTag extends JavaPlugin {
         registerCommands();
         registerEvents();
         registerCustomItems();
+
+        getLogger().info("Loaded!");
     }
 
     @Override
     public void onDisable() {
         tagManager.onDisable();
+    }
+
+    public void reload() {
+        getLogger().info("Reloading...");
+
+        onDisable();
+        getServer().getScheduler().cancelTasks(this);
+        HandlerList.unregisterAll(this);
+
+        reloadConfig();
+        init();
     }
 
     private void registerCommands() {
@@ -72,6 +91,7 @@ public final class GimmeTag extends JavaPlugin {
         registerCommand(new SuicideCommand());
         registerCommand(new GiveCommand(getServer(), itemManager));
         registerCommand(new ClassCommand(classSelectionManager));
+        registerCommand(new ReloadCommand(this));
         registerCommand(new TestCommand());
     }
 

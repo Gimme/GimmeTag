@@ -9,12 +9,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class RunnerCommand extends BaseCommand {
 
-    private TagManager tagManager;
+    private final TagManager tagManager;
 
     public RunnerCommand(@NotNull TagManager tagManager) {
         super("runner");
 
-        addAlias("r");
         setPlayerOnly(true);
         setDescription("Mark yourself as runner for the next round");
 
