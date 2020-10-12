@@ -165,7 +165,7 @@ public class BouncyProjectile implements Listener {
      */
     public void explode() {
         Projectile projectile = getCurrentProjectile();
-        if (explosionSound != null) explosionSound.play(projectile.getLocation());
+        if (explosionSound != null) explosionSound.playAt(projectile.getLocation());
 
         if (onExplode != null) {
             Location location = projectile.getLocation().clone();

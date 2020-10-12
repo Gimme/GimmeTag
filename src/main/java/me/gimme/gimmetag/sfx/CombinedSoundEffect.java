@@ -20,24 +20,24 @@ class CombinedSoundEffect extends SoundEffect {
     }
 
     @Override
-    public void playLocal(@NotNull Player player, @NotNull Location location) {
+    public void play(@NotNull Player player, @NotNull Location location) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (SoundEffect soundEffect : soundEffects) {
-                    soundEffect.playLocal(player, location);
+                    soundEffect.play(player, location);
                 }
             }
         }.runTaskLater(GimmeTag.getPlugin(), delayTicks);
     }
 
     @Override
-    public void play(@NotNull Location location) {
+    public void playAt(@NotNull Location location) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 for (SoundEffect soundEffect : soundEffects) {
-                    soundEffect.play(location);
+                    soundEffect.playAt(location);
                 }
             }
         }.runTaskLater(GimmeTag.getPlugin(), delayTicks);

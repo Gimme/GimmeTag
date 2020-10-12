@@ -16,8 +16,8 @@ public abstract class SoundEffect implements PlayableSound {
      *
      * @param player the player to play the sound effect for
      */
-    public void playLocal(@NotNull Player player) {
-        playLocal(player, getFrontOfPlayer(player));
+    public void play(@NotNull Player player) {
+        play(player, getFrontOfPlayer(player));
     }
 
     /**
@@ -26,7 +26,7 @@ public abstract class SoundEffect implements PlayableSound {
      * @param player   the player to play the sound effect for
      * @param location the location to play the sound at
      */
-    public abstract void playLocal(@NotNull Player player, @NotNull Location location);
+    public abstract void play(@NotNull Player player, @NotNull Location location);
 
     /**
      * Plays this sound effect at the specified player's location.
@@ -35,8 +35,8 @@ public abstract class SoundEffect implements PlayableSound {
      *
      * @param player the player whose location to play the sound effect at
      */
-    public void play(@NotNull Player player) {
-        play(getFrontOfPlayer(player));
+    public void playAt(@NotNull Player player) {
+        playAt(getFrontOfPlayer(player));
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class SoundEffect implements PlayableSound {
      *
      * @param location the location to play the sound effect at
      */
-    public abstract void play(@NotNull Location location);
+    public abstract void playAt(@NotNull Location location);
 
     private static Location getFrontOfPlayer(@NotNull Player player) {
         return player.getLocation().add(player.getLocation().getDirection().multiply(0.5));

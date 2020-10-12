@@ -6,12 +6,14 @@ import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Represents a custom item that can be used to create item stacks with continuous abilities tied to them.
@@ -65,7 +67,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
             if (toggleable) {
                 if (glowWhenActive) setGlowing(itemStack, false);
 
-                SoundEffects.DEACTIVATE.play(user);
+                SoundEffects.DEACTIVATE.playAt(user);
                 return true;
             }
         }

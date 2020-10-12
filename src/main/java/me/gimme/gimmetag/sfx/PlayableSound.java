@@ -14,5 +14,5 @@ public interface PlayableSound {
      *
      * @param location the location to play the sound at
      */
-    void play(@NotNull Location location);
+    void playAt(@NotNull Location location);
 }

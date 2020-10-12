@@ -4,14 +4,22 @@ import me.gimme.gimmetag.config.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.BouncyProjectileItem;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.tag.TagManager;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class SwapperBall extends BouncyProjectileItem {
 
@@ -74,6 +82,6 @@ public class SwapperBall extends BouncyProjectileItem {
 
 
     private static void playSound(@NotNull Player player) {
-        SoundEffects.TELEPORT.play(player);
+        SoundEffects.TELEPORT.playAt(player);
     }
 }

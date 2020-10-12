@@ -209,7 +209,7 @@ public class TagManager implements Listener {
                             .map(server::getPlayer)
                             .filter(Objects::nonNull)
                             .forEach(p -> {
-                                SoundEffects.COUNTDOWN.playLocal(p);
+                                SoundEffects.COUNTDOWN.play(p);
                                 if (Role.RUNNER == getRole(p)) p.sendTitle("", getSeconds() + "", 0, 25, 10);
                             });
                 }
@@ -221,7 +221,7 @@ public class TagManager implements Listener {
                         .map(server::getPlayer)
                         .filter(Objects::nonNull)
                         .forEach(p -> {
-                            SoundEffects.COUNTDOWN_FINISH.playLocal(p);
+                            SoundEffects.COUNTDOWN_FINISH.play(p);
                             if (Role.RUNNER == getRole(p)) p.sendTitle("", "They're coming!", 0, 25, 10);
                         });
             }

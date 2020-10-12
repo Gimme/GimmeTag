@@ -18,12 +18,12 @@ class NoteSoundEffect extends SoundEffect {
     }
 
     @Override
-    public void playLocal(@NotNull Player player, @NotNull Location location) {
+    public void play(@NotNull Player player, @NotNull Location location) {
         player.playNote(location, instrument, note);
     }
 
     @Override
-    public void play(@NotNull Location location) {
+    public void playAt(@NotNull Location location) {
         for (Player p : Objects.requireNonNull(location.getWorld()).getPlayers()) {
             p.playNote(location, instrument, note);
         }

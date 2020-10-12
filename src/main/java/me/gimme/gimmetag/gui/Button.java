@@ -29,7 +29,7 @@ public class Button extends ItemView {
     @Override
     void click(@NotNull Player clicker) {
         if (onClick == null) return;
-        if (soundEffect != null) soundEffect.playLocal(clicker);
+        if (soundEffect != null) soundEffect.play(clicker);
         onClick.accept(clicker);
     }
 }

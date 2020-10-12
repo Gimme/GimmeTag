@@ -42,12 +42,12 @@ public class StandardSoundEffect extends SoundEffect {
     }
 
     @Override
-    public void playLocal(@NotNull Player player, @NotNull Location location) {
+    public void play(@NotNull Player player, @NotNull Location location) {
         player.playSound(location, sound, soundCategory, volume, pitch);
     }
 
     @Override
-    public void play(@NotNull Location location) {
+    public void playAt(@NotNull Location location) {
         Objects.requireNonNull(location.getWorld()).playSound(location, sound, soundCategory, volume, pitch);
     }
 }

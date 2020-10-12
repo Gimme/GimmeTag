@@ -31,15 +31,15 @@ public class EventEffects implements Listener {
         Player hunter = event.getHunter();
         Player runner = event.getRunner();
 
-        SoundEffects.TAG.playLocal(hunter);
-        SoundEffects.TAGGED.playLocal(runner);
+        SoundEffects.TAG.play(hunter);
+        SoundEffects.TAGGED.play(runner);
 
         server.broadcastMessage(Role.HUNTER.playerDisplayName(runner) + " was tagged!");
         for (Player p : server.getOnlinePlayers()) {
             if (p.getUniqueId().equals(runner.getUniqueId())) continue;
             if (p.getUniqueId().equals(hunter.getUniqueId())) continue;
 
-            SoundEffects.TAG_BROADCAST.playLocal(p);
+            SoundEffects.TAG_BROADCAST.play(p);
         }
 
         // Lightning visual
@@ -56,7 +56,7 @@ public class EventEffects implements Listener {
             if (pLocation.distanceSquared(location) > offset * offset) {
                 location = pLocation.add(location.subtract(pLocation).toVector().normalize().multiply(offset));
             }
-            SoundEffects.GLOBAL_THUNDER.playLocal(p, location);
+            SoundEffects.GLOBAL_THUNDER.play(p, location);
         }
     }
 
@@ -79,8 +79,8 @@ public class EventEffects implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     private void onTagStart(TagStartEvent event) {
         for (Player player : server.getOnlinePlayers()) {
-            if (event.getHunters().contains(player.getUniqueId())) SoundEffects.HUNTER_GAME_START.playLocal(player);
-            else if (event.getRunners().contains(player.getUniqueId())) SoundEffects.RUNNER_GAME_START.playLocal(player);
+            if (event.getHunters().contains(player.getUniqueId())) SoundEffects.HUNTER_GAME_START.play(player);
+            else if (event.getRunners().contains(player.getUniqueId())) SoundEffects.RUNNER_GAME_START.play(player);
         }
     }
 
@@ -92,10 +92,10 @@ public class EventEffects implements Listener {
         Player winner = event.getWinner();
         if (winner == null) return;
 
-        SoundEffects.GAME_OVER_WIN.playLocal(winner);
+        SoundEffects.GAME_OVER_WIN.play(winner);
         for (Player player : server.getOnlinePlayers()) {
             if (player.getUniqueId().equals(winner.getUniqueId())) continue;
-            SoundEffects.GAME_OVER.playLocal(player);
+            SoundEffects.GAME_OVER.play(player);
         }
     }
 }

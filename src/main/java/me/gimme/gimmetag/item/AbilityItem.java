@@ -129,7 +129,7 @@ public abstract class AbilityItem extends CustomItem {
         if (cooldownTicks > 0) user.setCooldown(itemStack.getType(), cooldownTicks);
         if (useResponseMessage != null && !useResponseMessage.isEmpty())
             user.sendMessage(USE_RESPONSE_MESSAGE_FORMAT + useResponseMessage);
-        if (useSound != null) useSound.play(user);
+        if (useSound != null) useSound.playAt(user);
 
         return true;
     }
