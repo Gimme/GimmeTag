@@ -98,7 +98,7 @@ runner-classes:
       dash: 1
       egg: 5
   - ==: RoleClass
-    name: Swapper
+    name: Enderman
     icon: ender_pearl
     items:
       swapper_ball: 1

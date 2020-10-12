@@ -446,17 +446,7 @@ public class TagManager implements Listener {
      * @param clearCooldowns if the cooldowns of the added items should be cleared
      */
     private void setInventory(@NotNull Player player, @NotNull Role role, boolean clearCooldowns) {
-        RoleClass roleClass = classSelectionManager.getRoleClass(player, role);
-        if (role == Role.HUNTER) {
-            if (roleClass == null) {
-                roleClass = ClassSelectionManager.EMPTY_HUNTER_CLASS;
-            }
-            if (roleClass.getColors() == null) {
-                for (ArmorSlot armorSlot : ArmorSlot.values()) {
-                    roleClass.setColor(armorSlot, Color.fromRGB(Config.HUNTER_DEFAULT_OUTFIT_COLOR.getValue()));
-                }
-            }
-        }
+        RoleClass roleClass = classSelectionManager.getRoleClassOrDefault(player, role);
         inventorySupplier.setInventory(player.getInventory(), roleClass, clearCooldowns);
     }
 

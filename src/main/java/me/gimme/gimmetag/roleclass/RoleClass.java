@@ -20,7 +20,7 @@ public class RoleClass implements ConfigurationSerializable {
     @NotNull
     private final String name;
     @Nullable
-    private final Material icon;
+    private Material icon;
     @NotNull
     private final Map<String, Integer> items;
     @Nullable
@@ -36,6 +36,10 @@ public class RoleClass implements ConfigurationSerializable {
     @NotNull
     public String getName() {
         return name;
+    }
+
+    public void setIcon(@Nullable Material icon) {
+        this.icon = icon;
     }
 
     @Nullable
