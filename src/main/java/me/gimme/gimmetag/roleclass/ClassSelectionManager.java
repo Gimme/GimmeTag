@@ -54,7 +54,7 @@ public class ClassSelectionManager {
                 }
             }
 
-            classes.computeIfAbsent(Role.RUNNER, k -> new ArrayList<>()).add(roleClass);
+            classes.computeIfAbsent(Role.HUNTER, k -> new ArrayList<>()).add(roleClass);
         }
 
         String defaultRunnerClassName = Config.DEFAULT_RUNNER_CLASS.getValue();
