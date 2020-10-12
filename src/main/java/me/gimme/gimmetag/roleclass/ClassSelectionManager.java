@@ -112,6 +112,9 @@ public class ClassSelectionManager {
 
     private void selectClass(@NotNull Player player, @NotNull Role role, @NotNull RoleClass roleClass) {
         playerSelectedClasses.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>()).put(role, roleClass);
+
+        String format = "" + ChatColor.GRAY + ChatColor.ITALIC;
+        player.sendMessage(format + "Selected " + role.getDisplayName() + format + " class: " + roleClass.getName());
     }
 
 
