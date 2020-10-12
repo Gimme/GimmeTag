@@ -25,6 +25,8 @@ permissions:
   gimmetag.tag:
     description: Can use tag commands
     default: true
+  gimmetag.tag.class:
+    default: true
   gimmetag.tag.hunter:
     default: true
   gimmetag.tag.runner:
