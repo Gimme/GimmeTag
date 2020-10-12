@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.gui;
 
+import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -19,9 +20,8 @@ import java.util.UUID;
 
 public class InventoryGUI implements Listener {
 
-    public final Button BACK_BUTTON = new Button("Go Back", Material.RED_WOOL, null, this::back);
-
     private final NavigationManager navigation = new NavigationManager();
+    private final Button backButton = new Button("Go Back", Material.RED_WOOL, null, this::back, SoundEffects.CLICK_DECLINE);
 
     public InventoryGUI(@NotNull Plugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -42,6 +42,11 @@ public class InventoryGUI implements Listener {
 
     public void clearNavigationHistory(@NotNull Player player) {
         navigation.clearHistory(player);
+    }
+
+    @NotNull
+    public Button getBackButton() {
+        return backButton;
     }
 
     @EventHandler

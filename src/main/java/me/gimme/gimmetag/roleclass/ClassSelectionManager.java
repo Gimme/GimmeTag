@@ -3,6 +3,7 @@ package me.gimme.gimmetag.roleclass;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.gui.*;
 import me.gimme.gimmetag.item.ItemManager;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.tag.ArmorSlot;
 import me.gimme.gimmetag.tag.InventorySupplier;
 import me.gimme.gimmetag.tag.Role;
@@ -118,36 +119,43 @@ public class ClassSelectionManager {
     }
 
 
-    private GUIView createRoleClassView(@NotNull RoleClass roleClass, @NotNull Role role) {
-        return new GUIViewBuilder()
-                .setTitle("Inventory")
-                .addButtons(
-                        new Button("Choose", Material.LIME_WOOL, null, player -> {
-                            selectClass(player, role, roleClass);
-                            openClassSelectionMenu(player);
-                        }),
-                        gui.BACK_BUTTON
-                )
-                .setItemViews(inventorySupplier.getItems(roleClass.getItemMap()).toArray(new ItemStack[0]))
-                .build();
-    }
-
     private GUIView createClassesView(@NotNull Role role, @NotNull Player player) {
-        RoleClass currentClass = getRoleClassOrDefault(player, role);
+        RoleClass selectedClass = getRoleClass(player, role);
 
         return new GUIViewBuilder()
-                .setTitle("Select a " + role.getDisplayName() + " Class: " + currentClass.getName())
-                .addButton(gui.BACK_BUTTON)
+                .setTitle(role.getDisplayName() + ": " + (selectedClass != null
+                        ? selectedClass.getName()
+                        : "Select a Class"))
+                .addButton(gui.getBackButton())
                 .addButton(ItemView.EMPTY)
                 .addButtons(
                         classes.get(role).stream()
                                 .map(c -> {
                                     assert c.getIcon() != null;
                                     return new Button(c.getName(), c.getIcon(),
-                                            null, p -> gui.open(createRoleClassView(c, role), p));
+                                            null, p -> gui.open(createRoleClassView(c, role, c != selectedClass), p));
                                 })
                                 .toArray(Button[]::new)
                 )
+                .build();
+    }
+
+    private GUIView createRoleClassView(@NotNull RoleClass roleClass, @NotNull Role role, boolean selectable) {
+        String chooseButtonTitle = "Choose";
+        Button chooseButton =
+                selectable ?
+                        new Button(chooseButtonTitle, Material.LIME_WOOL, null, player -> {
+                            selectClass(player, role, roleClass);
+                            openClassSelectionMenu(player);
+                        }, SoundEffects.CLICK_ACCEPT)
+                        : new Button(ChatColor.GRAY + chooseButtonTitle, Material.LIGHT_GRAY_WOOL, null, null);
+        return new GUIViewBuilder()
+                .setTitle(roleClass.getName() + ": Items")
+                .addButtons(
+                        chooseButton,
+                        gui.getBackButton()
+                )
+                .setItemViews(inventorySupplier.getItems(roleClass.getItemMap()).toArray(new ItemStack[0]))
                 .build();
     }
 }

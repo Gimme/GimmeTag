@@ -13,6 +13,14 @@ public abstract class SoundEffects {
     public static final SoundEffect GLOBAL_THUNDER = new StandardSoundEffect(Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1000000f, 1.4f);
 
 
+    // UI
+
+    private static final float UI_CLICK_VOLUME = 0.25f;
+    public static final SoundEffect CLICK = new StandardSoundEffect(Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, UI_CLICK_VOLUME);
+    public static final SoundEffect CLICK_ACCEPT = CLICK;
+    public static final SoundEffect CLICK_DECLINE = new StandardSoundEffect(Sound.UI_BUTTON_CLICK, SoundCategory.MASTER, UI_CLICK_VOLUME, 0.80f);
+
+
     // ITEM SOUNDS
 
     public static final SoundEffect USE_EFFECT = new StandardSoundEffect(Sound.ENTITY_ZOMBIE_INFECT, SoundCategory.NEUTRAL, SoundEffect.DEFAULT_VOLUME, 1.4f);
