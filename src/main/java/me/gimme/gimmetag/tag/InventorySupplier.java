@@ -7,7 +7,10 @@ import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.roleclass.RoleClass;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -104,6 +107,10 @@ public class InventorySupplier {
 
         meta.setColor(color);
         meta.setUnbreakable(true);
+        // Remove armor stats
+        meta.addAttributeModifier(Attribute.GENERIC_ARMOR, new AttributeModifier("", 0, AttributeModifier.Operation.ADD_NUMBER));
+        // Hide info text
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
 
         armor.setItemMeta(meta);
 
