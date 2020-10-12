@@ -41,9 +41,12 @@ public class InventorySupplier {
         if (roleClass == null) return;
         addItems(inventory, roleClass.getItemMap(), clearCooldowns);
 
-        if (roleClass.getColors() != null) roleClass.getColors().forEach(
-                (armorSlot, color) -> armorSlot.equip(inventory, getColoredLeatherArmor(armorSlot, color))
-        );
+        for (ArmorSlot armorSlot : ArmorSlot.values()) {
+            Color color = roleClass.getColor(armorSlot);
+            if (color == null) continue;
+
+            armorSlot.equip(inventory, getColoredLeatherArmor(armorSlot, color));
+        }
     }
 
     private void addItems(@NotNull PlayerInventory inventory, Map<String, Integer> items, boolean clearCooldowns) {

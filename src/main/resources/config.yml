@@ -73,12 +73,14 @@ scoring:
 # ---------- TEAMS ----------
 
 hunter:
+  # Default color of leather armor, or -1 for no default armor.
   default-outfit-color: 0xFF0000
   teammate-outline: true
   hide-name-tag: true
   allow-class-change-on-respawn: true
 
 runner:
+  default-outfit-color: -1
   teammate-outline: true
   hide-name-tag: true
   collision-with-runner: true
@@ -121,6 +123,10 @@ hunter-classes:
   - ==: RoleClass
     name: Pyke
     icon: trident
+    color: 0x800000
+    colors:
+      HEAD: 0x000000
+      LEGS: 0x000000
     items:
       hunter_compass: 1
       hunter_speed_boost: 1
@@ -135,6 +141,7 @@ hunter-classes:
   - ==: RoleClass
     name: Spy
     icon: ender_eye
+    color: 0x000000
     items:
       spy_eye: 1
       hunter_speed_boost: 1

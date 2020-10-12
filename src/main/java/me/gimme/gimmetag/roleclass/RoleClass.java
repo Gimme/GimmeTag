@@ -15,22 +15,25 @@ import java.util.stream.Collectors;
 
 @SerializableAs("RoleClass")
 public class RoleClass implements ConfigurationSerializable {
-    public static final String DEFAULT_CLASS_NAME = "-";
+    private static final String DEFAULT_CLASS_NAME = "-";
 
     @NotNull
     private final String name;
     @Nullable
     private Material icon;
-    @NotNull
-    private final Map<String, Integer> items;
+    @Nullable
+    private Color color;
     @Nullable
     private Map<ArmorSlot, Color> colors;
+    @NotNull
+    private final Map<String, Integer> items;
 
-    public RoleClass(@NotNull String name, @Nullable Material icon, @NotNull Map<String, Integer> items, @Nullable Map<ArmorSlot, Color> colors) {
+    public RoleClass(@NotNull String name, @Nullable Material icon, @Nullable Color color, @Nullable Map<ArmorSlot, Color> colors, @NotNull Map<String, Integer> items) {
         this.name = name;
         this.icon = icon;
-        this.items = items;
+        this.color = color;
         this.colors = colors;
+        this.items = items;
     }
 
     @NotNull
@@ -47,9 +50,18 @@ public class RoleClass implements ConfigurationSerializable {
         return icon;
     }
 
-    @NotNull
-    public Map<String, Integer> getItemMap() {
-        return items;
+    public void setColor(@Nullable Color color) {
+        this.color = color;
+    }
+
+    @Nullable
+    public Color getColor() {
+        return color;
+    }
+
+    @Nullable
+    public Color getColor(@NotNull ArmorSlot armorSlot) {
+        return colors != null ? colors.getOrDefault(armorSlot, color) : color;
     }
 
     public void setColor(@NotNull ArmorSlot armorSlot, @NotNull Color color) {
@@ -62,11 +74,17 @@ public class RoleClass implements ConfigurationSerializable {
         return colors;
     }
 
+    @NotNull
+    public Map<String, Integer> getItemMap() {
+        return items;
+    }
+
 
     private static final String NAME = "name";
     private static final String ICON = "icon";
-    private static final String ITEMS = "items";
+    private static final String COLOR = "color";
     private static final String COLORS = "colors";
+    private static final String ITEMS = "items";
 
     @Override
     @NotNull
@@ -76,8 +94,9 @@ public class RoleClass implements ConfigurationSerializable {
 
         map.put(NAME, name);
         if (icon != null) map.put(ICON, icon.name());
-        map.put(ITEMS, items);
+        map.put(COLOR, color);
         map.put(COLORS, colors);
+        map.put(ITEMS, items);
 
         return map;
     }
@@ -96,8 +115,8 @@ public class RoleClass implements ConfigurationSerializable {
         String iconName = (String) args.get(ICON);
         Material icon = iconName != null ? Material.getMaterial(iconName.toUpperCase()) : null;
 
-        Map<String, Integer> items = ((Map<String, Integer>) args.get(ITEMS));
-        if (items == null) items = new HashMap<>();
+        Integer hexColor = (Integer) args.get(COLOR);
+        Color color = hexColor != null ? Color.fromRGB(hexColor) : null;
 
         Map<String, Integer> hexColors = ((Map<String, Integer>) args.get(COLORS));
         Map<ArmorSlot, Color> colors = null;
@@ -108,6 +127,9 @@ public class RoleClass implements ConfigurationSerializable {
             ));
         }
 
-        return new RoleClass(name, icon, items, colors);
+        Map<String, Integer> items = ((Map<String, Integer>) args.get(ITEMS));
+        if (items == null) items = new HashMap<>();
+
+        return new RoleClass(name, icon, color, colors, items);
     }
 }

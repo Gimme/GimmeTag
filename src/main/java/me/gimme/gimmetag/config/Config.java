@@ -45,6 +45,7 @@ public abstract class Config {
     public static final AbstractConfig<Boolean> HUNTER_ALLOW_CLASS_CHANGE_ON_RESPAWN = new ValueConfig<>(HUNTER, "allow-class-change-on-respawn", Boolean.class);
 
     private static final AbstractConfig<ConfigurationSection> RUNNER = new ValueConfig<>("runner", ConfigurationSection.class);
+    public static final AbstractConfig<Integer> RUNNER_DEFAULT_OUTFIT_COLOR = new ValueConfig<>(RUNNER, "default-outfit-color", Integer.class);
     public static final AbstractConfig<Boolean> RUNNER_TEAMMATE_OUTLINE = new ValueConfig<>(RUNNER, "teammate-outline", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_HIDE_NAME_TAG = new ValueConfig<>(RUNNER, "hide-name-tag", Boolean.class);
     public static final AbstractConfig<Boolean> RUNNER_COLLISION_WITH_RUNNER = new ValueConfig<>(RUNNER, "collision-with-runner", Boolean.class);

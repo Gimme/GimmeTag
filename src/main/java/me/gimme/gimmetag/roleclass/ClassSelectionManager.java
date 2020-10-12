@@ -4,7 +4,6 @@ import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.gui.*;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.sfx.SoundEffects;
-import me.gimme.gimmetag.tag.ArmorSlot;
 import me.gimme.gimmetag.tag.InventorySupplier;
 import me.gimme.gimmetag.tag.Role;
 import org.bukkit.ChatColor;
@@ -20,8 +19,8 @@ import java.util.*;
 
 public class ClassSelectionManager {
 
-    private static final RoleClass EMPTY_RUNNER_CLASS = new RoleClass("-", null, new HashMap<>(), null);
-    private static final RoleClass EMPTY_HUNTER_CLASS = new RoleClass("-", null, new HashMap<>(), null);
+    private static final RoleClass EMPTY_RUNNER_CLASS = new RoleClass("-", null, null, null, new HashMap<>());
+    private static final RoleClass EMPTY_HUNTER_CLASS = new RoleClass("-", null, null, null, new HashMap<>());
 
     private static final Material DEFAULT_RUNNER_ICON = Material.PLAYER_HEAD;
     private static final Material DEFAULT_HUNTER_ICON = Material.WITHER_SKELETON_SKULL;
@@ -40,23 +39,25 @@ public class ClassSelectionManager {
         this.gui = new InventoryGUI(plugin);
         this.inventorySupplier = new InventorySupplier(itemManager);
 
+
+        int runnerHexColor = Config.RUNNER_DEFAULT_OUTFIT_COLOR.getValue();
+        Color defaultRunnerOutfitColor = runnerHexColor < 0 ? null : Color.fromRGB(runnerHexColor);
         for (RoleClass roleClass : Config.RUNNER_CLASSES.getValue()) {
             if (roleClass.getIcon() == null) roleClass.setIcon(DEFAULT_RUNNER_ICON);
+            if (roleClass.getColor() == null) roleClass.setColor(defaultRunnerOutfitColor);
 
             classes.computeIfAbsent(Role.RUNNER, k -> new ArrayList<>()).add(roleClass);
         }
+
+        int hunterHexColor = Config.HUNTER_DEFAULT_OUTFIT_COLOR.getValue();
+        Color defaultHunterOutfitColor = hunterHexColor < 0 ? null : Color.fromRGB(hunterHexColor);
         for (RoleClass roleClass : Config.HUNTER_CLASSES.getValue()) {
             if (roleClass.getIcon() == null) roleClass.setIcon(DEFAULT_HUNTER_ICON);
-
-            if (roleClass.getColors() == null) {
-                // Default outfit
-                for (ArmorSlot armorSlot : ArmorSlot.values()) {
-                    roleClass.setColor(armorSlot, Color.fromRGB(Config.HUNTER_DEFAULT_OUTFIT_COLOR.getValue()));
-                }
-            }
+            if (roleClass.getColor() == null) roleClass.setColor(defaultHunterOutfitColor);
 
             classes.computeIfAbsent(Role.HUNTER, k -> new ArrayList<>()).add(roleClass);
         }
+
 
         String defaultRunnerClassName = Config.DEFAULT_RUNNER_CLASS.getValue();
         Optional<RoleClass> defaultRunnerClass = classes.get(Role.RUNNER).stream()
@@ -67,15 +68,15 @@ public class ClassSelectionManager {
                 .filter(c -> ChatColor.stripColor(c.getName()).equalsIgnoreCase(ChatColor.stripColor(defaultHunterClassName)))
                 .findFirst();
 
-        defaultClassByRole.put(Role.RUNNER, defaultRunnerClass.orElse(null));
+        defaultClassByRole.put(Role.RUNNER, defaultRunnerClass.orElse(EMPTY_RUNNER_CLASS));
         defaultClassByRole.put(Role.HUNTER, defaultHunterClass.orElse(EMPTY_HUNTER_CLASS));
 
         mainMenuView = new GUIViewBuilder()
                 .setTitle("Class Selection")
                 .addButtons(
-                        new Button(Role.RUNNER.getDisplayName(), DEFAULT_RUNNER_ICON, Collections.singletonList("Go to " + Role.RUNNER.getDisplayName() + " class selection"),
+                        new Button(Role.RUNNER.getDisplayName(), DEFAULT_RUNNER_ICON, Collections.singletonList(Role.RUNNER.getDisplayName() + " classes"),
                                 player -> gui.open(createClassesView(Role.RUNNER, player), player)),
-                        new Button(Role.HUNTER.getDisplayName(), DEFAULT_HUNTER_ICON, Collections.singletonList("Go to " + Role.HUNTER.getDisplayName() + " class selection"),
+                        new Button(Role.HUNTER.getDisplayName(), DEFAULT_HUNTER_ICON, Collections.singletonList(Role.HUNTER.getDisplayName() + " classes"),
                                 player -> gui.open(createClassesView(Role.HUNTER, player), player))
                 ).build();
     }
@@ -103,12 +104,7 @@ public class ClassSelectionManager {
 
     @NotNull
     public RoleClass getDefaultRoleClass(@NotNull Role role) {
-        RoleClass roleClass = defaultClassByRole.get(role);
-        if (roleClass == null) {
-            if (role == Role.HUNTER) roleClass = EMPTY_HUNTER_CLASS;
-            else roleClass = EMPTY_RUNNER_CLASS;
-        }
-        return roleClass;
+        return Objects.requireNonNull(defaultClassByRole.get(role));
     }
 
     private void selectClass(@NotNull Player player, @NotNull Role role, @NotNull RoleClass roleClass) {
