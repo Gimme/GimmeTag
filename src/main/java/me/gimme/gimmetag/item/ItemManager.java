@@ -1,5 +1,6 @@
 package me.gimme.gimmetag.item;
 
+import me.gimme.gimmetag.utils.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -81,7 +82,7 @@ public class ItemManager {
 
             // Don't use if clicked an interactable block while not sneaking
             Block clickedBlock = event.getClickedBlock();
-            if (clickedBlock != null && clickedBlock.getType().isInteractable() && !event.getPlayer().isSneaking())
+            if (clickedBlock != null && Materials.isInteractable(clickedBlock.getType()) && !event.getPlayer().isSneaking())
                 return;
 
             // Use the ability
