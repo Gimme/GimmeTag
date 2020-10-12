@@ -1,7 +1,5 @@
 package me.gimme.gimmetag.tag;
 
-import me.gimme.gimmecore.util.ChatTableBuilder;
-import me.gimme.gimmecore.util.TableBuilder;
 import me.gimme.gimmetag.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Keeps and displays the scores of players in an active round of tag.
@@ -65,11 +62,13 @@ public class TagScoreboard implements Listener {
         if (Config.RUNNER_HIDE_NAME_TAG.getValue())
             runnersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
         if (Config.RUNNER_COLLISION_WITH_RUNNER.getValue() && Config.RUNNER_COLLISION_WITH_HUNTER.getValue()) {
-            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.ALWAYS);
         } else if (Config.RUNNER_COLLISION_WITH_RUNNER.getValue()) {
             runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
         } else if (Config.RUNNER_COLLISION_WITH_HUNTER.getValue()) {
             runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
+        } else {
+            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         }
 
         objective = scoreboard.registerNewObjective(OBJECTIVE_NAME, OBJECTIVE_CRITERIA, OBJECTIVE_DISPLAyNAME, RenderType.INTEGER);
