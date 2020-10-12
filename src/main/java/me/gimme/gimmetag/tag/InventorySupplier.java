@@ -1,14 +1,13 @@
 package me.gimme.gimmetag.tag;
 
 import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.extension.BindingCurse;
 import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.roleclass.RoleClass;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -105,10 +104,11 @@ public class InventorySupplier {
 
         meta.setColor(color);
         meta.setUnbreakable(true);
-        meta.addEnchant(Enchantment.BINDING_CURSE, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         armor.setItemMeta(meta);
+
+        BindingCurse.setBindingCurse(armor, true);
+
         return armor;
     }
 }

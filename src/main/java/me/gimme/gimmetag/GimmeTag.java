@@ -109,6 +109,7 @@ public final class GimmeTag extends JavaPlugin {
         else getLogger().warning(PROTOCOL_LIB_NAME + " is needed to show team outlines.");
         registerEvents(new SoulboundItems());
         registerEvents(new SleepStun(tagManager));
+        registerEvents(new BindingCurse());
     }
 
     private void registerCustomItems() {
