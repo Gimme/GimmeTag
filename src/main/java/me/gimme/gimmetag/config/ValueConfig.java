@@ -10,13 +10,13 @@ class ValueConfig<T> extends AbstractConfig<T> {
         super(parent, path, cls);
     }
 
-    ValueConfig(@NotNull String path, @NotNull Class<? extends T> cls) {
-        super(path, cls);
+    ValueConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path, @NotNull Class<? extends T> cls) {
+        super(configurationSection, path, cls);
     }
 
     @NotNull
     @Override
     public T getValue() {
-        return (T) Objects.requireNonNull(getConfig().getObject(path, Object.class));
+        return (T) Objects.requireNonNull(getConfigurationSection().getObject(getPath(), Object.class));
     }
 }

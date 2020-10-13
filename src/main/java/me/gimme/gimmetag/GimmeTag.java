@@ -33,6 +33,12 @@ public final class GimmeTag extends JavaPlugin {
 
     private static final String PROTOCOL_LIB_NAME = "ProtocolLib";
 
+    private static final String CLASSES_CONFIG_PATH = "classes.yml";
+    private static final String ITEMS_CONFIG_PATH = "items.yml";
+
+    private YamlConfiguration classesConfig;
+    private YamlConfiguration itemsConfig;
+
     private CommandManager commandManager;
     private ItemManager itemManager;
     private TagManager tagManager;
@@ -46,13 +52,16 @@ public final class GimmeTag extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig();
         ConfigurationSerialization.registerClass(RoleClass.class);
 
         init();
     }
 
     private void init() {
+        saveDefaultConfig();
+        classesConfig = ConfigUtils.getYamlConfig(this, CLASSES_CONFIG_PATH);
+        itemsConfig = ConfigUtils.getYamlConfig(this, ITEMS_CONFIG_PATH);
+
         commandManager = new CommandManager(this);
         itemManager = new ItemManager(this);
         classSelectionManager = new ClassSelectionManager(this, itemManager);
@@ -163,5 +172,15 @@ public final class GimmeTag extends JavaPlugin {
     public static GimmeTag getInstance() {
         if (instance == null) throw new IllegalStateException("Plugin has not been enabled yet");
         return instance;
+    }
+
+    @NotNull
+    public YamlConfiguration getClassesConfig() {
+        return classesConfig;
+    }
+
+    @NotNull
+    public YamlConfiguration getItemsConfig() {
+        return itemsConfig;
     }
 }

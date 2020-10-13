@@ -32,8 +32,8 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
         this.defaultConfig = defaultConfig;
     }
 
-    BouncyProjectileConfig(@NotNull String path, @Nullable BouncyProjectileConfig defaultConfig) {
-        super(path);
+    BouncyProjectileConfig(@NotNull ConfigurationSection parent, @NotNull String path, @Nullable BouncyProjectileConfig defaultConfig) {
+        super(parent, path);
         this.defaultConfig = defaultConfig;
     }
 

@@ -1,0 +1,58 @@
+# ---------- CLASSES ----------
+
+default-runner-class: Speedy
+runner-classes:
+  - ==: RoleClass
+    name: Speedy
+    icon: sugar
+    items:
+      dash: 1
+      egg: 5
+  - ==: RoleClass
+    name: Enderman
+    icon: ender_pearl
+    items:
+      swapper_ball: 1
+      chorus_fruit: 3
+  - ==: RoleClass
+    name: Stealthy
+    icon: clay_ball
+    items:
+      smoke_grenade: 1
+      invis_potion: 1
+  - ==: RoleClass
+    name: Alchemist
+    icon: potion
+    items:
+      balloon_grenade: 1
+      invis_potion: 1
+
+default-hunter-class: Pyke
+hunter-classes:
+  - ==: RoleClass
+    name: Pyke
+    icon: trident
+    color: 0x800000
+    colors:
+      HEAD: 0x000000
+      LEGS: 0x000000
+    items:
+      hunter_compass: 1
+      hunter_speed_boost: 1
+      pykes_hook: 1
+  - ==: RoleClass
+    name: Impulse
+    icon: heart_of_the_sea
+    items:
+      hunter_radar: 1
+      hunter_speed_boost: 1
+      impulse_grenade: 1
+  - ==: RoleClass
+    name: Spy
+    icon: ender_eye
+    color: 0x000000
+    items:
+      spy_eye: 1
+      hunter_speed_boost: 1
+      hunter_bow: 1
+      arrow: 1

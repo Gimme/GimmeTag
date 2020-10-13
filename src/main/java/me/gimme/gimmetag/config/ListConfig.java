@@ -11,13 +11,13 @@ class ListConfig<T> extends AbstractConfig<List<T>> {
         super(parent, path, null);
     }
 
-    ListConfig(@NotNull String path) {
-        super(path, null);
+    ListConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
+        super(configurationSection, path, null);
     }
 
     @NotNull
     @Override
     public List<T> getValue() {
-        return (List<T>) Objects.requireNonNull(getConfig().getList(path));
+        return (List<T>) Objects.requireNonNull(getConfigurationSection().getList(getPath()));
     }
 }

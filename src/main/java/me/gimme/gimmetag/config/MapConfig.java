@@ -12,14 +12,14 @@ class MapConfig<T> extends AbstractConfig<Map<String, T>> {
         super(parent, path, null);
     }
 
-    MapConfig(@NotNull String path) {
-        super(path, null);
+    MapConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
+        super(configurationSection, path, null);
     }
 
     @NotNull
     @Override
     public Map<String, T> getValue() {
-        return Objects.requireNonNull(getConfig().getConfigurationSection(path)).getValues(false).entrySet()
+        return Objects.requireNonNull(getConfigurationSection().getConfigurationSection(getPath())).getValues(false).entrySet()
                 .stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (T) e.getValue()));
     }
 }

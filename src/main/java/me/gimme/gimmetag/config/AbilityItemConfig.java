@@ -1,7 +1,6 @@
 package me.gimme.gimmetag.config;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
@@ -11,16 +10,12 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
     private static final String DURATION_PATH = "duration";
     private static final String LEVEL_PATH = "level";
 
-    public AbilityItemConfig(@NotNull ConfigurationSection parent, @NotNull String path) {
-        this(FileConfiguration.createPath(parent, path));
-    }
-
     AbilityItemConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
         super(parent, path, ConfigurationSection.class);
     }
 
-    AbilityItemConfig(@NotNull String path) {
-        super(path, ConfigurationSection.class);
+    public AbilityItemConfig(@NotNull ConfigurationSection parent, @NotNull String path) {
+        super(parent, path, ConfigurationSection.class);
     }
 
     public double getCooldown() {
