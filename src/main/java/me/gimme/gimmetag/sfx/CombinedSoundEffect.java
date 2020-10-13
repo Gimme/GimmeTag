@@ -28,7 +28,7 @@ class CombinedSoundEffect extends SoundEffect {
                     soundEffect.play(player, location);
                 }
             }
-        }.runTaskLater(GimmeTag.getPlugin(), delayTicks);
+        }.runTaskLater(GimmeTag.getInstance(), delayTicks);
     }
 
     @Override
@@ -40,6 +40,6 @@ class CombinedSoundEffect extends SoundEffect {
                     soundEffect.playAt(location);
                 }
             }
-        }.runTaskLater(GimmeTag.getPlugin(), delayTicks);
+        }.runTaskLater(GimmeTag.getInstance(), delayTicks);
     }
 }

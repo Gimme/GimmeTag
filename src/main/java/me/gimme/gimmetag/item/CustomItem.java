@@ -22,8 +22,8 @@ import java.util.*;
  */
 public abstract class CustomItem {
 
-    private static final NamespacedKey ID_KEY = new NamespacedKey(GimmeTag.getPlugin(), "custom_item_id");
-    private static final NamespacedKey SOULBOUND_KEY = new NamespacedKey(GimmeTag.getPlugin(), "soulbound");
+    private static final NamespacedKey ID_KEY = new NamespacedKey(GimmeTag.getInstance(), "custom_item_id");
+    private static final NamespacedKey SOULBOUND_KEY = new NamespacedKey(GimmeTag.getInstance(), "soulbound");
     private static final PersistentDataType<String, String> ID_DATA_TYPE = PersistentDataType.STRING;
     private static final PersistentDataType<String, String> SOULBOUND_DATA_TYPE = PersistentDataType.STRING;
 

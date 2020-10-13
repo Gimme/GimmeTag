@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class AbstractConfig<T> {
 
     private static List<AbstractConfig<?>> values = new ArrayList<>();
-    private Plugin plugin = GimmeTag.getPlugin();
+    private Plugin plugin = GimmeTag.getInstance();
 
     protected String path;
     protected Class<? extends T> cls;

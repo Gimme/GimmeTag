@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BindingCurse implements Listener {
 
-    private static final NamespacedKey BINDING_CURSE_KEY = new NamespacedKey(GimmeTag.getPlugin(), "binding_curse");
+    private static final NamespacedKey BINDING_CURSE_KEY = new NamespacedKey(GimmeTag.getInstance(), "binding_curse");
     private static final PersistentDataType<Integer, Integer> BINDING_CURSE_DATA_TYPE = PersistentDataType.INTEGER;
 
     /**

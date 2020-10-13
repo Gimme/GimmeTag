@@ -211,7 +211,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
         @NotNull
         ContinuousAbilityItem.ItemOngoingUseTaskTimer start() {
-            runTaskTimer(GimmeTag.getPlugin(), 0, 1);
+            runTaskTimer(GimmeTag.getInstance(), 0, 1);
             return this;
         }
 

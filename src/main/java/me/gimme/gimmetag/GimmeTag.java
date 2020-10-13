@@ -1,6 +1,7 @@
 package me.gimme.gimmetag;
 
 import me.gimme.gimmecore.command.CommandManager;
+import me.gimme.gimmecore.util.ConfigUtils;
 import me.gimme.gimmetag.command.ArgPlaceholder;
 import me.gimme.gimmetag.command.commands.*;
 import me.gimme.gimmetag.config.AbilityItemConfig;
@@ -16,6 +17,7 @@ import me.gimme.gimmetag.roleclass.ClassSelectionManager;
 import me.gimme.gimmetag.roleclass.RoleClass;
 import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -157,8 +159,9 @@ public final class GimmeTag extends JavaPlugin {
 
     private static GimmeTag instance;
 
-    public static GimmeTag getPlugin() {
-        if (instance == null) throw new IllegalStateException("Plugin has not been initialized yet");
+    @NotNull
+    public static GimmeTag getInstance() {
+        if (instance == null) throw new IllegalStateException("Plugin has not been enabled yet");
         return instance;
     }
 }
