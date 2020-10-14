@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 
 public class ClassSelectionManager {
 
-    private static final RoleClass EMPTY_RUNNER_CLASS = new RoleClass("-", null, null, null, new HashMap<>());
-    private static final RoleClass EMPTY_HUNTER_CLASS = new RoleClass("-", null, null, null, new HashMap<>());
+    private static final RoleClass EMPTY_RUNNER_CLASS = new RoleClass("-", null, null, null, null, new HashMap<>());
+    private static final RoleClass EMPTY_HUNTER_CLASS = new RoleClass("-", null, null, null, null, new HashMap<>());
 
     private static final Material DEFAULT_RUNNER_ICON = Material.PLAYER_HEAD;
     private static final Material DEFAULT_HUNTER_ICON = Material.WITHER_SKELETON_SKULL;
@@ -41,7 +41,7 @@ public class ClassSelectionManager {
         this.inventorySupplier = new InventorySupplier(itemManager);
 
 
-        Map<String, RoleClass> roleClasses = Config.CLASSES.getValue().stream().collect(Collectors.toMap(RoleClass::getName, r -> r));
+        Map<String, RoleClass> roleClasses = Config.CLASSES.getValue().stream().collect(Collectors.toMap(r -> r.getName().toLowerCase(), r -> r));
 
         int runnerHexColor = Config.RUNNER_DEFAULT_OUTFIT_COLOR.getValue();
         Color defaultRunnerOutfitColor = runnerHexColor < 0 ? null : Color.fromRGB(runnerHexColor);
@@ -59,7 +59,7 @@ public class ClassSelectionManager {
         Color defaultHunterOutfitColor = hunterHexColor < 0 ? null : Color.fromRGB(hunterHexColor);
 
         for (String roleClassName : Config.HUNTER_CLASSES.getValue()) {
-            RoleClass roleClass = roleClasses.get(roleClassName);
+            RoleClass roleClass = roleClasses.get(roleClassName.toLowerCase());
             if (roleClass == null) continue;
             if (roleClass.getIcon() == null) roleClass.setIcon(DEFAULT_HUNTER_ICON);
             if (roleClass.getColor() == null) roleClass.setColor(defaultHunterOutfitColor);

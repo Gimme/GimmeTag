@@ -21,7 +21,7 @@ public class RoleClass implements ConfigurationSerializable {
     @NotNull
     private final String name;
     @NotNull
-    private final String displayName;
+    private final String format;
     @Nullable
     private Material icon;
     @Nullable
@@ -31,9 +31,9 @@ public class RoleClass implements ConfigurationSerializable {
     @NotNull
     private final Map<String, Integer> items;
 
-    public RoleClass(@NotNull String name, @Nullable Material icon, @Nullable Color color, @Nullable Map<ArmorSlot, Color> colors, @NotNull Map<String, Integer> items) {
-        this.displayName = name;
-        this.name = ChatColor.stripColor(name).toLowerCase();
+    public RoleClass(@NotNull String name, @Nullable String format, @Nullable Material icon, @Nullable Color color, @Nullable Map<ArmorSlot, Color> colors, @NotNull Map<String, Integer> items) {
+        this.name = ChatColor.stripColor(name);
+        this.format = format != null ? format : "";
         this.icon = icon;
         this.color = color;
         this.colors = colors;
@@ -47,7 +47,7 @@ public class RoleClass implements ConfigurationSerializable {
 
     @NotNull
     public String getDisplayName() {
-        return displayName;
+        return format + name;
     }
 
     public void setIcon(@Nullable Material icon) {
@@ -104,6 +104,7 @@ public class RoleClass implements ConfigurationSerializable {
 
 
     private static final String NAME = "name";
+    private static final String FORMAT = "format";
     private static final String ICON = "icon";
     private static final String COLOR = "color";
     private static final String COLORS = "colors";
@@ -135,6 +136,8 @@ public class RoleClass implements ConfigurationSerializable {
         String name = (String) args.get(NAME);
         if (name == null) name = DEFAULT_CLASS_NAME;
 
+        String format = (String) args.get(FORMAT);
+
         String iconName = (String) args.get(ICON);
         Material icon = iconName != null ? Material.getMaterial(iconName.toUpperCase()) : null;
 
@@ -153,6 +156,6 @@ public class RoleClass implements ConfigurationSerializable {
         Map<String, Integer> items = ((Map<String, Integer>) args.get(ITEMS));
         if (items == null) items = new HashMap<>();
 
-        return new RoleClass(name, icon, color, colors, items);
+        return new RoleClass(name, format, icon, color, colors, items);
     }
 }
