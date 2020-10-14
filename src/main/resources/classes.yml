@@ -1,7 +1,23 @@
-# ---------- CLASSES ----------
+runner-classes:
+  - Speedy
+  - Enderman
+  - Stealthy
+  - Alchemist
+
+hunter-classes:
+  - Pyke
+  - Impulse
+  - Spy
 
 default-runner-class: Speedy
-runner-classes:
+default-hunter-class: Pyke
+
+
+
+# ---------- CLASSES ----------
+
+classes:
+  # RUNNER
   - ==: RoleClass
     name: Speedy
     icon: sugar
@@ -27,8 +43,7 @@ runner-classes:
       balloon_grenade: 1
       invis_potion: 1
 
-default-hunter-class: Pyke
-hunter-classes:
+  # HUNTER
   - ==: RoleClass
     name: Pyke
     icon: trident

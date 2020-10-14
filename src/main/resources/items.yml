@@ -1,0 +1,131 @@
+# ---------- CUSTOM ITEM SETTINGS ----------
+
+# If custom items should be unusable by other people than the first owner. Useful to prevent players from trading abilities.
+soulbound-items: true
+
+
+
+# Settings for some of the various custom items.
+#
+# TODO: explain all parameters
+custom-item:
+  speed-boosts:
+    hunter_speed_boost:
+      cooldown: 15.0
+      duration: 5.0
+      level: 1
+    dash:
+      cooldown: 10.0
+      duration: 0.2
+      level: 50
+
+  invis_potion:
+    duration: 10.0
+
+  balloon_grenade:
+    consumable: true
+    cooldown: 0.0
+    duration: 7.0
+    level: 1
+
+  hunter_compass:
+    cooldown: 0.5
+    # -1: Infinite.
+    # 0: Point to the current runner location as of activation.
+    duration: -1
+
+  hunter_radar:
+    cooldown: 0.5
+    # -1: Infinite.
+    # 0: Show current distance as of activation.
+    duration: -1
+
+  spy_eye:
+    cooldown: 60.0
+    # -1: Infinite.
+    duration: 3.0
+    # Strength of the self slow effect.
+    level: 6
+    # If the user should glow to others during the effect.
+    self-glow: true
+
+
+  # PROJECTILES
+
+  pykes_hook:
+    cooldown: 10.0
+    speed: 0.5
+    ground-explosion-timer: 1.0
+    sticky: true
+    consume-on-direct-hit: true
+    # Pull strength
+    power: 2
+
+  swapper_ball:
+    cooldown: 20.0
+    speed: 1.0
+    ground-explosion-timer: 2.0
+    restitution-factor: 0.6
+    friction-factor: 0.9
+    consume-on-direct-hit: true
+    allow-hunter-swap: true
+
+  smoke_grenade:
+    cooldown: 30.0
+    # How long the smoke shroud lasts.
+    duration: 10.0
+    speed: 0.45
+    max-explosion-timer: 4.0
+    # The radius of the smoke area.
+    radius: 5.0
+    # Thickness of the smoke cloud.
+    power: 1.0
+    direct-hit-damage: 0.001
+    # Default color of the smoke.
+    color: 0xFFFFFF
+    # If the smoke should be the color of the user's team.
+    use-team-color: true
+
+  impulse_grenade:
+    cooldown: 20.0
+    speed: 0.8
+    sticky: true
+    radius: 6.0
+    # The power of the impulse.
+    power: 3.0
+
+# Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
+#
+# Despite the name, the projectiles do not need to be bouncy. With sticky=true, ground-explosion-timer=0 and
+# consume-on-direct-hit=true, it acts like a normal snowball would when it hits something.
+default-bouncy-projectile:
+  # Initial speed of the projectile, where 1.0 is the standard.
+  speed: 0.8
+  # The y-velocity decrease per tick, where 0.028 is the standard (works best for client-side prediction, reducing lag).
+  gravity: 0.028
+  # Max travel time before explosion.
+  max-explosion-timer: 20.0
+  # Time after the bouncing stops before explosion.
+  ground-explosion-timer: 0.5
+  # 1 means lossless bounces and 0 means no bounciness.
+  restitution-factor: 0.45
+  # 1 is slippery and 0 is sticky.
+  friction-factor: 0.8
+  # If the projectile should stick to the first surface it hits.
+  sticky: false
+  # If the projectile should be followed by a trail.
+  trail: true
+  # If the bounces should leave behind visible marks for a short duration.
+  bounce-marks: true
+  # If the projectile should have an outline that can be seen through walls (only seen by the thrower).
+  glowing: true
+  # The radius of the explosion effect.
+  radius: 5.0
+  # The power of the explosion effect. The meaning varies but generally refers to the main effect's potency.
+  power: 1.0
+  # Damage dealt on direct hits to entities. Anything above 0 carries a knockback.
+  direct-hit-damage: 0.0
+  # If the projectile should disappear when it hits an entity.
+  consume-on-direct-hit: false
+  # If the explosion effect should affect players from the same team.
+  friendly-fire: false

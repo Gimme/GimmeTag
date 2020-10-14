@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.roleclass;
 
 import me.gimme.gimmetag.tag.ArmorSlot;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Utility;
@@ -19,6 +20,8 @@ public class RoleClass implements ConfigurationSerializable {
 
     @NotNull
     private final String name;
+    @NotNull
+    private final String displayName;
     @Nullable
     private Material icon;
     @Nullable
@@ -29,7 +32,8 @@ public class RoleClass implements ConfigurationSerializable {
     private final Map<String, Integer> items;
 
     public RoleClass(@NotNull String name, @Nullable Material icon, @Nullable Color color, @Nullable Map<ArmorSlot, Color> colors, @NotNull Map<String, Integer> items) {
-        this.name = name;
+        this.displayName = name;
+        this.name = ChatColor.stripColor(name).toLowerCase();
         this.icon = icon;
         this.color = color;
         this.colors = colors;
@@ -39,6 +43,11 @@ public class RoleClass implements ConfigurationSerializable {
     @NotNull
     public String getName() {
         return name;
+    }
+
+    @NotNull
+    public String getDisplayName() {
+        return displayName;
     }
 
     public void setIcon(@Nullable Material icon) {
@@ -77,6 +86,20 @@ public class RoleClass implements ConfigurationSerializable {
     @NotNull
     public Map<String, Integer> getItemMap() {
         return items;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj.getClass() != getClass()) return false;
+
+        final RoleClass other = (RoleClass) obj;
+        return !getName().equals(other.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
     }
 
 

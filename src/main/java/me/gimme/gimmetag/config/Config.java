@@ -59,16 +59,16 @@ public abstract class Config {
     public static final AbstractConfig<Boolean> RUNNER_ALLOW_CLASS_CHANGE_ON_RESPAWN = new ValueConfig<>(RUNNER, "allow-class-change-on-respawn", Boolean.class);
 
 
+    public static final AbstractConfig<List<String>> RUNNER_CLASSES = new ListConfig<>(CLASSES_CONFIG, "runner-classes");
+    public static final AbstractConfig<List<String>> HUNTER_CLASSES = new ListConfig<>(CLASSES_CONFIG, "hunter-classes");
     public static final AbstractConfig<String> DEFAULT_RUNNER_CLASS = new ValueConfig<>(CLASSES_CONFIG, "default-runner-class", String.class);
     public static final AbstractConfig<String> DEFAULT_HUNTER_CLASS = new ValueConfig<>(CLASSES_CONFIG, "default-hunter-class", String.class);
-    public static final AbstractConfig<List<RoleClass>> RUNNER_CLASSES = new ListConfig<>(CLASSES_CONFIG, "runner-classes");
-    public static final AbstractConfig<List<RoleClass>> HUNTER_CLASSES = new ListConfig<>(CLASSES_CONFIG, "hunter-classes");
+    public static final AbstractConfig<List<RoleClass>> CLASSES = new ListConfig<>(CLASSES_CONFIG, "classes");
 
 
-    public static final AbstractConfig<Boolean> SOULBOUND_ITEMS = new ValueConfig<>(CONFIG, "soulbound-items", Boolean.class);
+    public static final AbstractConfig<Boolean> SOULBOUND_ITEMS = new ValueConfig<>(ITEMS_CONFIG, "soulbound-items", Boolean.class);
 
-    private static final AbstractConfig<ConfigurationSection> CUSTOM_ITEM = new ValueConfig<>(CONFIG, "custom-item", ConfigurationSection.class);
-
+    private static final AbstractConfig<ConfigurationSection> CUSTOM_ITEM = new ValueConfig<>(ITEMS_CONFIG, "custom-item", ConfigurationSection.class);
     public static final AbstractConfig<ConfigurationSection> SPEED_BOOSTS = new ValueConfig<>(CUSTOM_ITEM, "speed-boosts", ConfigurationSection.class);
     private static final AbstractConfig<ConfigurationSection> INVIS_POTION = new ValueConfig<>(CUSTOM_ITEM, "invis_potion", ConfigurationSection.class);
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration", Number.class);
@@ -78,7 +78,7 @@ public abstract class Config {
     public static final AbilityItemConfig SPY_EYE = new AbilityItemConfig(CUSTOM_ITEM, "spy_eye");
     public static final AbstractConfig<Boolean> SPY_EYE_SELF_GLOW = new ValueConfig<>(SPY_EYE, "self-glow", Boolean.class);
 
-    private static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig(CONFIG, "default-bouncy-projectile", null);
+    private static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig(ITEMS_CONFIG, "default-bouncy-projectile", null);
     public static final BouncyProjectileConfig PYKES_HOOK = new BouncyProjectileConfig(CUSTOM_ITEM, "pykes_hook", DEFAULT_BOUNCY_PROJECTILE);
     public static final BouncyProjectileConfig SWAPPER_BALL = new BouncyProjectileConfig(CUSTOM_ITEM, "swapper_ball", DEFAULT_BOUNCY_PROJECTILE);
     public static final AbstractConfig<Boolean> SWAPPER_ALLOW_HUNTER_SWAP = new ValueConfig<>(SWAPPER_BALL, "allow-hunter-swap", Boolean.class);

@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ClassSelectionManager {
 
@@ -40,9 +41,14 @@ public class ClassSelectionManager {
         this.inventorySupplier = new InventorySupplier(itemManager);
 
 
+        Map<String, RoleClass> roleClasses = Config.CLASSES.getValue().stream().collect(Collectors.toMap(RoleClass::getName, r -> r));
+
         int runnerHexColor = Config.RUNNER_DEFAULT_OUTFIT_COLOR.getValue();
         Color defaultRunnerOutfitColor = runnerHexColor < 0 ? null : Color.fromRGB(runnerHexColor);
-        for (RoleClass roleClass : Config.RUNNER_CLASSES.getValue()) {
+
+        for (String roleClassName : Config.RUNNER_CLASSES.getValue()) {
+            RoleClass roleClass = roleClasses.get(roleClassName.toLowerCase());
+            if (roleClass == null) continue;
             if (roleClass.getIcon() == null) roleClass.setIcon(DEFAULT_RUNNER_ICON);
             if (roleClass.getColor() == null) roleClass.setColor(defaultRunnerOutfitColor);
 
@@ -51,7 +57,10 @@ public class ClassSelectionManager {
 
         int hunterHexColor = Config.HUNTER_DEFAULT_OUTFIT_COLOR.getValue();
         Color defaultHunterOutfitColor = hunterHexColor < 0 ? null : Color.fromRGB(hunterHexColor);
-        for (RoleClass roleClass : Config.HUNTER_CLASSES.getValue()) {
+
+        for (String roleClassName : Config.HUNTER_CLASSES.getValue()) {
+            RoleClass roleClass = roleClasses.get(roleClassName);
+            if (roleClass == null) continue;
             if (roleClass.getIcon() == null) roleClass.setIcon(DEFAULT_HUNTER_ICON);
             if (roleClass.getColor() == null) roleClass.setColor(defaultHunterOutfitColor);
 
@@ -61,11 +70,11 @@ public class ClassSelectionManager {
 
         String defaultRunnerClassName = Config.DEFAULT_RUNNER_CLASS.getValue();
         Optional<RoleClass> defaultRunnerClass = classes.get(Role.RUNNER).stream()
-                .filter(c -> ChatColor.stripColor(c.getName()).equalsIgnoreCase(ChatColor.stripColor(defaultRunnerClassName)))
+                .filter(c -> c.getName().equalsIgnoreCase(defaultRunnerClassName))
                 .findFirst();
         String defaultHunterClassName = Config.DEFAULT_HUNTER_CLASS.getValue();
         Optional<RoleClass> defaultHunterClass = classes.get(Role.HUNTER).stream()
-                .filter(c -> ChatColor.stripColor(c.getName()).equalsIgnoreCase(ChatColor.stripColor(defaultHunterClassName)))
+                .filter(c -> c.getName().equalsIgnoreCase(defaultHunterClassName))
                 .findFirst();
 
         defaultClassByRole.put(Role.RUNNER, defaultRunnerClass.orElse(EMPTY_RUNNER_CLASS));
@@ -111,7 +120,7 @@ public class ClassSelectionManager {
         playerSelectedClasses.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>()).put(role, roleClass);
 
         String format = "" + ChatColor.GRAY + ChatColor.ITALIC;
-        player.sendMessage(format + "Selected " + role.getDisplayName() + format + " class: " + roleClass.getName());
+        player.sendMessage(format + "Selected " + role.getDisplayName() + format + " class: " + roleClass.getDisplayName());
     }
 
 
@@ -120,7 +129,7 @@ public class ClassSelectionManager {
 
         return new GUIViewBuilder()
                 .setTitle(role.getDisplayName() + ": " + (selectedClass != null
-                        ? selectedClass.getName()
+                        ? selectedClass.getDisplayName()
                         : "Select a Class"))
                 .addButton(gui.getBackButton())
                 .addButton(ItemView.EMPTY)
@@ -128,7 +137,7 @@ public class ClassSelectionManager {
                         classes.get(role).stream()
                                 .map(c -> {
                                     assert c.getIcon() != null;
-                                    return new Button(c.getName(), c.getIcon(),
+                                    return new Button(c.getDisplayName(), c.getIcon(),
                                             null, p -> gui.open(createRoleClassView(c, role, c != selectedClass), p));
                                 })
                                 .toArray(Button[]::new)
@@ -146,7 +155,7 @@ public class ClassSelectionManager {
                         }, SoundEffects.CLICK_ACCEPT)
                         : new Button(ChatColor.GRAY + chooseButtonTitle, Material.LIGHT_GRAY_WOOL, null, null);
         return new GUIViewBuilder()
-                .setTitle(roleClass.getName() + ": Items")
+                .setTitle(roleClass.getDisplayName() + ": Items")
                 .addButtons(
                         chooseButton,
                         gui.getBackButton()
