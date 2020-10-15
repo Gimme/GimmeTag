@@ -15,7 +15,9 @@ custom-item:
       duration: 5.0
       level: 1
     dash:
-      cooldown: 10.0
+      consumable: true
+      cooldown: 5.0
+      recharge: 30.0
       duration: 0.2
       level: 50
 

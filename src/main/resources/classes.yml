@@ -22,7 +22,7 @@ classes:
     name: Speedy
     icon: sugar
     items:
-      dash: 1
+      dash: 3
       egg: 5
   - ==: RoleClass
     name: Enderman

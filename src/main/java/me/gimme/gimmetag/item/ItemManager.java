@@ -56,6 +56,10 @@ public class ItemManager {
         return customItemsById;
     }
 
+    public void onDisable() {
+        abilityItemsById.values().forEach(AbilityItem::onDisable);
+    }
+
 
     private class OnUseListener implements Listener {
         @EventHandler(priority = EventPriority.HIGH)

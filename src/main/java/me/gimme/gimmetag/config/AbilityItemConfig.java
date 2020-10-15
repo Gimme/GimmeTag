@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
 
     private static final String COOLDOWN_PATH = "cooldown";
+    private static final String RECHARGE_TIME_PATH = "recharge";
     private static final String CONSUMABLE_PATH = "consumable";
     private static final String DURATION_PATH = "duration";
     private static final String LEVEL_PATH = "level";
@@ -20,6 +21,10 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
 
     public double getCooldown() {
         return getValue().getDouble(COOLDOWN_PATH);
+    }
+
+    public double getRechargeTime() {
+        return getValue().getDouble(RECHARGE_TIME_PATH);
     }
 
     public boolean isConsumable() {

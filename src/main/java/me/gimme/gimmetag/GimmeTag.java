@@ -77,6 +77,7 @@ public final class GimmeTag extends JavaPlugin {
     @Override
     public void onDisable() {
         tagManager.onDisable();
+        itemManager.onDisable();
     }
 
     public void reload() {

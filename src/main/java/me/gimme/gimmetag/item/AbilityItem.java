@@ -1,7 +1,9 @@
 package me.gimme.gimmetag.item;
 
 import me.gimme.gimmecore.util.RomanNumerals;
+import me.gimme.gimmetag.GimmeTag;
 import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.item.task.RechargeTask;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.Ticks;
@@ -13,8 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents a custom item that can be used to create item stacks with abilities tied to them.
@@ -27,6 +28,7 @@ public abstract class AbilityItem extends CustomItem {
 
     private boolean consumable;
     private int cooldownTicks;
+    private int rechargeTimeTicks;
     private int durationTicks;
     private int level;
 
@@ -35,8 +37,11 @@ public abstract class AbilityItem extends CustomItem {
     @Nullable
     private SoundEffect useSound;
     private boolean showCooldown;
+    private boolean showRechargeTime;
     private boolean showDuration;
     private boolean showLevel;
+
+    private final Map<@NotNull UUID, @NotNull RechargeTask> rechargeTasks = new HashMap<>();
 
     /**
      * Creates a new ability item with the specified name, item type and configuration.
@@ -75,11 +80,13 @@ public abstract class AbilityItem extends CustomItem {
     private void init(@NotNull AbilityItemConfig config) {
         this.consumable = config.isConsumable();
         setCooldown(config.getCooldown());
+        setRechargeTime(config.getRechargeTime());
         this.durationTicks = Ticks.secondsToTicks(config.getDuration());
         this.level = config.getLevel();
 
         this.useSound = SoundEffects.USE_EFFECT;
         showCooldown(cooldownTicks > 0);
+        showRechargeTime(rechargeTimeTicks > 0);
         showDuration(durationTicks > 0);
         showLevel(level > 0);
     }
@@ -108,6 +115,7 @@ public abstract class AbilityItem extends CustomItem {
      */
     @Override
     protected void updateLore(@NotNull ItemStack itemStack, @NotNull List<String> header, @NotNull List<String> footer) {
+        if (showRechargeTime) header.add(0, ChatColor.GRAY + formatSeconds(rechargeTimeTicks) + " Recharge");
         if (showCooldown) header.add(0, ChatColor.GRAY + formatSeconds(cooldownTicks) + " Cooldown");
         super.updateLore(itemStack, header, footer);
     }
@@ -125,8 +133,9 @@ public abstract class AbilityItem extends CustomItem {
         if (user.hasCooldown(itemStack.getType())) return false;
         if (!onUse(itemStack, user)) return false;
 
+        applyCooldown(itemStack, user);
         if (consumable) itemStack.setAmount(itemStack.getAmount() - 1);
-        if (cooldownTicks > 0) user.setCooldown(itemStack.getType(), cooldownTicks);
+
         if (useResponseMessage != null && !useResponseMessage.isEmpty())
             user.sendMessage(USE_RESPONSE_MESSAGE_FORMAT + useResponseMessage);
         if (useSound != null) useSound.playAt(user);
@@ -145,6 +154,38 @@ public abstract class AbilityItem extends CustomItem {
      */
     protected abstract boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user);
 
+    /**
+     * Applies cooldown, or recharge time, to the given item after being used by the specified player.
+     *
+     * @param itemStack the used item stack
+     * @param user      the user of the item
+     */
+    private void applyCooldown(@NotNull ItemStack itemStack, @NotNull Player user) {
+        UUID uuid = user.getUniqueId();
+
+        RechargeTask rechargeTask = rechargeTasks.get(uuid);
+        if (isRechargeable()) {
+            if (rechargeTask != null && !rechargeTask.isCancelled()) {
+                rechargeTask.incrementRecharges();
+            } else {
+                rechargeTask = new RechargeTask(GimmeTag.getInstance(), user, itemStack, getRechargeTime()).start();
+                rechargeTasks.put(uuid, rechargeTask);
+            }
+
+            int amount = itemStack.getAmount();
+            if (amount == 1) {
+                // Keep the final charge in inventory to indicate that it is recharging
+                itemStack.setAmount(amount + 1);
+                rechargeTask.setFinalCharge();
+            }
+        }
+
+        int cd = cooldownTicks;
+        if (rechargeTask != null && rechargeTask.isFinalCharge())
+            cd = Math.max(cd, rechargeTask.getTicksUntilRecharge());
+        if (cd > 0) user.setCooldown(itemStack.getType(), cd);
+    }
+
     void setCooldown(double seconds) {
         this.cooldownTicks = Ticks.secondsToTicks(seconds);
     }
@@ -155,6 +196,18 @@ public abstract class AbilityItem extends CustomItem {
 
     protected int getCooldownTicks() {
         return cooldownTicks;
+    }
+
+    private void setRechargeTime(double seconds) {
+        this.rechargeTimeTicks = Ticks.secondsToTicks(seconds);
+    }
+
+    private double getRechargeTime() {
+        return Ticks.ticksToSeconds(rechargeTimeTicks);
+    }
+
+    protected int getRechargeTimeTicks() {
+        return rechargeTimeTicks;
     }
 
     protected double getDuration() {
@@ -214,6 +267,15 @@ public abstract class AbilityItem extends CustomItem {
     }
 
     /**
+     * Sets if the recharge cooldown of this item should be displayed in the lore.
+     *
+     * @param showRechargeTime if the recharge cooldown should be displayed in the lore
+     */
+    private void showRechargeTime(boolean showRechargeTime) {
+        this.showRechargeTime = showRechargeTime;
+    }
+
+    /**
      * Sets if the duration of this item should be displayed next to the display name.
      *
      * @param showDuration if the duration should be displayed next to the display name
@@ -229,6 +291,22 @@ public abstract class AbilityItem extends CustomItem {
      */
     protected void showLevel(boolean showLevel) {
         this.showLevel = showLevel;
+    }
+
+    /**
+     * Returns if this item is consumable and will recharge consumptions after a delay.
+     *
+     * @return if this item is consumable and will recharge consumptions after a delay
+     */
+    private boolean isRechargeable() {
+        return consumable && rechargeTimeTicks > 0;
+    }
+
+    /**
+     * Cleans up all active tasks for this item.
+     */
+    public void onDisable() {
+        rechargeTasks.values().forEach(RechargeTask::rechargeAll);
     }
 
 
