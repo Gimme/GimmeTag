@@ -12,11 +12,11 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
     private static final String LEVEL_PATH = "level";
 
     AbilityItemConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
-        super(parent, path, ConfigurationSection.class);
+        super(parent, path);
     }
 
     public AbilityItemConfig(@NotNull ConfigurationSection parent, @NotNull String path) {
-        super(parent, path, ConfigurationSection.class);
+        super(parent, path);
     }
 
     public double getCooldown() {

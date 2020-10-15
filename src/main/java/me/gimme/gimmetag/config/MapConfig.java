@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 
 class MapConfig<T> extends AbstractConfig<Map<String, T>> {
     MapConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
-        super(parent, path, null);
+        super(parent, path);
     }
 
     MapConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
-        super(configurationSection, path, null);
+        super(configurationSection, path);
     }
 
     @NotNull

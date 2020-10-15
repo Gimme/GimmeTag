@@ -10,11 +10,11 @@ import java.util.Set;
 
 class SetConfig<T> extends AbstractConfig<Set<T>> {
     SetConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
-        super(parent, path, null);
+        super(parent, path);
     }
 
     SetConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
-        super(configurationSection, path, null);
+        super(configurationSection, path);
     }
 
     @NotNull

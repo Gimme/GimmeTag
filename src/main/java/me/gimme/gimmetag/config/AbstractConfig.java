@@ -13,11 +13,11 @@ public abstract class AbstractConfig<T> {
     private final ConfigurationSection configurationSection;
     private final String path;
 
-    AbstractConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path, Class<? extends T> cls) {
-        this(parent.getValue(), path, cls);
+    AbstractConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
+        this(parent.getValue(), path);
     }
 
-    AbstractConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path, Class<? extends T> cls) { // TODO: can remove cls parameter?
+    AbstractConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
         this.configurationSection = configurationSection;
         this.path = path;
 

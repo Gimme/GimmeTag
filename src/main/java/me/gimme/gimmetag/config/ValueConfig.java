@@ -6,12 +6,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 class ValueConfig<T> extends AbstractConfig<T> {
-    ValueConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path, @NotNull Class<? extends T> cls) {
-        super(parent, path, cls);
+    ValueConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
+        super(parent, path);
     }
 
-    ValueConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path, @NotNull Class<? extends T> cls) {
-        super(configurationSection, path, cls);
+    ValueConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
+        super(configurationSection, path);
     }
 
     @NotNull

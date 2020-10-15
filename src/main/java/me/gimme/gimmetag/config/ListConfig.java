@@ -8,11 +8,11 @@ import java.util.Objects;
 
 class ListConfig<T> extends AbstractConfig<List<T>> {
     ListConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
-        super(parent, path, null);
+        super(parent, path);
     }
 
     ListConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
-        super(configurationSection, path, null);
+        super(configurationSection, path);
     }
 
     @NotNull
