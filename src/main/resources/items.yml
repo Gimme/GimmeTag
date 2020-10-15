@@ -31,16 +31,16 @@ custom-item:
     level: 1
 
   hunter_compass:
-    cooldown: 0.5
+    cooldown: 10.0
     # -1: Infinite.
     # 0: Point to the current runner location as of activation.
-    duration: -1
+    duration: 0.0
 
   hunter_radar:
-    cooldown: 0.5
+    cooldown: 30.0
     # -1: Infinite.
     # 0: Show current distance as of activation.
-    duration: -1
+    duration: 5.0
 
   spy_eye:
     cooldown: 60.0
