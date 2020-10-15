@@ -87,4 +87,5 @@ public abstract class Config {
     public static final AbstractConfig<Integer> SMOKE_GRENADE_COLOR = new ValueConfig<>(SMOKE_GRENADE, "color");
     public static final AbstractConfig<Boolean> SMOKE_GRENADE_USE_TEAM_COLOR = new ValueConfig<>(SMOKE_GRENADE, "use-team-color");
     public static final BouncyProjectileConfig IMPULSE_GRENADE = new BouncyProjectileConfig(CUSTOM_ITEM, "impulse_grenade", DEFAULT_BOUNCY_PROJECTILE);
+    public static final BouncyProjectileConfig COOKED_EGG = new BouncyProjectileConfig(CUSTOM_ITEM, "cooked_egg", DEFAULT_BOUNCY_PROJECTILE);
 }

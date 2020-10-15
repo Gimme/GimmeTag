@@ -24,7 +24,7 @@ classes:
     icon: sugar
     items:
       dash: 3
-      egg: 5
+      cooked_egg: 5
   - ==: RoleClass
     name: Enderman
     format: §5

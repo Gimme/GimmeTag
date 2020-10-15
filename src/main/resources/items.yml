@@ -96,6 +96,18 @@ custom-item:
     # The power of the impulse.
     power: 3.0
 
+  cooked_egg:
+    consumable: true
+    cooldown: 0.0
+    recharge: 10.0
+    speed: 1.0
+    ground-explosion-timer: 0.0
+    sticky: true
+    trail: false
+    bounce-marks: false
+    glowing: false
+    direct-hit-damage: 0.001
+
 # Default values for bouncy projectiles (like smoke grenade), used when the corresponding value is omitted.
 #
 # Despite the name, the projectiles do not need to be bouncy. With sticky=true, ground-explosion-timer=0 and

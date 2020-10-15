@@ -155,6 +155,7 @@ public final class GimmeTag extends JavaPlugin {
                 this
         ));
         itemManager.registerItem(new ImpulseGrenade(Config.IMPULSE_GRENADE, this));
+        itemManager.registerItem(new CookedEgg(Config.COOKED_EGG, this));
         itemManager.registerItem(new PykesHook(
                 Config.PYKES_HOOK,
                 this
