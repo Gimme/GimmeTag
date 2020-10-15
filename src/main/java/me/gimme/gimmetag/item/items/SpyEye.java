@@ -1,10 +1,10 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.item.ContinuousAbilityItem;
 import me.gimme.gimmetag.utils.outline.CollectionOutlineEffect;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -12,7 +12,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * During this item's effect, you can see all other players through walls. As a side effect, you can't move, the screen

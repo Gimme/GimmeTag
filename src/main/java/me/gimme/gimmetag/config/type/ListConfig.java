@@ -1,18 +1,16 @@
-package me.gimme.gimmetag.config;
+package me.gimme.gimmetag.config.type;
 
+import me.gimme.gimmetag.config.AbstractConfig;
+import me.gimme.gimmetag.config.IConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
-class ListConfig<T> extends AbstractConfig<List<T>> {
-    ListConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
+public class ListConfig<T> extends AbstractConfig<List<T>> {
+    public ListConfig(@NotNull IConfig<ConfigurationSection> parent, @NotNull String path) {
         super(parent, path);
-    }
-
-    ListConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
-        super(configurationSection, path);
     }
 
     @NotNull

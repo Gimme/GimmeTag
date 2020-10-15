@@ -1,11 +1,14 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmetag.config.BouncyProjectileConfig;
+import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.BouncyProjectileItem;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.ChatColorConversion;
 import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -17,7 +20,10 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A smoke grenade is a projectile that explodes after landing on the ground and releases a cloud of smoke, which blocks

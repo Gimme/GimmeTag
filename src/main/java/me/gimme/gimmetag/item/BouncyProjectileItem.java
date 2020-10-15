@@ -1,6 +1,6 @@
 package me.gimme.gimmetag.item;
 
-import me.gimme.gimmetag.config.BouncyProjectileConfig;
+import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.sfx.PlayableSound;
 import me.gimme.gimmetag.sfx.SoundEffects;

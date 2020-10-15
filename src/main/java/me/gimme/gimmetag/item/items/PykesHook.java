@@ -1,6 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmetag.config.BouncyProjectileConfig;
+import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.utils.Ticks;

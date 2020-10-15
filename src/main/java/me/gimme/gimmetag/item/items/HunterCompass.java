@@ -1,9 +1,12 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.item.ContinuousAbilityItem;
 import me.gimme.gimmetag.tag.TagManager;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Objects;
 
 public class HunterCompass extends ContinuousAbilityItem {
 

@@ -1,7 +1,7 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmecore.chat.Chat;
-import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.item.ContinuousAbilityItem;
 import me.gimme.gimmetag.tag.TagManager;
 import org.bukkit.ChatColor;

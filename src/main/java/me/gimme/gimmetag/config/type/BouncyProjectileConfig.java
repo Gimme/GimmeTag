@@ -1,5 +1,6 @@
-package me.gimme.gimmetag.config;
+package me.gimme.gimmetag.config.type;
 
+import me.gimme.gimmetag.config.IConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.configuration.ConfigurationSection;
@@ -26,13 +27,8 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     @Nullable
     private final BouncyProjectileConfig defaultConfig;
 
-    BouncyProjectileConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path,
-                           @Nullable BouncyProjectileConfig defaultConfig) {
-        super(parent, path);
-        this.defaultConfig = defaultConfig;
-    }
-
-    BouncyProjectileConfig(@NotNull ConfigurationSection parent, @NotNull String path, @Nullable BouncyProjectileConfig defaultConfig) {
+    public BouncyProjectileConfig(@NotNull IConfig<ConfigurationSection> parent, @NotNull String path,
+                                  @Nullable BouncyProjectileConfig defaultConfig) {
         super(parent, path);
         this.defaultConfig = defaultConfig;
     }

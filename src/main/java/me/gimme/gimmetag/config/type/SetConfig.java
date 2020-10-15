@@ -1,5 +1,7 @@
-package me.gimme.gimmetag.config;
+package me.gimme.gimmetag.config.type;
 
+import me.gimme.gimmetag.config.AbstractConfig;
+import me.gimme.gimmetag.config.IConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,13 +10,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-class SetConfig<T> extends AbstractConfig<Set<T>> {
-    SetConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
+public class SetConfig<T> extends AbstractConfig<Set<T>> {
+    public SetConfig(@NotNull IConfig<ConfigurationSection> parent, @NotNull String path) {
         super(parent, path);
-    }
-
-    SetConfig(@NotNull ConfigurationSection configurationSection, @NotNull String path) {
-        super(configurationSection, path);
     }
 
     @NotNull

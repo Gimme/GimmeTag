@@ -4,8 +4,8 @@ import me.gimme.gimmecore.command.CommandManager;
 import me.gimme.gimmecore.util.ConfigUtils;
 import me.gimme.gimmetag.command.ArgPlaceholder;
 import me.gimme.gimmetag.command.commands.*;
-import me.gimme.gimmetag.config.AbilityItemConfig;
 import me.gimme.gimmetag.config.Config;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.extension.*;
 import me.gimme.gimmetag.gamerule.DisableArrowDamage;
 import me.gimme.gimmetag.gamerule.DisableHunger;
@@ -59,8 +59,8 @@ public final class GimmeTag extends JavaPlugin {
 
     private void init() {
         saveDefaultConfig();
-        classesConfig = ConfigUtils.getYamlConfig(this, CLASSES_CONFIG_PATH);
-        itemsConfig = ConfigUtils.getYamlConfig(this, ITEMS_CONFIG_PATH);
+        ConfigUtils.saveDefaultConfig(this, CLASSES_CONFIG_PATH);
+        ConfigUtils.saveDefaultConfig(this, ITEMS_CONFIG_PATH);
 
         commandManager = new CommandManager(this);
         itemManager = new ItemManager(this);
@@ -88,6 +88,9 @@ public final class GimmeTag extends JavaPlugin {
         HandlerList.unregisterAll(this);
 
         reloadConfig();
+        classesConfig = ConfigUtils.reloadConfig(this, CLASSES_CONFIG_PATH);
+        itemsConfig = ConfigUtils.reloadConfig(this, ITEMS_CONFIG_PATH);
+
         init();
     }
 
@@ -129,7 +132,7 @@ public final class GimmeTag extends JavaPlugin {
         for (String speedBoostId : speedBoostSection.getKeys(false)) {
             itemManager.registerItem(new SpeedBoost(
                     speedBoostId,
-                    new AbilityItemConfig(speedBoostSection, speedBoostId)
+                    new AbilityItemConfig(() -> speedBoostSection, speedBoostId)
             ));
         }
 
@@ -177,11 +180,13 @@ public final class GimmeTag extends JavaPlugin {
 
     @NotNull
     public YamlConfiguration getClassesConfig() {
+        if (classesConfig == null) classesConfig = ConfigUtils.reloadConfig(this, CLASSES_CONFIG_PATH);
         return classesConfig;
     }
 
     @NotNull
     public YamlConfiguration getItemsConfig() {
+        if (itemsConfig == null) itemsConfig = ConfigUtils.reloadConfig(this, ITEMS_CONFIG_PATH);
         return itemsConfig;
     }
 }

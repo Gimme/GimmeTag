@@ -2,7 +2,7 @@ package me.gimme.gimmetag.item;
 
 import me.gimme.gimmecore.util.RomanNumerals;
 import me.gimme.gimmetag.GimmeTag;
-import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.item.task.RechargeTask;
 import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.sfx.SoundEffects;

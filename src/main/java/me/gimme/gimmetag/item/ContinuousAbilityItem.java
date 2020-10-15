@@ -1,7 +1,7 @@
 package me.gimme.gimmetag.item;
 
 import me.gimme.gimmetag.GimmeTag;
-import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

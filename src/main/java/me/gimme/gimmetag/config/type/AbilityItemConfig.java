@@ -1,5 +1,6 @@
-package me.gimme.gimmetag.config;
+package me.gimme.gimmetag.config.type;
 
+import me.gimme.gimmetag.config.IConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
@@ -11,11 +12,7 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
     private static final String DURATION_PATH = "duration";
     private static final String LEVEL_PATH = "level";
 
-    AbilityItemConfig(@NotNull AbstractConfig<ConfigurationSection> parent, @NotNull String path) {
-        super(parent, path);
-    }
-
-    public AbilityItemConfig(@NotNull ConfigurationSection parent, @NotNull String path) {
+    public AbilityItemConfig(@NotNull IConfig<ConfigurationSection> parent, @NotNull String path) {
         super(parent, path);
     }
 

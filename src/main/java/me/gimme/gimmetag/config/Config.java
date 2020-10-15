@@ -1,6 +1,7 @@
 package me.gimme.gimmetag.config;
 
 import me.gimme.gimmetag.GimmeTag;
+import me.gimme.gimmetag.config.type.*;
 import me.gimme.gimmetag.roleclass.RoleClass;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -8,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class Config {
-    private static final AbstractConfig<ConfigurationSection> CONFIG = new ValueConfig<>(GimmeTag.getInstance().getConfig(), "");
-    private static final AbstractConfig<ConfigurationSection> CLASSES_CONFIG = new ValueConfig<>(GimmeTag.getInstance().getClassesConfig(), "");
-    private static final AbstractConfig<ConfigurationSection> ITEMS_CONFIG = new ValueConfig<>(GimmeTag.getInstance().getItemsConfig(), "");
+    private static final IConfig<ConfigurationSection> CONFIG = () -> GimmeTag.getInstance().getConfig();
+    private static final IConfig<ConfigurationSection> CLASSES_CONFIG = () -> GimmeTag.getInstance().getClassesConfig();
+    private static final IConfig<ConfigurationSection> ITEMS_CONFIG = () -> GimmeTag.getInstance().getItemsConfig();
 
 
     public static final AbstractConfig<Boolean> DISABLE_HUNGER = new ValueConfig<>(CONFIG, "disable-hunger");

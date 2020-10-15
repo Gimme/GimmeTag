@@ -22,6 +22,6 @@ public class ReloadCommand extends BaseCommand {
     protected @Nullable String execute(@NotNull CommandSender commandSender, @NotNull String[] strings) throws CommandUsageException {
         plugin.reload();
 
-        return null;
+        return successMessage("[" + plugin.getName() + "] Reload complete.");
     }
 }

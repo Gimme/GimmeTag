@@ -1,6 +1,6 @@
 package me.gimme.gimmetag.item.items;
 
-import me.gimme.gimmetag.config.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.item.AbilityItem;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.Color;
