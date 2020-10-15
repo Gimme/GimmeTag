@@ -20,24 +20,28 @@ classes:
   # RUNNER
   - ==: RoleClass
     name: Speedy
+    format: §e
     icon: sugar
     items:
       dash: 3
       egg: 5
   - ==: RoleClass
     name: Enderman
+    format: §5
     icon: ender_pearl
     items:
       swapper_ball: 1
       chorus_fruit: 3
   - ==: RoleClass
     name: Stealthy
+    format: §8
     icon: clay_ball
     items:
       smoke_grenade: 1
       invis_potion: 1
   - ==: RoleClass
     name: Alchemist
+    format: §d
     icon: potion
     items:
       balloon_grenade: 1
@@ -46,6 +50,7 @@ classes:
   # HUNTER
   - ==: RoleClass
     name: Pyke
+    format: §4
     icon: trident
     color: 0x800000
     colors:
@@ -57,6 +62,7 @@ classes:
       pykes_hook: 1
   - ==: RoleClass
     name: Impulse
+    format: §5
     icon: heart_of_the_sea
     items:
       hunter_radar: 1
@@ -64,6 +70,7 @@ classes:
       impulse_grenade: 1
   - ==: RoleClass
     name: Spy
+    format: §8
     icon: ender_eye
     color: 0x000000
     items:
