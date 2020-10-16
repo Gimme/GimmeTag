@@ -30,15 +30,15 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
     private boolean glowWhenActive;
 
     /**
-     * Creates a new continuous ability item with the specified name, item type and configuration.
+     * Creates a new continuous ability item with the specified name, display name, item type and configuration.
      *
-     * @param name   a unique name and the display name of this item. The name can contain ChatColors and spaces, which
-     *               will be stripped from the name and only be used for the display name.
-     * @param type   the item type of the generated item stacks
-     * @param config a config containing values to be applied to this ability item's variables
+     * @param id          a unique name for this item
+     * @param displayName the display name of this item
+     * @param type        the item type of the generated item stacks
+     * @param config      a config containing values to be applied to this ability item's variables
      */
-    public ContinuousAbilityItem(@NotNull String name, @NotNull Material type, @NotNull AbilityItemConfig config) {
-        super(name, type, config);
+    public ContinuousAbilityItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, @NotNull AbilityItemConfig config) {
+        super(id, displayName, type, config);
 
         if (isInfinite()) {
             showDuration(false);
@@ -48,9 +48,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         }
 
         if (getCooldownTicks() <= 0) setCooldown(0.5d);
-
-        this.glowWhenActive = hasDuration();
-        if (glowWhenActive) disableGlow();
+        setGlowWhenActive(hasDuration());
     }
 
     @NotNull
@@ -121,6 +119,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
 
     protected void setGlowWhenActive(boolean glowWhenActive) {
         this.glowWhenActive = glowWhenActive;
+        if (glowWhenActive) disableGlow();
     }
 
     /**
@@ -165,7 +164,7 @@ public abstract class ContinuousAbilityItem extends AbilityItem {
         private int ticksUntilCalculation;
 
         private ItemOngoingUseTaskTimer(@NotNull Player user, @NotNull ItemStack item, int ticksPerCalculation,
-                                          int durationTicks) {
+                                        int durationTicks) {
             this.user = user;
             this.item = item;
             this.itemSlot = user.getInventory().getHeldItemSlot();

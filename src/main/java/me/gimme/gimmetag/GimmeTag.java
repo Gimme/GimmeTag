@@ -4,8 +4,11 @@ import me.gimme.gimmecore.command.CommandManager;
 import me.gimme.gimmecore.util.ConfigUtils;
 import me.gimme.gimmetag.command.ArgPlaceholder;
 import me.gimme.gimmetag.command.commands.*;
+import me.gimme.gimmetag.config.AbstractConfig;
 import me.gimme.gimmetag.config.Config;
 import me.gimme.gimmetag.config.type.AbilityItemConfig;
+import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
+import me.gimme.gimmetag.config.type.ValueConfig;
 import me.gimme.gimmetag.extension.*;
 import me.gimme.gimmetag.gamerule.DisableArrowDamage;
 import me.gimme.gimmetag.gamerule.DisableHunger;
@@ -24,6 +27,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.BiFunction;
 
 public final class GimmeTag extends JavaPlugin {
 
@@ -128,38 +133,30 @@ public final class GimmeTag extends JavaPlugin {
     }
 
     private void registerCustomItems() {
-        ConfigurationSection speedBoostSection = Config.SPEED_BOOSTS.getValue();
-        for (String speedBoostId : speedBoostSection.getKeys(false)) {
-            itemManager.registerItem(new SpeedBoost(
-                    speedBoostId,
-                    new AbilityItemConfig(() -> speedBoostSection, speedBoostId)
-            ));
-        }
-
-        itemManager.registerItem(new SwapperBall(
-                Config.SWAPPER_BALL,
-                Config.SWAPPER_ALLOW_HUNTER_SWAP.getValue(),
+        registerCustomItem(Config.SPEED_BOOST, (id, c) -> new SpeedBoost(id, new AbilityItemConfig(c)));
+        registerCustomItem(Config.SWAPPER_BALL, (id, c) -> new SwapperBall(
+                id,
+                new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE),
+                Config.SWAPPER_ALLOW_HUNTER_SWAP.getValue(c),
                 this,
                 tagManager
         ));
         itemManager.registerItem(new HunterBow());
-        itemManager.registerItem(new InvisPotion(Config.INVIS_POTION_DURATION.getValue().doubleValue()));
-        itemManager.registerItem(new BalloonGrenade(Config.BALLOON_GRENADE));
-        itemManager.registerItem(new HunterCompass(Config.HUNTER_COMPASS, tagManager));
-        itemManager.registerItem(new HunterRadar(Config.HUNTER_RADAR, tagManager));
-        itemManager.registerItem(new SpyEye(Config.SPY_EYE, Config.SPY_EYE_SELF_GLOW.getValue(), this));
-        itemManager.registerItem(new SmokeGrenade(
-                Config.SMOKE_GRENADE,
-                Config.SMOKE_GRENADE_COLOR.getValue(),
-                Config.SMOKE_GRENADE_USE_TEAM_COLOR.getValue(),
+        registerCustomItem(Config.INVIS_POTION, (id, c) -> new InvisPotion(id, Config.INVIS_POTION_DURATION.getValue(c).doubleValue()));
+        registerCustomItem(Config.BALLOON_GRENADE, (id, c) -> new BalloonGrenade(id, new AbilityItemConfig(c)));
+        registerCustomItem(Config.HUNTER_COMPASS, (id, c) -> new HunterCompass(id, new AbilityItemConfig(c), tagManager));
+        registerCustomItem(Config.HUNTER_RADAR, (id, c) -> new HunterRadar(id, new AbilityItemConfig(c), tagManager));
+        registerCustomItem(Config.SPY_EYE, (id, c) -> new SpyEye(id, new AbilityItemConfig(c), Config.SPY_EYE_SELF_GLOW.getValue(c), this));
+        registerCustomItem(Config.SMOKE_GRENADE, (id, c) -> new SmokeGrenade(
+                id,
+                new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE),
+                Config.SMOKE_GRENADE_COLOR.getValue(c),
+                Config.SMOKE_GRENADE_USE_TEAM_COLOR.getValue(c),
                 this
         ));
-        itemManager.registerItem(new ImpulseGrenade(Config.IMPULSE_GRENADE, this));
-        itemManager.registerItem(new CookedEgg(Config.COOKED_EGG, this));
-        itemManager.registerItem(new PykesHook(
-                Config.PYKES_HOOK,
-                this
-        ));
+        registerCustomItem(Config.IMPULSE_GRENADE, (id, c) -> new ImpulseGrenade(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
+        registerCustomItem(Config.COOKED_EGG, (id, c) -> new CookedEgg(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
+        registerCustomItem(Config.PYKES_HOOK, (id, c) -> new PykesHook(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {
@@ -168,6 +165,25 @@ public final class GimmeTag extends JavaPlugin {
 
     private void registerEvents(Listener listener) {
         getServer().getPluginManager().registerEvents(listener, this);
+    }
+
+    private void registerCustomItem(@NotNull AbstractConfig<ConfigurationSection> config,
+                                    @NotNull BiFunction<@NotNull String, @NotNull ConfigurationSection, @NotNull CustomItem> function) {
+        String path = config.getPath();
+
+        if (config.getValue() != null) {
+            CustomItem customItem = function.apply(path, config.getValue());
+            itemManager.registerItem(customItem);
+        }
+
+        AbstractConfig<ConfigurationSection> multi = new ValueConfig<>(config.getParent(), "_" + path);
+        ConfigurationSection multiSection = multi.getValue();
+        if (multiSection != null) {
+            for (String id : multiSection.getKeys(false)) {
+                CustomItem customItem = function.apply(id, multiSection.getConfigurationSection(id));
+                itemManager.registerItem(customItem);
+            }
+        }
     }
 
 

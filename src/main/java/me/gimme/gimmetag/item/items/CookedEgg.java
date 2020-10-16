@@ -23,8 +23,8 @@ public class CookedEgg extends BouncyProjectileItem {
     private static final String NAME = "Cooked Egg";
     private static final Material MATERIAL = Material.EGG;
 
-    public CookedEgg(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
-        super(NAME, MATERIAL, config, plugin);
+    public CookedEgg(@NotNull String id, @NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
+        super(id, NAME, MATERIAL, config, plugin);
 
         setGlowing(false);
         setDisplayItem(MATERIAL, false);

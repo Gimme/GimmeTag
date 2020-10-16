@@ -32,8 +32,8 @@ public class SpyEye extends ContinuousAbilityItem {
     private final List<PotionEffect> potionEffects;
     private final PotionEffect glowEffect;
 
-    public SpyEye(@NotNull AbilityItemConfig config, boolean selfGlow, @NotNull Plugin plugin) {
-        super(NAME, MATERIAL, config);
+    public SpyEye(@NotNull String id, @NotNull AbilityItemConfig config, boolean selfGlow, @NotNull Plugin plugin) {
+        super(id, NAME, MATERIAL, config);
 
         this.plugin = plugin;
         this.selfGlow = selfGlow;

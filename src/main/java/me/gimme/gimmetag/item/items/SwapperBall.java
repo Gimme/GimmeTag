@@ -30,9 +30,9 @@ public class SwapperBall extends BouncyProjectileItem {
     private final boolean allowHunterSwap;
     private final TagManager tagManager;
 
-    public SwapperBall(@NotNull BouncyProjectileConfig config, boolean allowHunterSwap, @NotNull Plugin plugin,
+    public SwapperBall(@NotNull String id, @NotNull BouncyProjectileConfig config, boolean allowHunterSwap, @NotNull Plugin plugin,
                        @NotNull TagManager tagManager) {
-        super(NAME, MATERIAL, config, plugin);
+        super(id, NAME, MATERIAL, config, plugin);
 
         this.allowHunterSwap = allowHunterSwap;
         this.tagManager = tagManager;

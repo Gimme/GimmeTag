@@ -9,11 +9,11 @@ soulbound-items: true
 #
 # TODO: explain all parameters
 custom-item:
-  speed-boosts:
-    hunter_speed_boost:
-      cooldown: 15.0
-      duration: 5.0
-      level: 1
+  speed_boost:
+    cooldown: 15.0
+    duration: 5.0
+    level: 1
+  _speed_boost:
     dash:
       consumable: true
       cooldown: 5.0

@@ -52,7 +52,7 @@ public abstract class CustomItem {
      * @param type        the item type of the generated item stacks
      */
     public CustomItem(@NotNull String id, @NotNull String displayName, @NotNull Material type) {
-        this.id = ChatColor.stripColor(id).toLowerCase().replaceAll(" ", "_").replaceAll("[^a-z_]", "");
+        this.id = ChatColor.stripColor(id).toLowerCase().replaceAll(" ", "_").replaceAll("[^a-z0-9_]", "");
         this.displayName = displayName;
         this.type = type;
     }

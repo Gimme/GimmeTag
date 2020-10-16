@@ -33,9 +33,9 @@ public abstract class BouncyProjectileItem extends AbilityItem {
     @Nullable
     private PlayableSound explosionSound;
 
-    public BouncyProjectileItem(@NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
+    public BouncyProjectileItem(@NotNull String id, @NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
-        super(name, type, config);
+        super(id, name, type, config);
 
         this.plugin = plugin;
         this.config = config;

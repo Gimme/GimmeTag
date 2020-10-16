@@ -16,31 +16,27 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
         super(parent, path);
     }
 
+    public AbilityItemConfig(@NotNull ConfigurationSection section) {
+        this(section::getParent, section.getName());
+    }
+
     public double getCooldown() {
-        return getValue().getDouble(COOLDOWN_PATH);
+        return getValue().getDouble(COOLDOWN_PATH, 0);
     }
 
     public double getRechargeTime() {
-        return getValue().getDouble(RECHARGE_TIME_PATH);
+        return getValue().getDouble(RECHARGE_TIME_PATH, 0);
     }
 
     public boolean isConsumable() {
-        return getValue().getBoolean(CONSUMABLE_PATH);
+        return getValue().getBoolean(CONSUMABLE_PATH, false);
     }
 
     public double getDuration() {
-        return getValue().getDouble(DURATION_PATH);
+        return getValue().getDouble(DURATION_PATH, 0);
     }
 
     public int getLevel() {
-        return getValue().getInt(LEVEL_PATH);
-    }
-
-    public boolean hasDuration() {
-        return getValue().contains(DURATION_PATH);
-    }
-
-    public boolean hasLevel() {
-        return getValue().contains(LEVEL_PATH);
+        return getValue().getInt(LEVEL_PATH, 0);
     }
 }

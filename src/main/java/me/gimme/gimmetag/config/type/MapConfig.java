@@ -4,9 +4,9 @@ import me.gimme.gimmetag.config.AbstractConfig;
 import me.gimme.gimmetag.config.IConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 class MapConfig<T> extends AbstractConfig<Map<String, T>> {
@@ -14,10 +14,12 @@ class MapConfig<T> extends AbstractConfig<Map<String, T>> {
         super(parent, path);
     }
 
-    @NotNull
     @Override
-    public Map<String, T> getValue() {
-        return Objects.requireNonNull(getConfigurationSection().getConfigurationSection(getPath())).getValues(false).entrySet()
-                .stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (T) e.getValue()));
+    public @Nullable Map<String, T> getValue(@NotNull ConfigurationSection configurationSection) {
+        ConfigurationSection section = configurationSection.getConfigurationSection(getPath());
+        if (section == null) return null;
+
+        return section.getValues(false).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> (T) e.getValue()));
     }
 }

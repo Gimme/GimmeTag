@@ -20,8 +20,8 @@ public class ImpulseGrenade extends BouncyProjectileItem {
     private static final String NAME = "Impulse Grenade";
     private static final Material MATERIAL = Material.HEART_OF_THE_SEA;
 
-    public ImpulseGrenade(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
-        super(NAME, MATERIAL, config, plugin);
+    public ImpulseGrenade(@NotNull String id, @NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
+        super(id, NAME, MATERIAL, config, plugin);
 
         setDisplayItem(MATERIAL, true);
         setExplosionSound(SoundEffects.IMPULSE_EXPLOSION);

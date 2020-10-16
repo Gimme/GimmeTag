@@ -58,7 +58,7 @@ classes:
       LEGS: 0x000000
     items:
       hunter_compass: 1
-      hunter_speed_boost: 1
+      speed_boost: 1
       pykes_hook: 1
   - ==: RoleClass
     name: Impulse
@@ -66,7 +66,7 @@ classes:
     icon: heart_of_the_sea
     items:
       hunter_radar: 1
-      hunter_speed_boost: 1
+      speed_boost: 1
       impulse_grenade: 1
   - ==: RoleClass
     name: Spy
@@ -75,6 +75,6 @@ classes:
     color: 0x000000
     items:
       spy_eye: 1
-      hunter_speed_boost: 1
+      speed_boost: 1
       hunter_bow: 1
       arrow: 1

@@ -53,8 +53,8 @@ public class SmokeGrenade extends BouncyProjectileItem {
     private final int rgb;
     private final boolean useTeamColor;
 
-    public SmokeGrenade(@NotNull BouncyProjectileConfig config, int rgb, boolean useTeamColor, @NotNull Plugin plugin) {
-        super(NAME, MATERIAL, config, plugin);
+    public SmokeGrenade(@NotNull String id, @NotNull BouncyProjectileConfig config, int rgb, boolean useTeamColor, @NotNull Plugin plugin) {
+        super(id, NAME, MATERIAL, config, plugin);
 
         this.plugin = plugin;
         this.particleRadius = getRadius() * PARTICLE_TO_EFFECT_RADIUS_RATIO;

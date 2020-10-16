@@ -32,11 +32,7 @@ public class ItemManager {
             return;
         }
         customItemsById.put(customItem.getId(), customItem);
-    }
-
-    public void registerItem(@NotNull AbilityItem abilityItem) {
-        registerItem((CustomItem) abilityItem);
-        abilityItemsById.put(abilityItem.getId(), abilityItem);
+        if (customItem instanceof AbilityItem) abilityItemsById.put(customItem.getId(), (AbilityItem) customItem);
     }
 
     @Nullable

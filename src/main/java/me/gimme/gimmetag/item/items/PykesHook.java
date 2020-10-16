@@ -35,8 +35,8 @@ public class PykesHook extends CustomItem implements Listener {
     private final int maxTicks;
     private final double power;
 
-    public PykesHook(@NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
-        super(NAME, MATERIAL);
+    public PykesHook(@NotNull String id, @NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
+        super(id, NAME, MATERIAL);
 
         this.plugin = plugin;
         this.config = config;

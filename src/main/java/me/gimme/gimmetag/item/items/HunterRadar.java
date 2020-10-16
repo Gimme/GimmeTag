@@ -22,8 +22,8 @@ public class HunterRadar extends ContinuousAbilityItem {
 
     private final TagManager tagManager;
 
-    public HunterRadar(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
-        super(NAME, MATERIAL, config);
+    public HunterRadar(@NotNull String id, @NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
+        super(id, NAME, MATERIAL, config);
 
         this.tagManager = tagManager;
 

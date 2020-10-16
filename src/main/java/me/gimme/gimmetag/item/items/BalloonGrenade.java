@@ -20,8 +20,8 @@ public class BalloonGrenade extends AbilityItem {
     private static final Material MATERIAL = Material.SPLASH_POTION;
     private static final Color COLOR = Color.fromRGB(137, 208, 229);
 
-    public BalloonGrenade(@NotNull AbilityItemConfig config) {
-        super(NAME, MATERIAL, config);
+    public BalloonGrenade(@NotNull String id, @NotNull AbilityItemConfig config) {
+        super(id, NAME, MATERIAL, config);
 
         setUseSound(SoundEffects.THROW);
     }

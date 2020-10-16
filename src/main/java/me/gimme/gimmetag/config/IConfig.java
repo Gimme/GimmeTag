@@ -1,8 +1,7 @@
 package me.gimme.gimmetag.config;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IConfig<T> {
-    @NotNull
-    T getValue();
+    @Nullable T getValue();
 }

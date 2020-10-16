@@ -25,8 +25,8 @@ public class HunterCompass extends ContinuousAbilityItem {
 
     private final TagManager tagManager;
 
-    public HunterCompass(@NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
-        super(NAME, MATERIAL, config);
+    public HunterCompass(@NotNull String id, @NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
+        super(id, NAME, MATERIAL, config);
 
         this.tagManager = tagManager;
 

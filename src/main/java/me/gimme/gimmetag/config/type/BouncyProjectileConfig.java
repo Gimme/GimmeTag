@@ -33,6 +33,11 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
         this.defaultConfig = defaultConfig;
     }
 
+    public BouncyProjectileConfig(@NotNull ConfigurationSection section, @Nullable BouncyProjectileConfig defaultConfig) {
+        super(section);
+        this.defaultConfig = defaultConfig;
+    }
+
     public double getSpeed() {
         return getValue().getDouble(SPEED_PATH, defaultConfig != null ? defaultConfig.getSpeed() : 0);
     }
