@@ -2,7 +2,6 @@ package me.gimme.gimmetag.item.task;
 
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,21 +16,16 @@ import org.jetbrains.annotations.NotNull;
 public class RechargeTask extends BukkitRunnable {
 
     private final Plugin plugin;
-    private final Player player;
     private final ItemStack itemStack;
-    private final ItemStack charge;
     private final int rechargeTimeTicks;
 
     private int recharges;
     private int ticksUntilRecharge;
     private boolean finalCharge;
 
-    public RechargeTask(@NotNull Plugin plugin, @NotNull Player player, @NotNull ItemStack itemStack, double rechargeTime) {
+    public RechargeTask(@NotNull Plugin plugin, @NotNull ItemStack itemStack, double rechargeTime) {
         this.plugin = plugin;
-        this.player = player;
         this.itemStack = itemStack;
-        this.charge = itemStack.clone();
-        charge.setAmount(1);
         this.rechargeTimeTicks = Ticks.secondsToTicks(rechargeTime);
 
         recharges = 1;
@@ -55,7 +49,7 @@ public class RechargeTask extends BukkitRunnable {
     }
 
     private void recharge() {
-        player.getInventory().addItem(charge);
+        itemStack.setAmount(itemStack.getAmount() + 1);
     }
 
     public void rechargeAll() {

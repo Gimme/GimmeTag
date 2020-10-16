@@ -25,6 +25,7 @@ public class ImpulseGrenade extends BouncyProjectileItem {
 
         setDisplayItem(MATERIAL, true);
         setExplosionSound(SoundEffects.IMPULSE_EXPLOSION);
+        muteHitSound();
     }
 
     @Override

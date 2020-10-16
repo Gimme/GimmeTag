@@ -63,6 +63,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
 
         setDisplayItem(MATERIAL, false);
         setExplosionSound(SoundEffects.SMOKE_EXPLOSION);
+        muteHitSound();
     }
 
     @Override

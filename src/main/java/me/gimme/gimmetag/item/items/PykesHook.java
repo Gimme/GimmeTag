@@ -1,98 +1,43 @@
 package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
-import me.gimme.gimmetag.item.CustomItem;
-import me.gimme.gimmetag.item.entities.BouncyProjectile;
-import me.gimme.gimmetag.utils.Ticks;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import me.gimme.gimmetag.item.BowProjectileItem;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.entity.Trident;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+
 /**
- * A trident that can be thrown and pulls in anyone it hits. Like the League of Legends champion Pyke's Q ability.
+ * A bow whose arrows pull in anyone they hit. Like the League of Legends champion Pyke's Q ability.
  */
-public class PykesHook extends CustomItem implements Listener {
+public class PykesHook extends BowProjectileItem {
 
     private static final String NAME = "Pyke's Hook";
-    private static final Material MATERIAL = Material.TRIDENT;
-    private static final EntityType ENTITY_TYPE = EntityType.TRIDENT;
-
-    private final Plugin plugin;
-
-    private final BouncyProjectileConfig config;
-    private final int cooldownTicks;
-    private final double speed;
-    private final int maxTicks;
-    private final double power;
+    private static final Class<? extends Projectile> PROJECTILE_CLASS = Trident.class;
 
     public PykesHook(@NotNull String id, @NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
-        super(id, NAME, MATERIAL);
+        super(id, NAME, config, plugin);
 
-        this.plugin = plugin;
-        this.config = config;
-        this.cooldownTicks = Ticks.secondsToTicks(config.getCooldown());
-        this.speed = config.getSpeed();
-        this.maxTicks = Ticks.secondsToTicks(config.getMaxExplosionTimer());
-        this.power = config.getPower();
-
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        setProjectileClass(PROJECTILE_CLASS);
     }
 
     @Override
-    protected void onCreate(@NotNull ItemStack itemStack, @NotNull ItemMeta itemMeta) {
+    protected void onExplode(@NotNull Projectile projectile, @NotNull Collection<@NotNull Entity> livingEntities) {
     }
 
-    @EventHandler
-    private void onLaunch(ProjectileLaunchEvent event) {
-        if (event.isCancelled()) return;
+    @Override
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+        Vector velocity = projectile.getVelocity().clone();
+        velocity.setY(0);
+        velocity.normalize();
+        velocity.multiply(-1);
+        velocity.multiply(getPower());
+        velocity.setY(0.5 + 0.01 * getPower());
 
-        Projectile projectile = event.getEntity();
-        ProjectileSource projectileSource = projectile.getShooter();
-
-        if (projectile.getType() != ENTITY_TYPE) return;
-        if (!(projectileSource instanceof Player)) return;
-        Player thrower = (Player) projectileSource;
-
-        ItemStack main = thrower.getInventory().getItemInMainHand();
-        ItemStack off = thrower.getInventory().getItemInOffHand();
-        boolean usedMain = main.getType() == MATERIAL;
-
-        ItemStack usedItemStack = usedMain ? main : off;
-
-        if (!isThisCustomItem(usedItemStack)) return;
-
-        // Re-add the thrown item to the hand
-        if (!config.isConsumable()) {
-            if (usedMain) thrower.getInventory().setItemInMainHand(createItemStack());
-            else thrower.getInventory().setItemInOffHand(createItemStack());
-        }
-
-        thrower.setCooldown(usedItemStack.getType(), cooldownTicks);
-
-        projectile.setVelocity(projectile.getVelocity().multiply(speed));
-
-        BouncyProjectile bouncyProjectile = new BouncyProjectile(plugin, projectile, thrower, maxTicks);
-        BouncyProjectileConfig.init(bouncyProjectile, config);
-
-        bouncyProjectile.setOnHitEntity((p, e) -> {
-            Vector velocity = p.getVelocity().clone();
-            velocity.setY(0);
-            velocity.normalize();
-            velocity.multiply(-1);
-            velocity.multiply(power);
-            velocity.setY(0.5 + 0.01 * power);
-
-            e.setVelocity(velocity);
-        });
+        entity.setVelocity(velocity);
     }
 }

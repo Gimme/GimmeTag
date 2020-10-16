@@ -32,6 +32,8 @@ public abstract class AbilityItem extends CustomItem {
     private int durationTicks;
     private int level;
 
+    @NotNull
+    private UseEvent useEvent = UseEvent.INTERACT;
     @Nullable
     private String useResponseMessage;
     @Nullable
@@ -168,7 +170,7 @@ public abstract class AbilityItem extends CustomItem {
             if (rechargeTask != null && !rechargeTask.isCancelled()) {
                 rechargeTask.incrementRecharges();
             } else {
-                rechargeTask = new RechargeTask(GimmeTag.getInstance(), user, itemStack, getRechargeTime()).start();
+                rechargeTask = new RechargeTask(GimmeTag.getInstance(), itemStack, getRechargeTime()).start();
                 rechargeTasks.put(uuid, rechargeTask);
             }
 
@@ -228,6 +230,26 @@ public abstract class AbilityItem extends CustomItem {
      */
     protected int getAmplifier() {
         return level - 1;
+    }
+
+    /**
+     * Sets the event type that should trigger the use of this ability item. {@link UseEvent#SHOOT_BOW} can only be used
+     * if the item type is a bow.
+     *
+     * @param useEvent the event type to trigger this item's use
+     */
+    protected void setUseEvent(@NotNull UseEvent useEvent) {
+        this.useEvent = useEvent;
+    }
+
+    /**
+     * Returns the event type that will trigger the use of this ability item.
+     *
+     * @return the event type that will trigger this item's use
+     */
+    @NotNull
+    UseEvent getUseEvent() {
+        return useEvent;
     }
 
     /**
@@ -339,5 +361,11 @@ public abstract class AbilityItem extends CustomItem {
      */
     public static String getFormattedDuration(int durationTicks) {
         return "" + ChatColor.RESET + ChatColor.GRAY + " (" + formatSeconds(durationTicks) + ")" + ChatColor.RESET;
+    }
+
+
+    protected enum UseEvent {
+        INTERACT,
+        SHOOT_BOW
     }
 }

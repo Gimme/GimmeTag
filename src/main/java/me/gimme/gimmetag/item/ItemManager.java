@@ -3,11 +3,15 @@ package me.gimme.gimmetag.item;
 import me.gimme.gimmetag.utils.Materials;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -62,16 +66,17 @@ public class ItemManager {
         private void onInteract(PlayerInteractEvent event) {
             if (event.useItemInHand() == Event.Result.DENY) return;
 
-            ItemStack item = event.getItem();
-            if (item == null) return;
+            ItemStack itemStack = event.getItem();
+            if (itemStack == null) return;
 
             // Check if custom item
-            String itemId = CustomItem.getCustomItemId(item);
+            String itemId = CustomItem.getCustomItemId(itemStack);
             if (itemId == null) return;
 
             // Check if ability item
             AbilityItem abilityItem = abilityItemsById.get(itemId);
             if (abilityItem == null) return;
+            if (abilityItem.getUseEvent() != AbilityItem.UseEvent.INTERACT) return;
 
             // Deny the use of the regular item behind the ability
             event.setUseItemInHand(Event.Result.DENY);
@@ -86,7 +91,37 @@ public class ItemManager {
                 return;
 
             // Use the ability
-            if (abilityItem.use(item, event.getPlayer())) event.setUseInteractedBlock(Event.Result.DENY);
+            if (abilityItem.use(itemStack, event.getPlayer())) event.setUseInteractedBlock(Event.Result.DENY);
+        }
+
+        @EventHandler(priority = EventPriority.HIGH)
+        private void onShootBow(EntityShootBowEvent event) {
+            if (event.isCancelled()) return;
+
+            Entity entity = event.getEntity();
+
+            if (entity.getType() != EntityType.PLAYER) return;
+            Player shooter = (Player) entity;
+
+            ItemStack bow = event.getBow();
+            if (bow == null) return;
+
+            // Check if custom item
+            String itemId = CustomItem.getCustomItemId(bow);
+            if (itemId == null) return;
+
+            // Check if ability item
+            AbilityItem abilityItem = abilityItemsById.get(itemId);
+            if (abilityItem == null) return;
+            if (abilityItem.getUseEvent() != AbilityItem.UseEvent.SHOOT_BOW) return;
+            if (!(abilityItem instanceof BowProjectileItem)) return;
+            BowProjectileItem bowItem = (BowProjectileItem) abilityItem;
+
+            // Deny the use of the regular item behind the ability
+            event.setCancelled(true);
+
+            // Use the ability
+            bowItem.use(bow, shooter, event.getForce());
         }
     }
 }

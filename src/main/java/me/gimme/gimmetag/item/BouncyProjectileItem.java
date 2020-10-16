@@ -3,11 +3,16 @@ package me.gimme.gimmetag.item;
 import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.entities.BouncyProjectile;
 import me.gimme.gimmetag.sfx.PlayableSound;
+import me.gimme.gimmetag.sfx.SoundEffect;
 import me.gimme.gimmetag.sfx.SoundEffects;
+import me.gimme.gimmetag.sfx.StandardSoundEffect;
 import me.gimme.gimmetag.utils.Ticks;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
@@ -21,26 +26,35 @@ import java.util.Objects;
 
 public abstract class BouncyProjectileItem extends AbilityItem {
 
+    private static final SoundEffect HIT_PLAYER_SOUND_EFFECT = new StandardSoundEffect(Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.NEUTRAL);
+
     private final Plugin plugin;
     private final BouncyProjectileConfig config;
     private final double speed;
     private final int maxExplosionTimerTicks;
+    private final double radius;
+    private final double power;
 
+    @Nullable
+    private Class<? extends Projectile> projectileClass;
     @Nullable
     private ItemStack displayItem;
     @Nullable
     private Particle trailParticle;
     @Nullable
     private PlayableSound explosionSound;
+    private boolean hitSound = true;
 
-    public BouncyProjectileItem(@NotNull String id, @NotNull String name, @NotNull Material type, @NotNull BouncyProjectileConfig config,
+    public BouncyProjectileItem(@NotNull String id, @NotNull String displayName, @NotNull Material type, @NotNull BouncyProjectileConfig config,
                                 @NotNull Plugin plugin) {
-        super(id, name, type, config);
+        super(id, displayName, type, config);
 
         this.plugin = plugin;
         this.config = config;
         this.speed = config.getSpeed();
         this.maxExplosionTimerTicks = Ticks.secondsToTicks(config.getMaxExplosionTimer());
+        this.radius = config.getRadius();
+        this.power = config.getPower();
 
         setUseSound(SoundEffects.THROW);
     }
@@ -63,15 +77,39 @@ public abstract class BouncyProjectileItem extends AbilityItem {
 
     @Override
     protected boolean onUse(@NotNull ItemStack itemStack, @NotNull Player user) {
-        BouncyProjectile bouncyProjectile = BouncyProjectile.launch(plugin, user, speed, maxExplosionTimerTicks, displayItem);
+        launch(user, 1);
+
+        return true;
+    }
+
+    void launch(@NotNull Player launcher, double force) {
+        BouncyProjectile bouncyProjectile;
+
+        double realSpeed = force * speed;
+
+        if (projectileClass != null) {
+            Projectile projectile = launcher.launchProjectile(projectileClass);
+            projectile.setVelocity(projectile.getVelocity().multiply(realSpeed));
+
+            bouncyProjectile = new BouncyProjectile(plugin, projectile, launcher, maxExplosionTimerTicks);
+        } else {
+            bouncyProjectile = BouncyProjectile.launch(plugin, launcher, realSpeed, maxExplosionTimerTicks, displayItem);
+        }
+
+        init(bouncyProjectile);
+    }
+
+    private void init(@NotNull BouncyProjectile bouncyProjectile) {
         BouncyProjectileConfig.init(bouncyProjectile, config);
 
         bouncyProjectile.setOnExplode(this::onExplode);
-        bouncyProjectile.setOnHitEntity(this::onHitEntity);
+        bouncyProjectile.setOnHitEntity((p, e) -> {
+            onHitEntity(p, e);
+            if (hitSound && e.getType() == EntityType.PLAYER && (p.getShooter() instanceof Player))
+                HIT_PLAYER_SOUND_EFFECT.play((Player) p.getShooter());
+        });
         bouncyProjectile.setExplosionSound(explosionSound);
         if (trailParticle != null) bouncyProjectile.setTrailParticle(trailParticle);
-
-        return true;
     }
 
     protected void setDisplayItem(@NotNull Material material, boolean enchanted) {
@@ -84,7 +122,10 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         }
 
         this.displayItem = itemStack;
+    }
 
+    protected void setProjectileClass(@Nullable Class<? extends Projectile> projectileClass) {
+        this.projectileClass = projectileClass;
     }
 
     protected void setExplosionSound(@NotNull PlayableSound explosionSound) {
@@ -95,11 +136,15 @@ public abstract class BouncyProjectileItem extends AbilityItem {
         this.trailParticle = trailParticle;
     }
 
+    protected void muteHitSound() {
+        hitSound = false;
+    }
+
     protected double getRadius() {
-        return config.getRadius();
+        return radius;
     }
 
     protected double getPower() {
-        return config.getPower();
+        return power;
     }
 }

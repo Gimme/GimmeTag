@@ -61,7 +61,7 @@ custom-item:
     sticky: true
     consume-on-direct-hit: true
     # Pull strength
-    power: 2
+    power: 3
 
   swapper_ball:
     cooldown: 20.0
