@@ -15,13 +15,13 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
     private static final String RESTITUTION_FACTOR_PATH = "restitution-factor";
     private static final String FRICTION_FACTOR_PATH = "friction-factor";
     private static final String STICKY_PATH = "sticky";
+    private static final String CONSUME_ON_DIRECT_HIT_PATH = "consume-on-direct-hit";
     private static final String GLOWING_PATH = "glowing";
     private static final String TRAIL_PATH = "trail";
     private static final String BOUNCE_MARKS_PATH = "bounce-marks";
     private static final String RADIUS_PATH = "radius";
     private static final String POWER_PATH = "power";
     private static final String DIRECT_HIT_DAMAGE_PATH = "direct-hit-damage";
-    private static final String CONSUME_ON_DIRECT_HIT_PATH = "consume-on-direct-hit";
     private static final String FRIENDLY_FIRE_PATH = "friendly-fire";
 
     @Nullable
@@ -66,6 +66,10 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
         return getValue().getBoolean(STICKY_PATH, defaultConfig != null && defaultConfig.isSticky());
     }
 
+    public boolean getConsumeOnDirectHit() {
+        return getValue().getBoolean(CONSUME_ON_DIRECT_HIT_PATH, defaultConfig != null && defaultConfig.getConsumeOnDirectHit());
+    }
+
     public boolean getTrail() {
         return getValue().getBoolean(TRAIL_PATH, defaultConfig != null && defaultConfig.getTrail());
     }
@@ -90,10 +94,6 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
         return getValue().getDouble(DIRECT_HIT_DAMAGE_PATH, defaultConfig != null ? defaultConfig.getDirectHitDamage() : 0);
     }
 
-    public boolean getConsumeOnDirectHit() {
-        return getValue().getBoolean(CONSUME_ON_DIRECT_HIT_PATH, defaultConfig != null && defaultConfig.getConsumeOnDirectHit());
-    }
-
     public boolean getFriendlyFire() {
         return getValue().getBoolean(FRIENDLY_FIRE_PATH, defaultConfig != null && defaultConfig.getFriendlyFire());
     }
@@ -104,12 +104,12 @@ public class BouncyProjectileConfig extends AbilityItemConfig {
         bouncyProjectile.setRestitutionFactor(config.getRestitutionFactor());
         bouncyProjectile.setFrictionFactor(config.getFrictionFactor());
         bouncyProjectile.setSticky(config.isSticky());
+        bouncyProjectile.setConsumeOnDirectHit(config.getConsumeOnDirectHit());
         bouncyProjectile.setTrail(config.getTrail());
         bouncyProjectile.setBounceMarks(config.getBounceMarks());
         bouncyProjectile.setGlowing(config.getGlowing());
         bouncyProjectile.setRadius(config.getRadius());
         bouncyProjectile.setDamageOnDirectHit(config.getDirectHitDamage());
-        bouncyProjectile.setConsumeOnDirectHit(config.getConsumeOnDirectHit());
         bouncyProjectile.setFriendlyFire(config.getFriendlyFire());
     }
 }
