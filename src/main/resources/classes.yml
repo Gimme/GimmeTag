@@ -60,6 +60,7 @@ classes:
       hunter_compass: 1
       speed_boost: 1
       pykes_hook: 1
+      arrow: 1
   - ==: RoleClass
     name: Killer
     format: §5
@@ -69,6 +70,7 @@ classes:
       speed_boost: 1
       impulse_grenade: 1
       execution_bow: 1
+      arrow: 1
   - ==: RoleClass
     name: Spy
     format: §8
@@ -78,3 +80,4 @@ classes:
       spy_eye: 1
       speed_boost: 1
       slow_bow: 4
+      arrow: 1
