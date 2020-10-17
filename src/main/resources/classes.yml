@@ -50,7 +50,7 @@ classes:
   # HUNTER
   - ==: RoleClass
     name: Pyke
-    format: §4
+    format: §5
     icon: trident
     color: 0x800000
     colors:
@@ -63,14 +63,14 @@ classes:
       arrow: 1
   - ==: RoleClass
     name: Killer
-    format: §5
+    format: §4
     icon: heart_of_the_sea
     items:
       hunter_radar: 1
       speed_boost: 1
       impulse_grenade: 1
       execution_bow: 1
-      arrow: 1
+      blood_hunt: 1
   - ==: RoleClass
     name: Spy
     format: §8

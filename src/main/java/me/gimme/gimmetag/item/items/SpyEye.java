@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
  * goes dark and all other players can see you through walls as well.
  */
 public class SpyEye extends ContinuousAbilityItem {
+
     private static final String NAME = "Spy Eye";
     private static final Material MATERIAL = Material.ENDER_EYE;
     private static final List<String> INFO = Collections.singletonList("See other players through walls");

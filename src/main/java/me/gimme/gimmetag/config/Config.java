@@ -73,17 +73,22 @@ public abstract class Config {
     public static final AbstractConfig<Boolean> SOULBOUND_ITEMS = new ValueConfig<>(ITEMS_CONFIG, "soulbound-items");
 
     private static final AbstractConfig<ConfigurationSection> CUSTOM_ITEM = new ValueConfig<>(ITEMS_CONFIG, "custom-item");
+    public static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig(ITEMS_CONFIG, "default-bouncy-projectile", null);
+
     public static final AbstractConfig<ConfigurationSection> SPEED_BOOST = new ValueConfig<>(CUSTOM_ITEM, "speed_boost");
     public static final AbstractConfig<ConfigurationSection> INVIS_POTION = new ValueConfig<>(CUSTOM_ITEM, "invis_potion");
     public static final AbstractConfig<Number> INVIS_POTION_DURATION = new ValueConfig<>(INVIS_POTION, "duration");
     public static final AbstractConfig<ConfigurationSection> BALLOON_GRENADE = new ValueConfig<>(CUSTOM_ITEM, "balloon_grenade");
+
     public static final AbstractConfig<ConfigurationSection> HUNTER_COMPASS = new ValueConfig<>(CUSTOM_ITEM, "hunter_compass");
     public static final AbstractConfig<ConfigurationSection> HUNTER_RADAR = new ValueConfig<>(CUSTOM_ITEM, "hunter_radar");
     public static final AbstractConfig<ConfigurationSection> SPY_EYE = new ValueConfig<>(CUSTOM_ITEM, "spy_eye");
     public static final AbstractConfig<Number> SPY_EYE_RANGE = new ValueConfig<>(SPY_EYE, "range");
     public static final AbstractConfig<Boolean> SPY_EYE_SELF_GLOW = new ValueConfig<>(SPY_EYE, "self-glow");
+    public static final AbstractConfig<ConfigurationSection> BLOOD_HUNT = new ValueConfig<>(CUSTOM_ITEM, "blood_hunt");
+    public static final AbstractConfig<Number> BLOOD_HUNT_THRESHOLD = new ValueConfig<>(BLOOD_HUNT, "threshold");
+    public static final AbstractConfig<Number> BLOOD_HUNT_RANGE = new ValueConfig<>(BLOOD_HUNT, "range");
 
-    public static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig(ITEMS_CONFIG, "default-bouncy-projectile", null);
     public static final AbstractConfig<ConfigurationSection> PYKES_HOOK = new ValueConfig<>(CUSTOM_ITEM, "pykes_hook");
     public static final AbstractConfig<ConfigurationSection> SLOW_BOW = new ValueConfig<>(CUSTOM_ITEM, "slow_bow");
     public static final AbstractConfig<ConfigurationSection> GLOW_BOW = new ValueConfig<>(CUSTOM_ITEM, "glow_bow");

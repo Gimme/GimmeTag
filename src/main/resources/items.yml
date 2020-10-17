@@ -26,7 +26,6 @@ custom-item:
 
   balloon_grenade:
     consumable: true
-    cooldown: 0.0
     duration: 7.0
     level: 1
 
@@ -53,6 +52,14 @@ custom-item:
     # If the user should glow to others during the effect.
     self-glow: true
 
+  blood_hunt:
+    # -1: Infinite.
+    duration: -1
+    # Health threshold to be seen (0 - 1).
+    threshold: 0.5
+    # Range other players have to be within to be seen.
+    range: 30.0
+
 
   # PROJECTILES
 
@@ -61,7 +68,7 @@ custom-item:
     speed: 0.5
     sticky: true
     consume-on-direct-hit: true
-    # Pull strength
+    # Pull strength.
     power: 3
 
   slow_bow:
@@ -81,7 +88,7 @@ custom-item:
   execution_bow:
     sticky: true
     consume-on-direct-hit: true
-    # Execution health threshold (0 - 1)
+    # Execution health threshold (0 - 1).
     power: 0.5
 
   swapper_ball:
