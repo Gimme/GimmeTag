@@ -569,7 +569,11 @@ public class BouncyProjectile implements Listener {
             if (onHitEntity != null && checkFriendlyFire(hitEntity) && hitEntity instanceof LivingEntity)
                 onHitEntity.accept(oldProjectile, (LivingEntity) hitEntity);
             // Projectile will be removed after modifying damage in EntityDamageByEntityEvent
-            if (consumeOnDirectHit) return;
+            if (consumeOnDirectHit) {
+                if ((hitEntity instanceof HumanEntity) && ((HumanEntity) hitEntity).getGameMode() == GameMode.CREATIVE)
+                    remove();
+                return;
+            }
         }
 
         if (isArrow) {
