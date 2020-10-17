@@ -6,7 +6,7 @@ runner-classes:
 
 hunter-classes:
   - Pyke
-  - Impulse
+  - Killer
   - Spy
 
 default-runner-class: Speedy
@@ -61,13 +61,14 @@ classes:
       speed_boost: 1
       pykes_hook: 1
   - ==: RoleClass
-    name: Impulse
+    name: Killer
     format: §5
     icon: heart_of_the_sea
     items:
       hunter_radar: 1
       speed_boost: 1
       impulse_grenade: 1
+      execution_bow: 1
   - ==: RoleClass
     name: Spy
     format: §8

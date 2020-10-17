@@ -41,6 +41,6 @@ public class ExecutionBow extends BowProjectileItem {
         if (health > getPower() * maxHealth + 0.001) return;
 
         // Execute target with credit
-        entity.damage(health + 1, (Entity) projectile.getShooter());
+        entity.damage(health + 1000, (Entity) projectile.getShooter());
     }
 }
