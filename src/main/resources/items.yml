@@ -61,6 +61,11 @@ custom-item:
     # Range other players have to be within to be seen.
     range: 30.0
 
+  pink_ward:
+    cooldown: 30
+    # -1: Infinite.
+    duration: 10
+
 
   # PROJECTILES
 

@@ -38,7 +38,7 @@ classes:
     icon: clay_ball
     items:
       smoke_grenade: 1
-      invis_potion: 1
+      pink_ward: 1
   - ==: RoleClass
     name: Alchemist
     format: §d
@@ -79,5 +79,6 @@ classes:
     items:
       spy_eye: 1
       speed_boost: 1
+      pink_ward: 1
       slow_bow: 4
       arrow: 1

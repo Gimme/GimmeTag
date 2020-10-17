@@ -88,6 +88,7 @@ public abstract class Config {
     public static final AbstractConfig<ConfigurationSection> BLOOD_HUNT = new ValueConfig<>(CUSTOM_ITEM, "blood_hunt");
     public static final AbstractConfig<Number> BLOOD_HUNT_THRESHOLD = new ValueConfig<>(BLOOD_HUNT, "threshold");
     public static final AbstractConfig<Number> BLOOD_HUNT_RANGE = new ValueConfig<>(BLOOD_HUNT, "range");
+    public static final AbstractConfig<ConfigurationSection> PINK_WARD = new ValueConfig<>(CUSTOM_ITEM, "pink_ward");
 
     public static final AbstractConfig<ConfigurationSection> PYKES_HOOK = new ValueConfig<>(CUSTOM_ITEM, "pykes_hook");
     public static final AbstractConfig<ConfigurationSection> SLOW_BOW = new ValueConfig<>(CUSTOM_ITEM, "slow_bow");
