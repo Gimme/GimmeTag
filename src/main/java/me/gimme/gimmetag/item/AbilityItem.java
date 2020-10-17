@@ -170,15 +170,14 @@ public abstract class AbilityItem extends CustomItem {
             if (rechargeTask != null && !rechargeTask.isCancelled()) {
                 rechargeTask.incrementRecharges();
             } else {
-                rechargeTask = new RechargeTask(GimmeTag.getInstance(), itemStack, getRechargeTime()).start();
+                rechargeTask = new RechargeTask(GimmeTag.getInstance(), user, itemStack, getRechargeTime()).start();
                 rechargeTasks.put(uuid, rechargeTask);
             }
 
             int amount = itemStack.getAmount();
-            if (amount == 1) {
+            if (amount == 1 && rechargeTask.setFinalCharge(itemStack)) {
                 // Keep the final charge in inventory to indicate that it is recharging
                 itemStack.setAmount(amount + 1);
-                rechargeTask.setFinalCharge();
             }
         }
 
