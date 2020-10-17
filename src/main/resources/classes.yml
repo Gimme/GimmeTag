@@ -76,5 +76,4 @@ classes:
     items:
       spy_eye: 1
       speed_boost: 1
-      hunter_bow: 1
-      arrow: 1
+      slow_bow: 1

@@ -16,6 +16,9 @@ import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
 import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.item.items.*;
+import me.gimme.gimmetag.item.items.bows.HunterBow;
+import me.gimme.gimmetag.item.items.bows.PykesHook;
+import me.gimme.gimmetag.item.items.bows.SlowBow;
 import me.gimme.gimmetag.roleclass.ClassSelectionManager;
 import me.gimme.gimmetag.roleclass.RoleClass;
 import me.gimme.gimmetag.tag.TagManager;
@@ -157,6 +160,7 @@ public final class GimmeTag extends JavaPlugin {
         registerCustomItem(Config.IMPULSE_GRENADE, (id, c) -> new ImpulseGrenade(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
         registerCustomItem(Config.COOKED_EGG, (id, c) -> new CookedEgg(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
         registerCustomItem(Config.PYKES_HOOK, (id, c) -> new PykesHook(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
+        registerCustomItem(Config.SLOW_BOW, (id, c) -> new SlowBow(id, new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE), this));
     }
 
     private void registerCommand(me.gimme.gimmecore.command.BaseCommand command) {

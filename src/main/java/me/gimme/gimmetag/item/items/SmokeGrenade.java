@@ -90,7 +90,7 @@ public class SmokeGrenade extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull LivingEntity entity) {
     }
 
     private void startSmoke(@NotNull Location location, @NotNull Color color) {

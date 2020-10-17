@@ -63,6 +63,16 @@ custom-item:
     # Pull strength
     power: 3
 
+  slow_bow:
+    cooldown: 1.0
+    recharge: 10.0
+    duration: 1.0
+    level: 3
+    speed: 1.0
+    ground-explosion-timer: 1.0
+    sticky: true
+    consume-on-direct-hit: true
+
   swapper_ball:
     cooldown: 20.0
     speed: 1.0

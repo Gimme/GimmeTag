@@ -8,10 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
@@ -51,7 +48,7 @@ public class SwapperBall extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull LivingEntity entity) {
         if (entity.getType() != EntityType.PLAYER) return; // Didn't hit a player
 
         Entity shooter = (Entity) projectile.getShooter();

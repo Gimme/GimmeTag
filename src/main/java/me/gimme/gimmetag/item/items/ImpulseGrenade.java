@@ -5,6 +5,7 @@ import me.gimme.gimmetag.item.BouncyProjectileItem;
 import me.gimme.gimmetag.sfx.SoundEffects;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,7 +51,7 @@ public class ImpulseGrenade extends BouncyProjectileItem {
     }
 
     @Override
-    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull LivingEntity entity) {
     }
 
 

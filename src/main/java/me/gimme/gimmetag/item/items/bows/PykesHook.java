@@ -1,8 +1,9 @@
-package me.gimme.gimmetag.item.items;
+package me.gimme.gimmetag.item.items.bows;
 
 import me.gimme.gimmetag.config.type.BouncyProjectileConfig;
 import me.gimme.gimmetag.item.BowProjectileItem;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Trident;
 import org.bukkit.plugin.Plugin;
@@ -30,7 +31,7 @@ public class PykesHook extends BowProjectileItem {
     }
 
     @Override
-    protected void onHitEntity(@NotNull Projectile projectile, @NotNull Entity entity) {
+    protected void onHitEntity(@NotNull Projectile projectile, @NotNull LivingEntity entity) {
         Vector velocity = projectile.getVelocity().clone();
         velocity.setY(0);
         velocity.normalize();

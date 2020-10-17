@@ -51,7 +51,7 @@ public class BouncyProjectile implements Listener {
     @Nullable
     private BiConsumer<@NotNull Projectile, @NotNull Collection<@NotNull Entity>> onExplode;
     @Nullable
-    private BiConsumer<@NotNull Projectile, @NotNull Entity> onHitEntity;
+    private BiConsumer<@NotNull Projectile, @NotNull LivingEntity> onHitEntity;
     private int groundExplosionTimerTicks = -1;
     private boolean manualGravity;
     private double gravity = DEFAULT_GRAVITY;
@@ -218,7 +218,7 @@ public class BouncyProjectile implements Listener {
      *
      * @param onHitEntity the consumer to set
      */
-    public void setOnHitEntity(@Nullable BiConsumer<@NotNull Projectile, @NotNull Entity> onHitEntity) {
+    public void setOnHitEntity(@Nullable BiConsumer<@NotNull Projectile, @NotNull LivingEntity> onHitEntity) {
         this.onHitEntity = onHitEntity;
     }
 
@@ -566,7 +566,8 @@ public class BouncyProjectile implements Listener {
 
         // On hit entity
         if (hitEntity != null) {
-            if (onHitEntity != null && checkFriendlyFire(hitEntity)) onHitEntity.accept(oldProjectile, hitEntity);
+            if (onHitEntity != null && checkFriendlyFire(hitEntity) && hitEntity instanceof LivingEntity)
+                onHitEntity.accept(oldProjectile, (LivingEntity) hitEntity);
             // Projectile will be removed after modifying damage in EntityDamageByEntityEvent
             if (consumeOnDirectHit) return;
         }

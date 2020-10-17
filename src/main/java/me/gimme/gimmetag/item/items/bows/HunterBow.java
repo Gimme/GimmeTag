@@ -1,4 +1,4 @@
-package me.gimme.gimmetag.item.items;
+package me.gimme.gimmetag.item.items.bows;
 
 import me.gimme.gimmetag.item.CustomItem;
 import org.bukkit.Material;
