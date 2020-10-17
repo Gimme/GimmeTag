@@ -75,6 +75,14 @@ custom-item:
     sticky: true
     consume-on-direct-hit: true
 
+  execution_bow:
+    speed: 1.0
+    ground-explosion-timer: 1.0
+    sticky: true
+    # Execution health threshold (0 - 1)
+    power: 0.5
+    consume-on-direct-hit: true
+
   swapper_ball:
     cooldown: 20.0
     speed: 1.0

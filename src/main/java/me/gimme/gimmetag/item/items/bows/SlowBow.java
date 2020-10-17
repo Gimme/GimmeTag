@@ -21,6 +21,8 @@ public class SlowBow extends BowProjectileItem {
 
     public SlowBow(@NotNull String id, @NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
         super(id, NAME, config, plugin);
+
+        setInfo("Slows on hit");
     }
 
     @Override

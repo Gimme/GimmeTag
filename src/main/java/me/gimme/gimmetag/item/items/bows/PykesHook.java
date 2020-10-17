@@ -23,6 +23,7 @@ public class PykesHook extends BowProjectileItem {
     public PykesHook(@NotNull String id, @NotNull BouncyProjectileConfig config, @NotNull Plugin plugin) {
         super(id, NAME, config, plugin);
 
+        setInfo("Pulls on hit");
         setProjectileClass(PROJECTILE_CLASS);
     }
 
