@@ -147,7 +147,7 @@ public final class GimmeTag extends JavaPlugin {
         registerCustomItem(Config.BALLOON_GRENADE, (id, c) -> new BalloonGrenade(id, new AbilityItemConfig(c)));
         registerCustomItem(Config.HUNTER_COMPASS, (id, c) -> new HunterCompass(id, new AbilityItemConfig(c), tagManager));
         registerCustomItem(Config.HUNTER_RADAR, (id, c) -> new HunterRadar(id, new AbilityItemConfig(c), tagManager));
-        registerCustomItem(Config.SPY_EYE, (id, c) -> new SpyEye(id, new AbilityItemConfig(c), Config.SPY_EYE_SELF_GLOW.getValue(c), this));
+        registerCustomItem(Config.SPY_EYE, (id, c) -> new SpyEye(id, new AbilityItemConfig(c), Config.SPY_EYE_RANGE.getValue(c).doubleValue(), Config.SPY_EYE_SELF_GLOW.getValue(c), this));
         registerCustomItem(Config.SMOKE_GRENADE, (id, c) -> new SmokeGrenade(
                 id,
                 new BouncyProjectileConfig(c, Config.DEFAULT_BOUNCY_PROJECTILE),

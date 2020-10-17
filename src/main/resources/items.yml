@@ -48,6 +48,8 @@ custom-item:
     duration: 3.0
     # Strength of the self slow effect.
     level: 6
+    # Range other players have to be within to be seen.
+    range: 30.0
     # If the user should glow to others during the effect.
     self-glow: true
 

@@ -2,6 +2,7 @@ package me.gimme.gimmetag.item.items;
 
 import me.gimme.gimmetag.config.type.AbilityItemConfig;
 import me.gimme.gimmetag.item.ContinuousAbilityItem;
+import me.gimme.gimmetag.sfx.SoundEffects;
 import me.gimme.gimmetag.utils.outline.CollectionOutlineEffect;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,9 +13,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * During this item's effect, you can see all other players through walls. As a side effect, you can't move, the screen
@@ -28,14 +28,16 @@ public class SpyEye extends ContinuousAbilityItem {
     private static final int POTION_TICKS = 2;
 
     private final Plugin plugin;
+    private final double range;
     private final boolean selfGlow;
     private final List<PotionEffect> potionEffects;
     private final PotionEffect glowEffect;
 
-    public SpyEye(@NotNull String id, @NotNull AbilityItemConfig config, boolean selfGlow, @NotNull Plugin plugin) {
+    public SpyEye(@NotNull String id, @NotNull AbilityItemConfig config, double range, boolean selfGlow, @NotNull Plugin plugin) {
         super(id, NAME, MATERIAL, config);
 
         this.plugin = plugin;
+        this.range = range;
         this.selfGlow = selfGlow;
 
         setInfo(INFO);
@@ -60,10 +62,23 @@ public class SpyEye extends ContinuousAbilityItem {
         CollectionOutlineEffect outlineEffect = new CollectionOutlineEffect(plugin, user, null);
         outlineEffect.show();
 
+        double rangeSquared = range * range;
+        Set<UUID> seenPlayers = new HashSet<>();
+
         return new ContinuousUse() {
             @Override
             public void onCalculate() {
-                outlineEffect.setTargets(user.getWorld().getPlayers());
+                List<Player> targets = user.getWorld().getPlayers().stream()
+                        .filter(p -> user.getLocation().distanceSquared(p.getLocation()) < rangeSquared)
+                        .collect(Collectors.toList());
+
+                targets.forEach(p -> {
+                    if (seenPlayers.contains(p.getUniqueId())) return;
+                    seenPlayers.add(p.getUniqueId());
+                    SoundEffects.SPY_EYE_ACTIVATION.play(p);
+                });
+
+                outlineEffect.setTargets(targets);
                 outlineEffect.refresh();
             }
 

@@ -80,6 +80,7 @@ public abstract class Config {
     public static final AbstractConfig<ConfigurationSection> HUNTER_COMPASS = new ValueConfig<>(CUSTOM_ITEM, "hunter_compass");
     public static final AbstractConfig<ConfigurationSection> HUNTER_RADAR = new ValueConfig<>(CUSTOM_ITEM, "hunter_radar");
     public static final AbstractConfig<ConfigurationSection> SPY_EYE = new ValueConfig<>(CUSTOM_ITEM, "spy_eye");
+    public static final AbstractConfig<Number> SPY_EYE_RANGE = new ValueConfig<>(SPY_EYE, "range");
     public static final AbstractConfig<Boolean> SPY_EYE_SELF_GLOW = new ValueConfig<>(SPY_EYE, "self-glow");
 
     public static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig(ITEMS_CONFIG, "default-bouncy-projectile", null);

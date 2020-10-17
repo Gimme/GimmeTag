@@ -36,6 +36,7 @@ public abstract class SoundEffects {
             new StandardSoundEffect(Sound.BLOCK_CONDUIT_ACTIVATE, SoundCategory.NEUTRAL, 3f),
             new StandardSoundEffect(Sound.BLOCK_CONDUIT_DEACTIVATE, SoundCategory.NEUTRAL, 3f)
     );
+    public static final SoundEffect SPY_EYE_ACTIVATION = new StandardSoundEffect(Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.NEUTRAL, 0.7f, 0.9f);
 
 
     // GAME EVENTS
