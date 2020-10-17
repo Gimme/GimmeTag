@@ -15,7 +15,6 @@ custom-item:
     level: 1
   _speed_boost:
     dash:
-      consumable: true
       cooldown: 5.0
       recharge: 30.0
       duration: 0.2
@@ -74,7 +73,6 @@ custom-item:
     power: 3
 
   slow_bow:
-    consumable: true
     cooldown: 1.0
     recharge: 10.0
     duration: 1.0
@@ -127,7 +125,6 @@ custom-item:
     direct-hit-damage: 0.0
 
   cooked_egg:
-    consumable: true
     cooldown: 0.0
     recharge: 10.0
     ground-explosion-timer: 0.0

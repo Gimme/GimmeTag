@@ -80,7 +80,7 @@ public abstract class AbilityItem extends CustomItem {
      * @param config the configuration to get the values from
      */
     private void init(@NotNull AbilityItemConfig config) {
-        this.consumable = config.isConsumable();
+        this.consumable = config.isConsumable() || config.getRechargeTime() > 0;
         setCooldown(config.getCooldown());
         setRechargeTime(config.getRechargeTime());
         this.durationTicks = Ticks.secondsToTicks(config.getDuration());
