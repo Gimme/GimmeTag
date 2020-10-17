@@ -55,6 +55,8 @@ custom-item:
   blood_hunt:
     # -1: Infinite.
     duration: -1
+    # Speed boost level when seeing low health target.
+    level: 1
     # Health threshold to be seen (0 - 1).
     threshold: 0.5
     # Range other players have to be within to be seen.
