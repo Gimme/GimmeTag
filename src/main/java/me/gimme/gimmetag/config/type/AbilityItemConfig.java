@@ -37,6 +37,6 @@ public class AbilityItemConfig extends ValueConfig<ConfigurationSection> {
     }
 
     public int getLevel() {
-        return getValue().getInt(LEVEL_PATH, 1);
+        return getValue().getInt(LEVEL_PATH, 0);
     }
 }
