@@ -551,6 +551,12 @@ public class TagManager implements Listener {
      * @param player the player to check the distance from a hunter
      */
     private void deathTag(@NotNull Player player) {
+        Player killer = player.getKiller();
+        if (killer != null && getRole(killer) == Role.HUNTER) {
+            tag(player, killer);
+            return;
+        }
+
         int tagDeathDistance = Config.TAG_DEATH_DISTANCE.getValue();
         if (tagDeathDistance == 0) return;
 
