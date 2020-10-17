@@ -629,7 +629,8 @@ public class BouncyProjectile implements Listener {
         if (event.isCancelled()) return;
         if (!isFromThisBouncyProjectile(event.getDamager())) return;
 
-        event.setDamage(damageOnDirectHit);
+        if (damageOnDirectHit == 0) event.setCancelled(true);
+        else event.setDamage(damageOnDirectHit);
         if (consumeOnDirectHit) remove();
     }
 

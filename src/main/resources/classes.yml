@@ -39,6 +39,8 @@ classes:
     items:
       smoke_grenade: 1
       pink_ward: 1
+      glow_bow: 1
+      arrow: 1
   - ==: RoleClass
     name: Alchemist
     format: §d

@@ -89,6 +89,7 @@ custom-item:
     duration: 15.0
     sticky: true
     consume-on-direct-hit: true
+    direct-hit-damage: 0.0
 
   execution_bow:
     sticky: true
