@@ -16,7 +16,6 @@ import me.gimme.gimmetag.gamerule.EnableProjectileKnockback;
 import me.gimme.gimmetag.item.CustomItem;
 import me.gimme.gimmetag.item.ItemManager;
 import me.gimme.gimmetag.item.items.*;
-import me.gimme.gimmetag.item.items.bows.HunterBow;
 import me.gimme.gimmetag.item.items.bows.PykesHook;
 import me.gimme.gimmetag.item.items.bows.SlowBow;
 import me.gimme.gimmetag.roleclass.ClassSelectionManager;
@@ -144,7 +143,6 @@ public final class GimmeTag extends JavaPlugin {
                 this,
                 tagManager
         ));
-        itemManager.registerItem(new HunterBow());
         registerCustomItem(Config.INVIS_POTION, (id, c) -> new InvisPotion(id, Config.INVIS_POTION_DURATION.getValue(c).doubleValue()));
         registerCustomItem(Config.BALLOON_GRENADE, (id, c) -> new BalloonGrenade(id, new AbilityItemConfig(c)));
         registerCustomItem(Config.HUNTER_COMPASS, (id, c) -> new HunterCompass(id, new AbilityItemConfig(c), tagManager));
