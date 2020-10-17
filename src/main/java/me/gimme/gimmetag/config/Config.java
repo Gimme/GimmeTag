@@ -86,6 +86,7 @@ public abstract class Config {
     public static final BouncyProjectileConfig DEFAULT_BOUNCY_PROJECTILE = new BouncyProjectileConfig(ITEMS_CONFIG, "default-bouncy-projectile", null);
     public static final AbstractConfig<ConfigurationSection> PYKES_HOOK = new ValueConfig<>(CUSTOM_ITEM, "pykes_hook");
     public static final AbstractConfig<ConfigurationSection> SLOW_BOW = new ValueConfig<>(CUSTOM_ITEM, "slow_bow");
+    public static final AbstractConfig<ConfigurationSection> GLOW_BOW = new ValueConfig<>(CUSTOM_ITEM, "glow_bow");
     public static final AbstractConfig<ConfigurationSection> EXECUTION_BOW = new ValueConfig<>(CUSTOM_ITEM, "execution_bow");
     public static final AbstractConfig<ConfigurationSection> SWAPPER_BALL = new ValueConfig<>(CUSTOM_ITEM, "swapper_ball");
     public static final AbstractConfig<Boolean> SWAPPER_ALLOW_HUNTER_SWAP = new ValueConfig<>(SWAPPER_BALL, "allow-hunter-swap");

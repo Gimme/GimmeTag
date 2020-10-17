@@ -65,10 +65,16 @@ custom-item:
     power: 3
 
   slow_bow:
+    consumable: true
     cooldown: 1.0
     recharge: 10.0
     duration: 1.0
     level: 3
+    sticky: true
+    consume-on-direct-hit: true
+
+  glow_bow:
+    duration: 15.0
     sticky: true
     consume-on-direct-hit: true
 
