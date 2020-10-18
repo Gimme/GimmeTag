@@ -15,8 +15,8 @@ custom-item:
     level: 1
   _speed_boost:
     dash:
-      cooldown: 5.0
-      recharge: 30.0
+      cooldown: 3.0
+      recharge: 15.0
       duration: 0.2
       level: 50
 
@@ -24,7 +24,7 @@ custom-item:
     duration: 10.0
 
   balloon_grenade:
-    consumable: true
+    cooldown: 20.0
     duration: 7.0
     level: 1
 
@@ -62,7 +62,7 @@ custom-item:
     range: 30.0
 
   pink_ward:
-    cooldown: 30
+    cooldown: 20
     # -1: Infinite.
     duration: 10
 
@@ -98,7 +98,7 @@ custom-item:
     power: 0.5
 
   swapper_ball:
-    cooldown: 20.0
+    cooldown: 10.0
     ground-explosion-timer: 2.0
     restitution-factor: 0.6
     friction-factor: 0.9
@@ -132,7 +132,7 @@ custom-item:
 
   cooked_egg:
     cooldown: 0.0
-    recharge: 10.0
+    recharge: 5.0
     ground-explosion-timer: 0.0
     sticky: true
     trail: false

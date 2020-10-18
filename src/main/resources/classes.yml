@@ -1,8 +1,7 @@
 runner-classes:
-  - Speedy
-  - Enderman
-  - Stealthy
-  - Alchemist
+  - Dasher
+  - Disruptor
+  - Scout
 
 hunter-classes:
   - Pyke
@@ -19,21 +18,21 @@ default-hunter-class: Pyke
 classes:
   # RUNNER
   - ==: RoleClass
-    name: Speedy
+    name: Dasher
     format: §e
     icon: sugar
     items:
       dash: 3
-      cooked_egg: 5
+      cooked_egg: 10
   - ==: RoleClass
-    name: Enderman
+    name: Disruptor
     format: §5
     icon: ender_pearl
     items:
       swapper_ball: 1
-      chorus_fruit: 3
+      balloon_grenade: 1
   - ==: RoleClass
-    name: Stealthy
+    name: Scout
     format: §8
     icon: clay_ball
     items:
@@ -41,13 +40,6 @@ classes:
       pink_ward: 1
       glow_bow: 1
       arrow: 1
-  - ==: RoleClass
-    name: Alchemist
-    format: §d
-    icon: potion
-    items:
-      balloon_grenade: 1
-      invis_potion: 1
 
   # HUNTER
   - ==: RoleClass
