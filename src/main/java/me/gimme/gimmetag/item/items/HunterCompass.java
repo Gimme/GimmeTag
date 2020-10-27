@@ -24,11 +24,18 @@ public class HunterCompass extends ContinuousAbilityItem {
     private static final String INFO = "Points to nearest runner";
 
     private final TagManager tagManager;
+    private final boolean followTarget;
 
     public HunterCompass(@NotNull String id, @NotNull AbilityItemConfig config, @NotNull TagManager tagManager) {
         super(id, NAME, MATERIAL, config);
 
         this.tagManager = tagManager;
+        this.followTarget = getDurationTicks() != 0;
+
+        if (!followTarget) {
+            setDuration(getCooldown());
+            setGlowWhenActive(true);
+        }
 
         setInfo(INFO);
     }
@@ -41,7 +48,7 @@ public class HunterCompass extends ContinuousAbilityItem {
     protected @NotNull ContinuousUse createContinuousUse(@NotNull ItemStack itemStack, @NotNull Player user) {
         setTarget(itemStack, null);
 
-        return new ContinuousUse() {
+        if (followTarget) return new ContinuousUse() {
             private Entity closestTarget;
 
             @Override
@@ -52,6 +59,23 @@ public class HunterCompass extends ContinuousAbilityItem {
             @Override
             public void onTick() {
                 if (closestTarget != null) setTarget(itemStack, closestTarget.getLocation());
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        };
+
+        Entity closestTarget = tagManager.getClosestRunner(user);
+        Location closestTargetLocation = closestTarget != null ? closestTarget.getLocation() : null;
+        return new ContinuousUse() {
+            @Override
+            public void onCalculate() {
+            }
+
+            @Override
+            public void onTick() {
+                setTarget(itemStack, closestTargetLocation);
             }
 
             @Override

@@ -83,7 +83,7 @@ public abstract class AbilityItem extends CustomItem {
         this.consumable = config.isConsumable() || config.getRechargeTime() > 0;
         setCooldown(config.getCooldown());
         setRechargeTime(config.getRechargeTime());
-        this.durationTicks = Ticks.secondsToTicks(config.getDuration());
+        setDuration(config.getDuration());
         this.level = config.getLevel();
 
         this.useSound = SoundEffects.USE_EFFECT;
@@ -209,6 +209,10 @@ public abstract class AbilityItem extends CustomItem {
 
     protected int getRechargeTimeTicks() {
         return rechargeTimeTicks;
+    }
+
+    protected void setDuration(double seconds) {
+        this.durationTicks = Ticks.secondsToTicks(seconds);
     }
 
     protected double getDuration() {

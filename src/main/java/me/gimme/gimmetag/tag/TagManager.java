@@ -650,7 +650,7 @@ public class TagManager implements Listener {
      */
     @Nullable
     public Player getClosestHunter(@NotNull Player player, boolean includeSleeping) {
-        return getClosestPlayer(player, getOnlineHunters(includeSleeping));
+        return getClosestEntity(player, getOnlineHunters(includeSleeping));
     }
 
     /**
@@ -659,21 +659,21 @@ public class TagManager implements Listener {
      */
     @Nullable
     public Player getClosestRunner(@NotNull Player player) {
-        return getClosestPlayer(player, getOnlineRunners());
+        return getClosestEntity(player, getOnlineRunners());
     }
 
     /**
-     * @param player the player to check nearby players of
-     * @return the closest player to the specified player (not self), or null if list has no other players
+     * @param entity the entity to check nearby entities of
+     * @return the closest entity to the specified entity (not self), or null if list has no other entities
      */
     @Nullable
-    private Player getClosestPlayer(@NotNull Player player, @NotNull List<Player> players) {
-        if (players.isEmpty()) return null;
-        if (players.size() == 1 && players.get(0).getUniqueId().equals(player.getUniqueId())) return null;
+    private <T extends Entity> T getClosestEntity(@NotNull Entity entity, @NotNull Collection<T> entities) {
+        if (entities.isEmpty()) return null;
+        if (entities.size() == 1 && entities.iterator().next().getUniqueId().equals(entity.getUniqueId())) return null;
 
-        return Collections.min(players, Comparator.comparing((p) -> {
-            if (p.getUniqueId().equals(player.getUniqueId())) return Double.MAX_VALUE;
-            return player.getLocation().distanceSquared(p.getLocation());
+        return Collections.min(entities, Comparator.comparing((p) -> {
+            if (p.getUniqueId().equals(entity.getUniqueId())) return Double.MAX_VALUE;
+            return entity.getLocation().distanceSquared(p.getLocation());
         }));
     }
 
