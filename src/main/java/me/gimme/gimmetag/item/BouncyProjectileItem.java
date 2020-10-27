@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public abstract class BouncyProjectileItem extends AbilityItem {
 
-    private static final SoundEffect HIT_PLAYER_SOUND_EFFECT = new StandardSoundEffect(Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.NEUTRAL);
+    private static final SoundEffect HIT_PLAYER_SOUND_EFFECT = new StandardSoundEffect(Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.NEUTRAL, 0.5f);
 
     private final Plugin plugin;
     private final BouncyProjectileConfig config;
