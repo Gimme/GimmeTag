@@ -8,7 +8,7 @@ hunter-classes:
   - Killer
   - Spy
 
-default-runner-class: Speedy
+default-runner-class: Dasher
 default-hunter-class: Pyke
 
 
