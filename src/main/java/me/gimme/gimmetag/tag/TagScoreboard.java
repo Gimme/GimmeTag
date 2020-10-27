@@ -51,9 +51,9 @@ public class TagScoreboard implements Listener {
         huntersTeam.setCanSeeFriendlyInvisibles(true);
         huntersTeam.setAllowFriendlyFire(Config.ENABLE_PVP.getValue());
         if (Config.HUNTER_HIDE_NAME_TAG.getValue())
-            huntersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
+            huntersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OTHER_TEAMS);
         if (!Config.HUNTER_OWN_TEAM_COLLISION.getValue())
-            huntersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
+            huntersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
 
         runnersTeam = scoreboard.registerNewTeam(RUNNERS_TEAM_NAME);
         runnersTeam.setColor(RUNNERS_TEAM_COLOR);
@@ -61,13 +61,13 @@ public class TagScoreboard implements Listener {
         runnersTeam.setCanSeeFriendlyInvisibles(true);
         runnersTeam.setAllowFriendlyFire(Config.ENABLE_PVP.getValue());
         if (Config.RUNNER_HIDE_NAME_TAG.getValue())
-            runnersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OWN_TEAM);
+            runnersTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.FOR_OTHER_TEAMS);
         if (Config.RUNNER_OWN_TEAM_COLLISION.getValue() && Config.RUNNER_OTHER_TEAM_COLLISION.getValue()) {
             runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.ALWAYS);
         } else if (Config.RUNNER_OWN_TEAM_COLLISION.getValue()) {
-            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
-        } else if (Config.RUNNER_OTHER_TEAM_COLLISION.getValue()) {
             runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
+        } else if (Config.RUNNER_OTHER_TEAM_COLLISION.getValue()) {
+            runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OWN_TEAM);
         } else {
             runnersTeam.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
         }
