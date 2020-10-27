@@ -15,6 +15,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Stand still and become invisible for a duration or until you move again.
  */
@@ -22,10 +25,14 @@ public class PinkWard extends AbilityItem {
 
     private static final String NAME = ChatColor.DARK_RED + "Pink Ward";
     private static final Material MATERIAL = Material.REDSTONE_TORCH;
-    private static final String INFO = "Stand still and become invisible";
+    private static final String INFO = "Become invisible while standing still";
 
-    private static final PotionEffect SLOW_EFFECT = new PotionEffect(PotionEffectType.SLOW, 10, 1000, false, false);
+    private static final PotionEffect SLOW_EFFECT = new PotionEffect(PotionEffectType.SLOW, 15, 1000, false, false); // Prevents moving
     private static final PotionEffect INVISIBILITY_EFFECT = new PotionEffect(PotionEffectType.INVISIBILITY, 2, 0, false, false);
+    private static final List<PotionEffect> VISUAL_EFFECTS = Arrays.asList(
+            new PotionEffect(PotionEffectType.HUNGER, 2, 0, false, false, false),
+            new PotionEffect(PotionEffectType.WITHER, 2, 0, false, false, false)
+    );
 
     private final Plugin plugin;
 
@@ -42,20 +49,23 @@ public class PinkWard extends AbilityItem {
         user.setSprinting(false);
         user.addPotionEffect(SLOW_EFFECT);
 
-        Location startLocation = user.getLocation().clone();
-
         new BukkitRunnable() {
+            private Location startLocation;
+
             private int ticks;
 
             @Override
             public void run() {
+                if (ticks == 15) startLocation = user.getLocation().clone();
+
                 if ((getDurationTicks() >= 0 && ++ticks > getDurationTicks())
-                        || distanceSquared2d(user.getLocation(), startLocation) > 0.1 * 0.1) {
+                        || (startLocation != null && distanceSquared2d(user.getLocation(), startLocation) > Math.pow(0.1, 2))) {
                     cancel();
                     return;
                 }
 
                 user.addPotionEffect(INVISIBILITY_EFFECT);
+                user.addPotionEffects(VISUAL_EFFECTS);
             }
         }.runTaskTimer(plugin, 0, 1);
 
