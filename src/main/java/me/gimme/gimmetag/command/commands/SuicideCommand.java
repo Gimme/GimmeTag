@@ -14,6 +14,8 @@ public class SuicideCommand extends BaseCommand {
         addAlias("kill");
         addAlias("die");
         addAlias("kms");
+        addAlias("stuck");
+        addAlias("unstuck");
         setPlayerOnly(true);
         setDescription("Commit suicide");
     }
